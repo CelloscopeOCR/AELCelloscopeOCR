@@ -1,11 +1,7 @@
-/EclipseAntProject/AELCelloscopeOCR/bin
-/EclipseAntProject/AELCelloscopeOCR/.settings
-/EclipseAntProject/AELCelloscopeOCR/gen
-/EclipseAntProject/AELCelloscopeOCR/.classpath
-/EclipseAntProject/AELCelloscopeOCR/.project
-
-/Eclipse AntProject/AELCelloscopeOCR/bin
-/Eclipse Ant Project/AELCelloscopeOCR/.settings
-/Eclipse Ant Project/AELCelloscopeOCR/gen
-/Eclipse Ant Project/AELCelloscopeOCR/.classpath
-/Eclipse Ant Project/AELCelloscopeOCR/.project
+*/bin
+*/.settings
+*/gen
+*/.classpath
+*/.project
+*.apk
+*.classpath
