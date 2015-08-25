@@ -55,6 +55,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 		this.data = data;
 		this.width = width;
 		this.height = height;
+
 	}
 
 	@Override
@@ -66,7 +67,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 		File path = Environment
 				.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-		File file = new File(path, "/Camera/test.jpg");
+		File file = new File(path, "/test.jpg");
 		Bitmap imutableBitmap = BitmapFactory
 				.decodeFile(file.getAbsolutePath());
 		Bitmap bitmap = imutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
