@@ -544,8 +544,7 @@ public final class CaptureActivity extends Activity implements
 
 			// Creating the handler starts the preview, which can also throw a
 			// RuntimeException.
-			handler = new CaptureActivityHandler(this, cameraManager,
-					isContinuousModeActive);
+			handler = new CaptureActivityHandler(this, cameraManager);
 
 		} catch (IOException ioe) {
 			showErrorMessage("Error",

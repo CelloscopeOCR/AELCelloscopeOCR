@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2008 ZXing authors
- * Copyright 2011 Robert Theis
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
 import android.os.Handler;
@@ -28,9 +12,6 @@ import com.ael.celloscope.aelcelloscopeocr.camera.CameraManager;
 /**
  * This class handles all the messaging which comprises the state machine for
  * capture.
- *
- * The code for this class was adapted from the ZXing project:
- * http://code.google.com/p/zxing/
  */
 final class CaptureActivityHandler extends Handler {
 
@@ -46,37 +27,19 @@ final class CaptureActivityHandler extends Handler {
 		PREVIEW, PREVIEW_PAUSED, CONTINUOUS, CONTINUOUS_PAUSED, SUCCESS, DONE
 	}
 
-	CaptureActivityHandler(CaptureActivity activity,
-			CameraManager cameraManager, boolean isContinuousModeActive) {
+	CaptureActivityHandler(CaptureActivity activity, CameraManager cameraManager) {
 		this.activity = activity;
 		this.cameraManager = cameraManager;
 
-		// Start ourselves capturing previews (and decoding if using continuous
-		// recognition mode).
 		cameraManager.startPreview();
 
 		decodeThread = new DecodeThread(activity);
 		decodeThread.start();
 
-		if (isContinuousModeActive) {
-			state = State.CONTINUOUS;
-
-			// Show the shutter and torch buttons
-			activity.setButtonVisibility(true);
-
-			// Display a "be patient" message while first recognition request is
-			// running
-			activity.setStatusViewForContinuous();
-
-			restartOcrPreviewAndDecode();
-		} else {
-			state = State.SUCCESS;
-
-			// Show the shutter and torch buttons
-			activity.setButtonVisibility(true);
-
-			restartOcrPreview();
-		}
+		state = State.SUCCESS;
+		// Show the shutter and torch buttons
+		activity.setButtonVisibility(true);
+		restartOcrPreview();
 	}
 
 	@Override
@@ -85,28 +48,6 @@ final class CaptureActivityHandler extends Handler {
 		switch (message.what) {
 		case R.id.restart_preview:
 			restartOcrPreview();
-			break;
-		case R.id.ocr_continuous_decode_failed:
-			DecodeHandler.resetDecodeState();
-			try {
-				activity.handleOcrContinuousDecode((OcrResultFailure) message.obj);
-			} catch (NullPointerException e) {
-				Log.w(TAG, "got bad OcrResultFailure", e);
-			}
-			if (state == State.CONTINUOUS) {
-				restartOcrPreviewAndDecode();
-			}
-			break;
-		case R.id.ocr_continuous_decode_succeeded:
-			DecodeHandler.resetDecodeState();
-			try {
-				activity.handleOcrContinuousDecode((OcrResult) message.obj);
-			} catch (NullPointerException e) {
-				// Continue
-			}
-			if (state == State.CONTINUOUS) {
-				restartOcrPreviewAndDecode();
-			}
 			break;
 		case R.id.ocr_decode_succeeded:
 			state = State.SUCCESS;
@@ -129,26 +70,17 @@ final class CaptureActivityHandler extends Handler {
 	}
 
 	void stop() {
-		// TODO See if this should be done by sending a quit message to
-		// decodeHandler as is done
-		// below in quitSynchronously().
 
 		Log.d(TAG, "Setting state to CONTINUOUS_PAUSED.");
 		state = State.CONTINUOUS_PAUSED;
 		removeMessages(R.id.ocr_continuous_decode);
 		removeMessages(R.id.ocr_decode);
 		removeMessages(R.id.ocr_continuous_decode_failed);
-		removeMessages(R.id.ocr_continuous_decode_succeeded); // TODO are these
-																// removeMessages()
-																// calls doing
-																// anything?
-
-		// Freeze the view displayed to the user.
-		// CameraManager.get().stopPreview();
+		removeMessages(R.id.ocr_continuous_decode_succeeded);
 	}
 
 	void resetState() {
-		// Log.d(TAG, "in restart()");
+
 		if (state == State.CONTINUOUS_PAUSED) {
 			Log.d(TAG, "Setting state to CONTINUOUS");
 			state = State.CONTINUOUS;
