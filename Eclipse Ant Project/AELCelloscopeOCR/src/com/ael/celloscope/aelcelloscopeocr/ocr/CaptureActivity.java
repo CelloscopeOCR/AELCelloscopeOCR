@@ -613,13 +613,7 @@ public final class CaptureActivity extends Activity implements
 			startActivity(intent);
 			break;
 		}
-		case ABOUT_ID: {
-			intent = new Intent(this, HelpActivity.class);
-			intent.putExtra(HelpActivity.REQUESTED_PAGE_KEY,
-					HelpActivity.ABOUT_PAGE);
-			startActivity(intent);
-			break;
-		}
+	
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -1183,15 +1177,7 @@ public final class CaptureActivity extends Activity implements
 				prefs.edit()
 						.putInt(PreferencesActivity.KEY_HELP_VERSION_SHOWN,
 								currentVersion).commit();
-				Intent intent = new Intent(this, HelpActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-
-				// Show the default page on a clean install, and the what's new
-				// page on an upgrade.
-				String page = lastVersion == 0 ? HelpActivity.DEFAULT_PAGE
-						: HelpActivity.WHATS_NEW_PAGE;
-				intent.putExtra(HelpActivity.REQUESTED_PAGE_KEY, page);
-				startActivity(intent);
+				
 				return true;
 			}
 		} catch (PackageManager.NameNotFoundException e) {

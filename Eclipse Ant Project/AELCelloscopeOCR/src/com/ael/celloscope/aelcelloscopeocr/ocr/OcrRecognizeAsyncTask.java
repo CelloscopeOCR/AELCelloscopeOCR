@@ -41,16 +41,16 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	@Override
 	protected Boolean doInBackground(Void... arg0) {
 
-		// Bitmap bitmap =
-		// activity.getCameraManager().buildLuminanceSource(data, width,
-		// height).renderCroppedGreyscaleBitmap();
+		 Bitmap bitmap =
+		 activity.getCameraManager().buildLuminanceSource(data, width,
+		 height).renderCroppedGreyscaleBitmap();
 
-		File path = Environment
-				.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-		File file = new File(path, "/test.jpg");
-		Bitmap imutableBitmap = BitmapFactory
-				.decodeFile(file.getAbsolutePath());
-		Bitmap bitmap = imutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
+		// File path = Environment
+		// .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+		// File file = new File(path, "/test.jpg");
+		// Bitmap imutableBitmap = BitmapFactory
+		// .decodeFile(file.getAbsolutePath());
+		// Bitmap bitmap = imutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
 
 		try {
 			baseApi.setImage(ReadFile.readBitmap(bitmap));
