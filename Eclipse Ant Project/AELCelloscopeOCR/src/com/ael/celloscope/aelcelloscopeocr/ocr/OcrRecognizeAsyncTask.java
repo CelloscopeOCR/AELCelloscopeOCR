@@ -27,9 +27,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	private int width;
 	private int height;
 	private OcrResult ocrResult;
-
-	// private long timeRequired;
-
+	
 	OcrRecognizeAsyncTask(CaptureActivity activity, TessBaseAPI baseApi,
 			byte[] data, int width, int height) {
 		this.activity = activity;
@@ -42,7 +40,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 	@Override
 	protected Boolean doInBackground(Void... arg0) {
-		long start = System.currentTimeMillis();
+		
 		// Bitmap bitmap =
 		// activity.getCameraManager().buildLuminanceSource(data, width,
 		// height).renderCroppedGreyscaleBitmap();
@@ -59,20 +57,12 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 		try {
 			baseApi.setImage(ReadFile.readBitmap(bitmap));
 			textResult = baseApi.getUTF8Text();
-			// timeRequired = System.currentTimeMillis() - start;
 
 			if (textResult == null || textResult.equals("")) {
 				return false;
 			}
 			ocrResult = new OcrResult();
-			// ocrResult.setWordConfidences(baseApi.wordConfidences());
-			// ocrResult.setMeanConfidence(baseApi.meanConfidence());
-			// ocrResult
-			// .setRegionBoundingBoxes(baseApi.getRegions().getBoxRects());
-			// ocrResult.setTextlineBoundingBoxes(baseApi.getTextlines()
-			// .getBoxRects());
 			ocrResult.setWordBoundingBoxes(baseApi.getWords().getBoxRects());
-			// ocrResult.setStripBoundingBoxes(baseApi.getStrips().getBoxRects());
 		} catch (RuntimeException e) {
 			Log.e("OcrRecognizeAsyncTask",
 					"Caught RuntimeException in request to Tesseract. Setting state to CONTINUOUS_STOPPED.");
@@ -85,10 +75,8 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 			}
 			return false;
 		}
-		// timeRequired = System.currentTimeMillis() - start;
 		ocrResult.setBitmap(bitmap);
 		ocrResult.setText(textResult);
-		// ocrResult.setRecognitionTimeRequired(timeRequired);
 		return true;
 	}
 
