@@ -79,15 +79,6 @@ final class CaptureActivityHandler extends Handler {
 		removeMessages(R.id.ocr_continuous_decode_succeeded);
 	}
 
-	void resetState() {
-
-		if (state == State.CONTINUOUS_PAUSED) {
-			Log.d(TAG, "Setting state to CONTINUOUS");
-			state = State.CONTINUOUS;
-			restartOcrPreviewAndDecode();
-		}
-	}
-
 	void quitSynchronously() {
 		state = State.DONE;
 		if (cameraManager != null) {

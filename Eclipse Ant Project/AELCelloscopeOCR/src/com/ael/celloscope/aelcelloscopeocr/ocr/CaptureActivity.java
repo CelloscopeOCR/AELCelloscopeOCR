@@ -200,8 +200,8 @@ public final class CaptureActivity extends Activity implements
 											// "English"
 	private int pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_AUTO_OSD;
 	private int ocrEngineMode = TessBaseAPI.OEM_TESSERACT_ONLY;
-	private String characterBlacklist;
-	private String characterWhitelist;
+	private final String characterBlacklist = "";
+	private final String characterWhitelist = "!?@#$%&*()<>_-+=/.,:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	private ShutterButton shutterButton;
 	private boolean isTranslationActive; // Whether we want to show translations
 	private boolean isContinuousModeActive; // Whether we are doing OCR in
@@ -461,15 +461,10 @@ public final class CaptureActivity extends Activity implements
 		Log.d(TAG, "resumeOCR()");
 
 		// This method is called when Tesseract has already been successfully
-		// initialized, so set
-		// isEngineReady = true here.
+		// initialized
 		isEngineReady = true;
-
 		isPaused = false;
 
-		if (handler != null) {
-			handler.resetState();
-		}
 		if (baseApi != null) {
 			baseApi.setPageSegMode(pageSegmentationMode);
 			baseApi.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST,
@@ -483,35 +478,6 @@ public final class CaptureActivity extends Activity implements
 			// exists. Therefore
 			// surfaceCreated() won't be called, so init the camera here.
 			initCamera(surfaceHolder);
-		}
-	}
-
-	/** Called when the shutter button is pressed in continuous mode. */
-	void onShutterButtonPressContinuous() {
-		isPaused = true;
-		handler.stop();
-		beepManager.playBeepSoundAndVibrate();
-		if (lastResult != null) {
-			handleOcrDecode(lastResult);
-		} else {
-			Toast toast = Toast.makeText(this, "OCR failed. Please try again.",
-					Toast.LENGTH_SHORT);
-			toast.setGravity(Gravity.TOP, 0, 0);
-			toast.show();
-			resumeContinuousDecoding();
-		}
-	}
-
-	/** Called to resume recognition after translation in continuous mode. */
-	@SuppressWarnings("unused")
-	void resumeContinuousDecoding() {
-		isPaused = false;
-		resetStatusView();
-		setStatusViewForContinuous();
-		DecodeHandler.resetDecodeState();
-		handler.resetState();
-		if (shutterButton != null && DISPLAY_SHUTTER_BUTTON) {
-			shutterButton.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -531,7 +497,6 @@ public final class CaptureActivity extends Activity implements
 		hasSurface = true;
 	}
 
-	/** Initializes the camera and starts the handler to begin previewing. */
 	private void initCamera(SurfaceHolder surfaceHolder) {
 		Log.d(TAG, "initCamera()");
 		if (surfaceHolder == null) {
@@ -539,19 +504,14 @@ public final class CaptureActivity extends Activity implements
 		}
 		try {
 
-			// Open and initialize the camera
 			cameraManager.openDriver(surfaceHolder);
-
-			// Creating the handler starts the preview, which can also throw a
-			// RuntimeException.
 			handler = new CaptureActivityHandler(this, cameraManager);
 
 		} catch (IOException ioe) {
 			showErrorMessage("Error",
 					"Could not initialize camera. Please try restarting device.");
 		} catch (RuntimeException e) {
-			// Barcode Scanner has seen crashes in the wild of this variety:
-			// java.?lang.?RuntimeException: Fail to connect to camera service
+
 			showErrorMessage("Error",
 					"Could not initialize camera. Please try restarting device.");
 		}
@@ -598,7 +558,7 @@ public final class CaptureActivity extends Activity implements
 			if (isPaused) {
 				Log.d(TAG,
 						"only resuming continuous recognition, not quitting...");
-				resumeContinuousDecoding();
+
 				return true;
 			}
 
@@ -617,7 +577,7 @@ public final class CaptureActivity extends Activity implements
 			}
 		} else if (keyCode == KeyEvent.KEYCODE_CAMERA) {
 			if (isContinuousModeActive) {
-				onShutterButtonPressContinuous();
+
 			} else {
 				handler.hardwareShutterButtonClick();
 			}
@@ -1169,12 +1129,8 @@ public final class CaptureActivity extends Activity implements
 
 	@Override
 	public void onShutterButtonClick(ShutterButton b) {
-		if (isContinuousModeActive) {
-			onShutterButtonPressContinuous();
-		} else {
-			if (handler != null) {
-				handler.shutterButtonClick();
-			}
+		if (handler != null) {
+			handler.shutterButtonClick();
 		}
 	}
 
@@ -1332,13 +1288,6 @@ public final class CaptureActivity extends Activity implements
 		} else if (ocrEngineModeName.equals(ocrEngineModes[2])) {
 			ocrEngineMode = TessBaseAPI.OEM_TESSERACT_CUBE_COMBINED;
 		}
-
-		// Retrieve from preferences, and set in this Activity, the character
-		// blacklist and whitelist
-		characterBlacklist = OcrCharacterHelper.getBlacklist(prefs,
-				sourceLanguageCodeOcr);
-		characterWhitelist = OcrCharacterHelper.getWhitelist(prefs,
-				sourceLanguageCodeOcr);
 
 		prefs.registerOnSharedPreferenceChangeListener(listener);
 
