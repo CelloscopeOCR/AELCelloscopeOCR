@@ -1293,21 +1293,7 @@ public final class CaptureActivity extends Activity implements
 				.putBoolean(PreferencesActivity.KEY_PLAY_BEEP,
 						CaptureActivity.DEFAULT_TOGGLE_BEEP).commit();
 
-		// Character blacklist
-		prefs.edit()
-				.putString(
-						PreferencesActivity.KEY_CHARACTER_BLACKLIST,
-						OcrCharacterHelper
-								.getDefaultBlacklist(CaptureActivity.DEFAULT_SOURCE_LANGUAGE_CODE))
-				.commit();
-
-		// Character whitelist
-		prefs.edit()
-				.putString(
-						PreferencesActivity.KEY_CHARACTER_WHITELIST,
-						OcrCharacterHelper
-								.getDefaultWhitelist(CaptureActivity.DEFAULT_SOURCE_LANGUAGE_CODE))
-				.commit();
+	
 
 		// Page segmentation mode
 		prefs.edit()
