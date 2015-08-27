@@ -25,9 +25,9 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	private TessBaseAPI baseApi;
 	private byte[] data;
 	private int width;
-	private int height;
-	private OcrResult ocrResult;
-	
+	private int height;	
+	String textResult;
+
 	OcrRecognizeAsyncTask(CaptureActivity activity, TessBaseAPI baseApi,
 			byte[] data, int width, int height) {
 		this.activity = activity;
@@ -40,7 +40,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 	@Override
 	protected Boolean doInBackground(Void... arg0) {
-		
+
 		// Bitmap bitmap =
 		// activity.getCameraManager().buildLuminanceSource(data, width,
 		// height).renderCroppedGreyscaleBitmap();
@@ -52,17 +52,14 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 				.decodeFile(file.getAbsolutePath());
 		Bitmap bitmap = imutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
 
-		String textResult;
-
 		try {
 			baseApi.setImage(ReadFile.readBitmap(bitmap));
 			textResult = baseApi.getUTF8Text();
 
-			if (textResult == null || textResult.equals("")) {
-				return false;
+			if (textResult != null && !textResult.equals("")) {
+				return true;
 			}
-			ocrResult = new OcrResult();
-			ocrResult.setWordBoundingBoxes(baseApi.getWords().getBoxRects());
+
 		} catch (RuntimeException e) {
 			Log.e("OcrRecognizeAsyncTask",
 					"Caught RuntimeException in request to Tesseract. Setting state to CONTINUOUS_STOPPED.");
@@ -73,11 +70,8 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 			} catch (NullPointerException e1) {
 				// Continue
 			}
-			return false;
 		}
-		ocrResult.setBitmap(bitmap);
-		ocrResult.setText(textResult);
-		return true;
+		return false;
 	}
 
 	@Override
@@ -86,14 +80,14 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 		Handler handler = activity.getHandler();
 		if (handler != null) {
-			// Send results for single-shot mode recognition.
+
 			if (result) {
 				Message message = Message.obtain(handler,
-						R.id.ocr_decode_succeeded, ocrResult);
+						R.id.ocr_decode_succeeded, textResult);
 				message.sendToTarget();
 			} else {
 				Message message = Message.obtain(handler,
-						R.id.ocr_decode_failed, ocrResult);
+						R.id.ocr_decode_failed, textResult);
 				message.sendToTarget();
 			}
 			activity.getProgressDialog().dismiss();

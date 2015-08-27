@@ -113,7 +113,7 @@ final class CaptureActivityHandler extends Handler {
 			activity.setShutterButtonClickable(true);
 			// activity.handleOcrDecode((OcrResult) message.obj);
 			Toast toastSuccess = Toast.makeText(activity.getBaseContext(),
-					((OcrResult) message.obj).getText(), Toast.LENGTH_LONG);
+					message.obj.toString(), Toast.LENGTH_LONG);
 			toastSuccess.setGravity(Gravity.TOP, 0, 0);
 			toastSuccess.show();
 			break;
