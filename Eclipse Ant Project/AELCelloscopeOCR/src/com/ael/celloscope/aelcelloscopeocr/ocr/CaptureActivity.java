@@ -189,7 +189,7 @@ public final class CaptureActivity extends Activity implements
 	private OcrResult lastResult;
 	private Bitmap lastBitmap;
 	private boolean hasSurface;
-	private BeepManager beepManager;
+	
 	private TessBaseAPI baseApi; // Java interface for the Tesseract OCR engine
 	private String sourceLanguageCodeOcr; // ISO 639-3 language code
 	private String sourceLanguageReadable; // Language name, for example,
@@ -254,8 +254,7 @@ public final class CaptureActivity extends Activity implements
 		handler = null;
 		lastResult = null;
 		hasSurface = false;
-		beepManager = new BeepManager(this);
-
+		
 		// Camera shutter button
 		if (DISPLAY_SHUTTER_BUTTON) {
 			shutterButton = (ShutterButton) findViewById(R.id.shutter_button);
@@ -1237,7 +1236,7 @@ public final class CaptureActivity extends Activity implements
 
 		prefs.registerOnSharedPreferenceChangeListener(listener);
 
-		beepManager.updatePrefs();
+	
 	}
 
 	/**
