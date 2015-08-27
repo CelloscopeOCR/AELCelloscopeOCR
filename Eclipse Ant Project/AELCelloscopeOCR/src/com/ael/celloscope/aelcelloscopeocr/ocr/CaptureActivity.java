@@ -186,7 +186,7 @@ public final class CaptureActivity extends Activity implements
 	private View cameraButtonView;
 	private View resultView;
 	private View progressView;
-	private OcrResult lastResult;
+	private String lastResult;
 	private Bitmap lastBitmap;
 	private boolean hasSurface;
 	
@@ -769,11 +769,11 @@ public final class CaptureActivity extends Activity implements
 	 *            Object representing successful OCR results
 	 * @return True if a non-null result was received for OCR
 	 */
-	boolean handleOcrDecode(OcrResult ocrResult) {
+	boolean handleOcrDecode(String ocrResult) {
 		lastResult = ocrResult;
 
 		// Test whether the result is null
-		if (ocrResult.getText() == null || ocrResult.getText().equals("")) {
+		if (ocrResult == null || ocrResult.equals("")) {
 			Toast toast = Toast.makeText(this, "OCR failed. Please try again.",
 					Toast.LENGTH_SHORT);
 			toast.setGravity(Gravity.TOP, 0, 0);
@@ -790,7 +790,7 @@ public final class CaptureActivity extends Activity implements
 		resultView.setVisibility(View.VISIBLE);
 
 		ImageView bitmapImageView = (ImageView) findViewById(R.id.image_view);
-		lastBitmap = ocrResult.getBitmap();
+		
 		if (lastBitmap == null) {
 			bitmapImageView.setImageBitmap(BitmapFactory.decodeResource(
 					getResources(), R.drawable.ic_launcher));
@@ -802,9 +802,9 @@ public final class CaptureActivity extends Activity implements
 		TextView sourceLanguageTextView = (TextView) findViewById(R.id.source_language_text_view);
 		sourceLanguageTextView.setText(sourceLanguageReadable);
 		TextView ocrResultTextView = (TextView) findViewById(R.id.ocr_result_text_view);
-		ocrResultTextView.setText(ocrResult.getText());
+		ocrResultTextView.setText(ocrResult);
 		// Crudely scale betweeen 22 and 32 -- bigger font for shorter text
-		int scaledSize = Math.max(22, 32 - ocrResult.getText().length() / 4);
+		int scaledSize = Math.max(22, 32 - ocrResult.length() / 4);
 		ocrResultTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, scaledSize);
 
 		TextView translationLanguageLabelTextView = (TextView) findViewById(R.id.translation_language_label_text_view);
@@ -826,7 +826,7 @@ public final class CaptureActivity extends Activity implements
 
 			// Get the translation asynchronously
 			new TranslateAsyncTask(this, sourceLanguageCodeTranslation,
-					targetLanguageCodeTranslation, ocrResult.getText())
+					targetLanguageCodeTranslation, ocrResult)
 					.execute();
 		} else {
 			translationLanguageLabelTextView.setVisibility(View.GONE);
@@ -838,53 +838,8 @@ public final class CaptureActivity extends Activity implements
 		return true;
 	}
 
-	/**
-	 * Displays information relating to the results of a successful real-time
-	 * OCR request.
-	 * 
-	 * @param ocrResult
-	 *            Object representing successful OCR results
-	 */
-	void handleOcrContinuousDecode(OcrResult ocrResult) {
 
-		lastResult = ocrResult;
 
-		// Send an OcrResultText object to the ViewfinderView for text rendering
-		viewfinderView.addResultText(new OcrResultText(ocrResult.getText(),
-				ocrResult.getWordConfidences(), ocrResult.getMeanConfidence(),
-				ocrResult.getBitmapDimensions(), ocrResult
-						.getRegionBoundingBoxes(), ocrResult
-						.getTextlineBoundingBoxes(), ocrResult
-						.getStripBoundingBoxes(), ocrResult
-						.getWordBoundingBoxes(), ocrResult
-						.getCharacterBoundingBoxes()));
-
-		Integer meanConfidence = ocrResult.getMeanConfidence();
-
-		if (CONTINUOUS_DISPLAY_RECOGNIZED_TEXT) {
-			// Display the recognized text on the screen
-			statusViewTop.setText(ocrResult.getText());
-			int scaledSize = Math
-					.max(22, 32 - ocrResult.getText().length() / 4);
-			statusViewTop.setTextSize(TypedValue.COMPLEX_UNIT_SP, scaledSize);
-			statusViewTop.setTextColor(Color.BLACK);
-			statusViewTop
-					.setBackgroundResource(R.color.status_top_text_background);
-
-			statusViewTop.getBackground()
-					.setAlpha(meanConfidence * (255 / 100));
-		}
-
-		if (CONTINUOUS_DISPLAY_METADATA) {
-			// Display recognition-related metadata at the bottom of the screen
-			long recognitionTimeRequired = ocrResult
-					.getRecognitionTimeRequired();
-			statusViewBottom.setTextSize(14);
-			statusViewBottom.setText("OCR: " + sourceLanguageReadable
-					+ " - Mean confidence: " + meanConfidence.toString()
-					+ " - Time required: " + recognitionTimeRequired + " ms");
-		}
-	}
 
 	/**
 	 * Version of handleOcrContinuousDecode for failed OCR requests. Displays a
