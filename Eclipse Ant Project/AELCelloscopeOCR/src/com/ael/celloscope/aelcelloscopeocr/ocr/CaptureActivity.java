@@ -720,49 +720,21 @@ public final class CaptureActivity extends Activity implements
 			String languageName) {
 		isEngineReady = false;
 
-		// Set up the dialog box for the thermometer-style download progress
-		// indicator
+		
 		if (dialog != null) {
 			dialog.dismiss();
 		}
 		dialog = new ProgressDialog(this);
 
-		// If we have a language that only runs using Cube, then set the
-		// ocrEngineMode to Cube
-		if (ocrEngineMode != TessBaseAPI.OEM_CUBE_ONLY) {
-			for (String s : CUBE_REQUIRED_LANGUAGES) {
-				if (s.equals(languageCode)) {
-					ocrEngineMode = TessBaseAPI.OEM_CUBE_ONLY;
-					SharedPreferences prefs = PreferenceManager
-							.getDefaultSharedPreferences(this);
-					prefs.edit()
-							.putString(PreferencesActivity.KEY_OCR_ENGINE_MODE,
-									getOcrEngineModeName()).commit();
-				}
-			}
-		}
+		
+		ocrEngineMode = TessBaseAPI.OEM_TESSERACT_ONLY;
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		prefs.edit()
+				.putString(PreferencesActivity.KEY_OCR_ENGINE_MODE,
+						getOcrEngineModeName()).commit();
 
-		// If our language doesn't support Cube, then set the ocrEngineMode to
-		// Tesseract
-		if (ocrEngineMode != TessBaseAPI.OEM_TESSERACT_ONLY) {
-			boolean cubeOk = false;
-			for (String s : CUBE_SUPPORTED_LANGUAGES) {
-				if (s.equals(languageCode)) {
-					cubeOk = true;
-				}
-			}
-			if (!cubeOk) {
-				ocrEngineMode = TessBaseAPI.OEM_TESSERACT_ONLY;
-				SharedPreferences prefs = PreferenceManager
-						.getDefaultSharedPreferences(this);
-				prefs.edit()
-						.putString(PreferencesActivity.KEY_OCR_ENGINE_MODE,
-								getOcrEngineModeName()).commit();
-			}
-		}
-
-		// Display the name of the OCR engine we're initializing in the
-		// indeterminate progress dialog box
+		
 		indeterminateDialog = new ProgressDialog(this);
 		indeterminateDialog.setTitle("Please wait");
 		String ocrEngineModeName = getOcrEngineModeName();
@@ -781,19 +753,7 @@ public final class CaptureActivity extends Activity implements
 			handler.quitSynchronously();
 		}
 
-		// Disable continuous mode if we're using Cube. This will prevent bad
-		// states for devices
-		// with low memory that crash when running OCR with Cube, and prevent
-		// unwanted delays.
-		if (ocrEngineMode == TessBaseAPI.OEM_CUBE_ONLY
-				|| ocrEngineMode == TessBaseAPI.OEM_TESSERACT_CUBE_COMBINED) {
-			Log.d(TAG, "Disabling continuous preview");
-			isContinuousModeActive = false;
-			SharedPreferences prefs = PreferenceManager
-					.getDefaultSharedPreferences(this);
-			prefs.edit().putBoolean(PreferencesActivity.KEY_CONTINUOUS_PREVIEW,
-					false);
-		}
+		
 
 		// Start AsyncTask to install language data and init OCR
 		baseApi = new TessBaseAPI();
