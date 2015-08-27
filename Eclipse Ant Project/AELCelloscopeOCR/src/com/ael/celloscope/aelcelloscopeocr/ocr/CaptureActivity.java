@@ -232,11 +232,7 @@ public final class CaptureActivity extends Activity implements
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 
-		checkFirstLaunch();
-
-		if (isFirstLaunch) {
-			setDefaultPreferences();
-		}
+		checkFirstLaunch();	
 
 		Window window = getWindow();
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -1128,75 +1124,7 @@ public final class CaptureActivity extends Activity implements
 
 	}
 
-	/**
-	 * Sets default values for preferences. To be called the first time this app
-	 * is run.
-	 */
-	private void setDefaultPreferences() {
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		// Continuous preview
-		prefs.edit()
-				.putBoolean(PreferencesActivity.KEY_CONTINUOUS_PREVIEW,
-						CaptureActivity.DEFAULT_TOGGLE_CONTINUOUS).commit();
-
-		// Recognition language
-		prefs.edit()
-				.putString(PreferencesActivity.KEY_SOURCE_LANGUAGE_PREFERENCE,
-						CaptureActivity.DEFAULT_SOURCE_LANGUAGE_CODE).commit();
-
-		// Translation
-		prefs.edit()
-				.putBoolean(PreferencesActivity.KEY_TOGGLE_TRANSLATION,
-						CaptureActivity.DEFAULT_TOGGLE_TRANSLATION).commit();
-
-		// Translation target language
-		prefs.edit()
-				.putString(PreferencesActivity.KEY_TARGET_LANGUAGE_PREFERENCE,
-						CaptureActivity.DEFAULT_TARGET_LANGUAGE_CODE).commit();
-
-		// Translator
-		prefs.edit()
-				.putString(PreferencesActivity.KEY_TRANSLATOR,
-						CaptureActivity.DEFAULT_TRANSLATOR).commit();
-
-		// OCR Engine
-		prefs.edit()
-				.putString(PreferencesActivity.KEY_OCR_ENGINE_MODE,
-						CaptureActivity.DEFAULT_OCR_ENGINE_MODE).commit();
-
-		// Autofocus
-		prefs.edit()
-				.putBoolean(PreferencesActivity.KEY_AUTO_FOCUS,
-						CaptureActivity.DEFAULT_TOGGLE_AUTO_FOCUS).commit();
-
-		// Disable problematic focus modes
-		prefs.edit()
-				.putBoolean(PreferencesActivity.KEY_DISABLE_CONTINUOUS_FOCUS,
-						CaptureActivity.DEFAULT_DISABLE_CONTINUOUS_FOCUS)
-				.commit();
-
-		// Beep
-		prefs.edit()
-				.putBoolean(PreferencesActivity.KEY_PLAY_BEEP,
-						CaptureActivity.DEFAULT_TOGGLE_BEEP).commit();
-
-		// Page segmentation mode
-		prefs.edit()
-				.putString(PreferencesActivity.KEY_PAGE_SEGMENTATION_MODE,
-						CaptureActivity.DEFAULT_PAGE_SEGMENTATION_MODE)
-				.commit();
-
-		// Reversed camera image
-		prefs.edit()
-				.putBoolean(PreferencesActivity.KEY_REVERSE_IMAGE,
-						CaptureActivity.DEFAULT_TOGGLE_REVERSED_IMAGE).commit();
-
-		// Light
-		prefs.edit()
-				.putBoolean(PreferencesActivity.KEY_TOGGLE_LIGHT,
-						CaptureActivity.DEFAULT_TOGGLE_LIGHT).commit();
-	}
 
 	void displayProgressDialog() {
 		// Set up the indeterminate progress dialog box
