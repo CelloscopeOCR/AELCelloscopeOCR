@@ -1,18 +1,3 @@
-/*
- * Copyright 2011 Robert Theis
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
 import java.io.File;
@@ -36,17 +21,14 @@ import com.googlecode.tesseract.android.TessBaseAPI;
  */
 final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
-	// private static final boolean PERFORM_FISHER_THRESHOLDING = false;
-	// private static final boolean PERFORM_OTSU_THRESHOLDING = false;
-	// private static final boolean PERFORM_SOBEL_THRESHOLDING = false;
-
 	private CaptureActivity activity;
 	private TessBaseAPI baseApi;
 	private byte[] data;
 	private int width;
 	private int height;
 	private OcrResult ocrResult;
-	private long timeRequired;
+
+	// private long timeRequired;
 
 	OcrRecognizeAsyncTask(CaptureActivity activity, TessBaseAPI baseApi,
 			byte[] data, int width, int height) {
@@ -77,22 +59,20 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 		try {
 			baseApi.setImage(ReadFile.readBitmap(bitmap));
 			textResult = baseApi.getUTF8Text();
-			timeRequired = System.currentTimeMillis() - start;
+			// timeRequired = System.currentTimeMillis() - start;
 
-			// Check for failure to recognize text
 			if (textResult == null || textResult.equals("")) {
 				return false;
 			}
 			ocrResult = new OcrResult();
-			ocrResult.setWordConfidences(baseApi.wordConfidences());
-			ocrResult.setMeanConfidence(baseApi.meanConfidence());
-			ocrResult
-					.setRegionBoundingBoxes(baseApi.getRegions().getBoxRects());
-			ocrResult.setTextlineBoundingBoxes(baseApi.getTextlines()
-					.getBoxRects());
+			// ocrResult.setWordConfidences(baseApi.wordConfidences());
+			// ocrResult.setMeanConfidence(baseApi.meanConfidence());
+			// ocrResult
+			// .setRegionBoundingBoxes(baseApi.getRegions().getBoxRects());
+			// ocrResult.setTextlineBoundingBoxes(baseApi.getTextlines()
+			// .getBoxRects());
 			ocrResult.setWordBoundingBoxes(baseApi.getWords().getBoxRects());
-			ocrResult.setStripBoundingBoxes(baseApi.getStrips().getBoxRects());
-			// ocrResult.setCharacterBoundingBoxes(baseApi.getCharacters().getBoxRects());
+			// ocrResult.setStripBoundingBoxes(baseApi.getStrips().getBoxRects());
 		} catch (RuntimeException e) {
 			Log.e("OcrRecognizeAsyncTask",
 					"Caught RuntimeException in request to Tesseract. Setting state to CONTINUOUS_STOPPED.");
@@ -105,10 +85,10 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 			}
 			return false;
 		}
-		timeRequired = System.currentTimeMillis() - start;
+		// timeRequired = System.currentTimeMillis() - start;
 		ocrResult.setBitmap(bitmap);
 		ocrResult.setText(textResult);
-		ocrResult.setRecognitionTimeRequired(timeRequired);
+		// ocrResult.setRecognitionTimeRequired(timeRequired);
 		return true;
 	}
 
