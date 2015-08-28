@@ -14,12 +14,9 @@ final class DecodeHandler extends Handler {
 
 	private final CaptureActivity activity;
 	private boolean running = true;
-	private final TessBaseAPI baseApi;
 
 	DecodeHandler(CaptureActivity activity) {
 		this.activity = activity;
-		baseApi = activity.getBaseApi();
-
 	}
 
 	@Override
@@ -41,7 +38,7 @@ final class DecodeHandler extends Handler {
 	private void ocrDecode(byte[] data, int width, int height) {
 
 		// activity.displayProgressDialog();
-		new OcrRecognizeAsyncTask(activity, baseApi, data, width, height)
+		new OcrRecognizeAsyncTask(activity, data, width, height)
 				.execute();
 	}
 }

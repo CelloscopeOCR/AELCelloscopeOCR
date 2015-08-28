@@ -42,7 +42,6 @@ public final class CaptureActivity extends Activity implements
 	private ShutterButton shutterButton;
 
 	private TessBaseAPI baseApi;
-
 	private boolean isEngineReady;
 
 	Handler getcaptureActivityHandler() {
@@ -222,30 +221,8 @@ public final class CaptureActivity extends Activity implements
 	protected void onResume() {
 		super.onResume();
 		resetStatusView();
-
-		// Set up the camera preview surface.
-		surfaceView = (SurfaceView) findViewById(R.id.preview_view);
-		surfaceHolder = surfaceView.getHolder();
-		if (!hasSurface) {
-			surfaceHolder.addCallback(this);
-			surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-		}
-
-		// Comment out the following block to test non-OCR functions without an
-		// SD card
-
-		// Do OCR engine initialization, if necessary
-		boolean doNewInit = (baseApi == null);
-		if (doNewInit) {
-
-			File storageDirectory = getStorageDirectory();
-			if (storageDirectory != null) {
-				initOcrEngine(storageDirectory);
-			}
-		} else {
-			// We already have the engine initialized, so just start the camera.
-			resumeOCR();
-		}
+		this.setSerfaceView();
+		this.initializeOCREngine();
 	}
 
 	/**
@@ -404,29 +381,44 @@ public final class CaptureActivity extends Activity implements
 		return null;
 	}
 
-	/**
-	 * Requests initialization of the OCR engine with the given parameters.
-	 * 
-	 * @param storageRoot
-	 *            Path to location of the tessdata directory to use
-	 */
-	private void initOcrEngine(File storageRoot) {
-		isEngineReady = false;
-
-		if (captureActivityHandler != null) {
-			captureActivityHandler.quitSynchronously();
-		}
-
-		// Start AsyncTask to install language data and init OCR
-		baseApi = new TessBaseAPI();
-		new OcrInitAsyncTask(this, baseApi).execute(storageRoot.toString());
-	}
-
 	private void resetStatusView() {
 
 		viewfinderView.setVisibility(View.VISIBLE);
 		shutterButton.setVisibility(View.VISIBLE);
 		viewfinderView.removeResultText();
+	}
+
+	private void setSerfaceView() {
+		surfaceView = (SurfaceView) findViewById(R.id.preview_view);
+		surfaceHolder = surfaceView.getHolder();
+		if (!hasSurface) {
+			surfaceHolder.addCallback(this);
+			surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		}
+	}
+
+	private void initializeOCREngine() {
+		// Do OCR engine initialization, if necessary
+		boolean doNewInit = (baseApi == null);
+		if (doNewInit) {
+
+			File storageDirectory = getStorageDirectory();
+			if (storageDirectory != null) {
+				isEngineReady = false;
+
+				if (captureActivityHandler != null) {
+					captureActivityHandler.quitSynchronously();
+				}
+
+				// Start AsyncTask to install language data and init OCR
+				baseApi = new TessBaseAPI();
+				new OcrInitAsyncTask(this, baseApi).execute(storageDirectory
+						.toString());
+			}
+		} else {
+			// We already have the engine initialized, so just start the camera.
+			resumeOCR();
+		}
 	}
 
 	void setButtonVisibility(boolean visible) {
