@@ -39,15 +39,12 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import com.ael.celloscope.aelcelloscopeocr.R;
 import com.ael.celloscope.aelcelloscopeocr.camera.CameraManager;
 import com.ael.celloscope.aelcelloscopeocr.camera.ShutterButton;
-import com.ael.celloscope.aelcelloscopeocr.language.LanguageCodeHelper;
-import com.ael.celloscope.aelcelloscopeocr.language.TranslateAsyncTask;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
 /**
@@ -528,20 +525,6 @@ public final class CaptureActivity extends Activity implements
 		menu.add(0, ABOUT_ID, 0, "About").setIcon(
 				android.R.drawable.ic_menu_info_details);
 		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-		case SETTINGS_ID: {
-			intent = new Intent().setClass(this, PreferencesActivity.class);
-			startActivity(intent);
-			break;
-		}
-
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
