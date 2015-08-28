@@ -506,33 +506,6 @@ public final class CaptureActivity extends Activity implements
 				.execute(storageRoot.toString());
 	}
 
-	/**
-	 * Displays information relating to the result of OCR, and requests a
-	 * translation if necessary.
-	 * 
-	 * @param ocrResult
-	 *            Object representing successful OCR results
-	 * @return True if a non-null result was received for OCR
-	 */
-	boolean handleOcrDecode(String ocrResult) {
-		lastResult = ocrResult;
-
-		if (ocrResult == null || ocrResult.equals("")) {
-			Toast toast = Toast.makeText(this, "OCR failed. Please try again.",
-					Toast.LENGTH_SHORT);
-			toast.setGravity(Gravity.TOP, 0, 0);
-			toast.show();
-			return false;
-		}
-
-		// Turn off capture-related UI elements
-		shutterButton.setVisibility(View.GONE);
-
-		viewfinderView.setVisibility(View.GONE);
-
-		setProgressBarVisibility(false);
-		return true;
-	}
 
 	/**
 	 * Resets view elements.
