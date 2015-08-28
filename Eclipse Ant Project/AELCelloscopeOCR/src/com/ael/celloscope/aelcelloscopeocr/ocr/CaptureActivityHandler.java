@@ -125,19 +125,6 @@ final class CaptureActivityHandler extends Handler {
 	}
 
 	/**
-	 * Send a decode request for realtime OCR mode
-	 */
-	private void restartOcrPreviewAndDecode() {
-		// Continue capturing camera frames
-		cameraManager.startPreview();
-
-		// Continue requesting decode of images
-		cameraManager.requestOcrDecode(decodeThread.getHandler(),
-				R.id.ocr_continuous_decode);
-		activity.drawViewfinder();
-	}
-
-	/**
 	 * Request OCR on the current preview frame.
 	 */
 	private void ocrDecode() {

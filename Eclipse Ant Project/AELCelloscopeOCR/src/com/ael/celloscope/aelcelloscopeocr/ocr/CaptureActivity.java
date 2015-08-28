@@ -460,13 +460,10 @@ public final class CaptureActivity extends Activity implements
 				.execute(storageRoot.toString());
 	}
 
-	/**
-	 * Resets view elements.
-	 */
+
 	private void resetStatusView() {
 
 		viewfinderView.setVisibility(View.VISIBLE);
-
 		shutterButton.setVisibility(View.VISIBLE);
 		viewfinderView.removeResultText();
 	}

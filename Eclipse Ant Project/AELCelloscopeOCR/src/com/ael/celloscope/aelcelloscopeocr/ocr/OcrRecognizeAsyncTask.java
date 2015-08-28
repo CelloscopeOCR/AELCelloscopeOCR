@@ -25,7 +25,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	private TessBaseAPI baseApi;
 	private byte[] data;
 	private int width;
-	private int height;	
+	private int height;
 	String textResult;
 
 	OcrRecognizeAsyncTask(CaptureActivity activity, TessBaseAPI baseApi,
@@ -39,11 +39,16 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	}
 
 	@Override
+	protected void onPreExecute() {
+		activity.displayProgressDialog();
+	}
+
+	@Override
 	protected Boolean doInBackground(Void... arg0) {
 
-		 Bitmap bitmap =
-		 activity.getCameraManager().buildLuminanceSource(data, width,
-		 height).renderCroppedGreyscaleBitmap();
+		Bitmap bitmap = activity.getCameraManager()
+				.buildLuminanceSource(data, width, height)
+				.renderCroppedGreyscaleBitmap();
 
 		// File path = Environment
 		// .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
