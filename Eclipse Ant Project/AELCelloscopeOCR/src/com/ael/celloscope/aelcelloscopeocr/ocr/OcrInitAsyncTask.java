@@ -51,18 +51,15 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 	private Context context;
 	private TessBaseAPI baseApi;
 	private ProgressDialog dialog;
-	private ProgressDialog indeterminateDialog;
 	private final String languageCode;
 	private String languageName;
 	private int ocrEngineMode;
 
-	OcrInitAsyncTask(CaptureActivity activity, TessBaseAPI baseApi,
-			ProgressDialog dialog, ProgressDialog indeterminateDialog) {
+	OcrInitAsyncTask(CaptureActivity activity, TessBaseAPI baseApi) {
 		this.activity = activity;
 		this.context = activity.getBaseContext();
 		this.baseApi = baseApi;
-		this.dialog = dialog;
-		this.indeterminateDialog = indeterminateDialog;
+		dialog = new ProgressDialog(activity);
 		this.languageCode = "eng";
 		this.languageName = "English";
 		this.ocrEngineMode = 0;
@@ -192,10 +189,8 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 			languageName = "orientation and script detection";
 			try {
 				// Check for, and delete, partially-downloaded OSD files
-				String[] badFiles = {
-						OSD_FILENAME + ".gz.download",
-						OSD_FILENAME + ".gz",
-						OSD_FILENAME };
+				String[] badFiles = { OSD_FILENAME + ".gz.download",
+						OSD_FILENAME + ".gz", OSD_FILENAME };
 				for (String filename : badFiles) {
 					File file = new File(tessdataDir, filename);
 					if (file.exists()) {
@@ -203,13 +198,11 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 					}
 				}
 
-				Log.d(TAG, "Checking for OSD data ("
-						+ OSD_FILENAME_BASE
+				Log.d(TAG, "Checking for OSD data (" + OSD_FILENAME_BASE
 						+ ".zip) in application assets...");
 				// Check for "osd.traineddata.zip"
-				osdInstallSuccess = installFromAssets(
-						OSD_FILENAME_BASE + ".zip",
-						tessdataDir, new File(OSD_FILENAME));
+				osdInstallSuccess = installFromAssets(OSD_FILENAME_BASE
+						+ ".zip", tessdataDir, new File(OSD_FILENAME));
 			} catch (IOException e) {
 				Log.e(TAG, "IOException", e);
 			} catch (Exception e) {
@@ -218,12 +211,10 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 
 			if (!osdInstallSuccess) {
 				// File was not packaged in assets, so download it
-				Log.d(TAG, "Downloading " + OSD_FILENAME
-						+ ".gz...");
+				Log.d(TAG, "Downloading " + OSD_FILENAME + ".gz...");
 				try {
-					osdInstallSuccess = downloadFile(
-							OSD_FILENAME, new File(tessdataDir,
-									OSD_FILENAME));
+					osdInstallSuccess = downloadFile(OSD_FILENAME, new File(
+							tessdataDir, OSD_FILENAME));
 					if (!osdInstallSuccess) {
 						Log.e(TAG, "Download failed");
 						return false;
@@ -298,9 +289,8 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 	private boolean downloadFile(String sourceFilenameBase, File destinationFile)
 			throws IOException {
 		try {
-			return downloadGzippedFileHttp(
-					new URL(DOWNLOAD_BASE + sourceFilenameBase
-							+ ".gz"), destinationFile);
+			return downloadGzippedFileHttp(new URL(DOWNLOAD_BASE
+					+ sourceFilenameBase + ".gz"), destinationFile);
 		} catch (MalformedURLException e) {
 			throw new IllegalArgumentException("Bad URL string.");
 		}
@@ -669,7 +659,7 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 		super.onPostExecute(result);
 
 		try {
-			indeterminateDialog.dismiss();
+			dialog.dismiss();
 		} catch (IllegalArgumentException e) {
 			// Catch "View not attached to window manager" error, and continue
 		}

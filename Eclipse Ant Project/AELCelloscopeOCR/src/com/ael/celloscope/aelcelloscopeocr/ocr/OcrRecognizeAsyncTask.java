@@ -2,6 +2,7 @@ package com.ael.celloscope.aelcelloscopeocr.ocr;
 
 import java.io.File;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -27,6 +28,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	private int width;
 	private int height;
 	String textResult;
+	private ProgressDialog indeterminateDialog;
 
 	OcrRecognizeAsyncTask(CaptureActivity activity, TessBaseAPI baseApi,
 			byte[] data, int width, int height) {
@@ -40,7 +42,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 	@Override
 	protected void onPreExecute() {
-		activity.displayProgressDialog();
+		this.displayProgressDialog();
 	}
 
 	@Override
@@ -95,10 +97,20 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 						R.id.ocr_decode_failed, textResult);
 				message.sendToTarget();
 			}
-			activity.getProgressDialog().dismiss();
+			
+			indeterminateDialog.dismiss();
 		}
 		if (baseApi != null) {
 			baseApi.clear();
 		}
+	}
+
+	void displayProgressDialog() {
+
+		indeterminateDialog = new ProgressDialog(activity);
+		indeterminateDialog.setTitle("Please wait");
+		indeterminateDialog.setMessage("Performing OCR " + "...");
+		indeterminateDialog.setCancelable(false);
+		indeterminateDialog.show();
 	}
 }

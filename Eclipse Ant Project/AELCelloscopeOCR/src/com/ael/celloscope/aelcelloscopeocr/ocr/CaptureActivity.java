@@ -67,8 +67,7 @@ public final class CaptureActivity extends Activity implements
 	private ShutterButton shutterButton;
 
 	private TessBaseAPI baseApi;
-	private ProgressDialog dialog;
-	private ProgressDialog indeterminateDialog;
+
 	private boolean isEngineReady;
 
 	Handler getcaptureActivityHandler() {
@@ -439,27 +438,14 @@ public final class CaptureActivity extends Activity implements
 	private void initOcrEngine(File storageRoot) {
 		isEngineReady = false;
 
-		if (dialog != null) {
-			dialog.dismiss();
-		}
-		dialog = new ProgressDialog(this);
-
-		indeterminateDialog = new ProgressDialog(this);
-		indeterminateDialog.setTitle("Please wait");
-		indeterminateDialog.setMessage("Initializing OCR engine ...");
-		indeterminateDialog.setCancelable(false);
-		indeterminateDialog.show();
-
 		if (captureActivityHandler != null) {
 			captureActivityHandler.quitSynchronously();
 		}
 
 		// Start AsyncTask to install language data and init OCR
 		baseApi = new TessBaseAPI();
-		new OcrInitAsyncTask(this, baseApi, dialog, indeterminateDialog)
-				.execute(storageRoot.toString());
+		new OcrInitAsyncTask(this, baseApi).execute(storageRoot.toString());
 	}
-
 
 	private void resetStatusView() {
 
@@ -494,19 +480,6 @@ public final class CaptureActivity extends Activity implements
 	@Override
 	public void onShutterButtonFocus(ShutterButton b, boolean pressed) {
 		cameraManager.requestAutoFocus(350L);
-	}
-
-	void displayProgressDialog() {
-
-		indeterminateDialog = new ProgressDialog(this);
-		indeterminateDialog.setTitle("Please wait");
-		indeterminateDialog.setMessage("Performing OCR " + "...");
-		indeterminateDialog.setCancelable(false);
-		indeterminateDialog.show();
-	}
-
-	ProgressDialog getProgressDialog() {
-		return indeterminateDialog;
 	}
 
 	void showErrorMessage(String title, String message) {
