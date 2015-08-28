@@ -1,12 +1,8 @@
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
-import java.io.File;
-
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -97,7 +93,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 						R.id.ocr_decode_failed, textResult);
 				message.sendToTarget();
 			}
-			
+
 			indeterminateDialog.dismiss();
 		}
 		if (baseApi != null) {

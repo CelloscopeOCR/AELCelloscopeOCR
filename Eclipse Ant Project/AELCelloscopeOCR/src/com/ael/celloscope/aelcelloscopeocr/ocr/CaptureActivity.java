@@ -2,46 +2,21 @@ package com.ael.celloscope.aelcelloscopeocr.ocr;
 
 import java.io.File;
 import java.io.IOException;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.text.ClipboardManager;
-import android.text.SpannableStringBuilder;
-import android.text.style.CharacterStyle;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-
-import android.widget.Toast;
-
 import com.ael.celloscope.aelcelloscopeocr.R;
 import com.ael.celloscope.aelcelloscopeocr.camera.CameraManager;
 import com.ael.celloscope.aelcelloscopeocr.camera.ShutterButton;
