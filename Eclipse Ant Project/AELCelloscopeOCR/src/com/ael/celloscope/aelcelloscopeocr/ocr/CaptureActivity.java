@@ -1,20 +1,3 @@
-/*
- * Copyright (C) 2008 ZXing authors
- * Copyright 2011 Robert Theis
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
 import java.io.File;
@@ -72,17 +55,11 @@ import com.googlecode.tesseract.android.TessBaseAPI;
  * thread. It draws a viewfinder to help the user place the text correctly,
  * shows feedback as the image processing is happening, and then overlays the
  * results when a scan is successful.
- * 
- * The code for this class was adapted from the ZXing project:
- * http://code.google.com/p/zxing/
  */
 public final class CaptureActivity extends Activity implements
 		SurfaceHolder.Callback, ShutterButton.OnShutterButtonListener {
 
 	private static final String TAG = CaptureActivity.class.getSimpleName();
-
-	// Note: These constants will be overridden by any default values defined in
-	// preferences.xml.
 
 	/** ISO 639-3 language code indicating the default recognition language. */
 	public static final String DEFAULT_SOURCE_LANGUAGE_CODE = "eng";
@@ -113,9 +90,6 @@ public final class CaptureActivity extends Activity implements
 
 	/** Whether to beep by default when the shutter button is pressed. */
 	public static final boolean DEFAULT_TOGGLE_BEEP = false;
-
-	/** Whether to initially show a looping, real-time OCR display. */
-	public static final boolean DEFAULT_TOGGLE_CONTINUOUS = false;
 
 	/** Whether to initially reverse the image returned by the camera. */
 	public static final boolean DEFAULT_TOGGLE_REVERSED_IMAGE = false;
@@ -191,19 +165,19 @@ public final class CaptureActivity extends Activity implements
 	private boolean hasSurface;
 
 	private TessBaseAPI baseApi; // Java interface for the Tesseract OCR engine
-	private String sourceLanguageCodeOcr; // ISO 639-3 language code
-	private String sourceLanguageReadable; // Language name, for example,
-											// "English"
-	private String sourceLanguageCodeTranslation; // ISO 639-1 language code
-	private String targetLanguageCodeTranslation; // ISO 639-1 language code
-	private String targetLanguageReadable; // Language name, for example,
-											// "English"
+	private String sourceLanguageCodeOcr = "eng";
+	private String sourceLanguageReadable = "English";
+	private String sourceLanguageCodeTranslation = "en";
+	private String targetLanguageCodeTranslation = "es"; // ISO 639-1 language
+															// code
+	private String targetLanguageReadable = "Spanish";
+
 	private int pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_AUTO_OSD;
 	private int ocrEngineMode = TessBaseAPI.OEM_TESSERACT_ONLY;
 	private final String characterBlacklist = "";
 	private final String characterWhitelist = "!?@#$%&*()<>_-+=/.,:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	private ShutterButton shutterButton;
-	private boolean isTranslationActive; // Whether we want to show translations
+
 	private boolean isContinuousModeActive; // Whether we are doing OCR in
 											// continuous mode
 	private SharedPreferences prefs;
@@ -417,8 +391,6 @@ public final class CaptureActivity extends Activity implements
 		String previousSourceLanguageCodeOcr = sourceLanguageCodeOcr;
 		int previousOcrEngineMode = ocrEngineMode;
 
-		retrievePreferences();
-
 		// Set up the camera preview surface.
 		surfaceView = (SurfaceView) findViewById(R.id.preview_view);
 		surfaceHolder = surfaceView.getHolder();
@@ -435,7 +407,7 @@ public final class CaptureActivity extends Activity implements
 				|| !sourceLanguageCodeOcr.equals(previousSourceLanguageCodeOcr)
 				|| ocrEngineMode != previousOcrEngineMode;
 		if (doNewInit) {
-			
+
 			File storageDirectory = getStorageDirectory();
 			if (storageDirectory != null) {
 				initOcrEngine(storageDirectory, sourceLanguageCodeOcr,
@@ -621,28 +593,6 @@ public final class CaptureActivity extends Activity implements
 			int height) {
 	}
 
-	/** Sets the necessary language code values for the given OCR language. */
-	private boolean setSourceLanguage(String languageCode) {
-		sourceLanguageCodeOcr = languageCode;
-		sourceLanguageCodeTranslation = LanguageCodeHelper
-				.mapLanguageCode(languageCode);
-		sourceLanguageReadable = LanguageCodeHelper.getOcrLanguageName(this,
-				languageCode);
-		return true;
-	}
-
-	/**
-	 * Sets the necessary language code values for the translation target
-	 * language.
-	 */
-	private boolean setTargetLanguage(String languageCode) {
-		targetLanguageCodeTranslation = languageCode;
-		targetLanguageReadable = LanguageCodeHelper.getTranslationLanguageName(
-				this, languageCode);
-		return true;
-	}
-
-	
 	private File getStorageDirectory() {
 
 		String state = null;
@@ -667,12 +617,12 @@ public final class CaptureActivity extends Activity implements
 			}
 
 		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-			
+
 			Log.e(TAG, "External storage is read-only");
 			showErrorMessage(
 					"Error",
 					"Required external storage (such as an SD card) is unavailable for data storage.");
-		} else {			
+		} else {
 			Log.e(TAG, "External storage is unavailable");
 			showErrorMessage("Error",
 					"Required external storage (such as an SD card) is unavailable or corrupted.");
@@ -780,30 +730,11 @@ public final class CaptureActivity extends Activity implements
 		TextView translationLanguageLabelTextView = (TextView) findViewById(R.id.translation_language_label_text_view);
 		TextView translationLanguageTextView = (TextView) findViewById(R.id.translation_language_text_view);
 		TextView translationTextView = (TextView) findViewById(R.id.translation_text_view);
-		if (isTranslationActive) {
-			// Handle translation text fields
-			translationLanguageLabelTextView.setVisibility(View.VISIBLE);
-			translationLanguageTextView.setText(targetLanguageReadable);
-			translationLanguageTextView
-					.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL),
-							Typeface.NORMAL);
-			translationLanguageTextView.setVisibility(View.VISIBLE);
-
-			// Activate/re-activate the indeterminate progress indicator
-			translationTextView.setVisibility(View.GONE);
-			progressView.setVisibility(View.VISIBLE);
-			setProgressBarVisibility(true);
-
-			// Get the translation asynchronously
-			new TranslateAsyncTask(this, sourceLanguageCodeTranslation,
-					targetLanguageCodeTranslation, ocrResult).execute();
-		} else {
-			translationLanguageLabelTextView.setVisibility(View.GONE);
-			translationLanguageTextView.setVisibility(View.GONE);
-			translationTextView.setVisibility(View.GONE);
-			progressView.setVisibility(View.GONE);
-			setProgressBarVisibility(false);
-		}
+		translationLanguageLabelTextView.setVisibility(View.GONE);
+		translationLanguageTextView.setVisibility(View.GONE);
+		translationTextView.setVisibility(View.GONE);
+		progressView.setVisibility(View.GONE);
+		setProgressBarVisibility(false);
 		return true;
 	}
 
@@ -1028,75 +959,6 @@ public final class CaptureActivity extends Activity implements
 			ocrEngineModeName = ocrEngineModes[2];
 		}
 		return ocrEngineModeName;
-	}
-
-	private void retrievePreferences() {
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-		// Retrieve from preferences, and set in this Activity, the language
-		// preferences
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-		setSourceLanguage(prefs.getString(
-				PreferencesActivity.KEY_SOURCE_LANGUAGE_PREFERENCE,
-				CaptureActivity.DEFAULT_SOURCE_LANGUAGE_CODE));
-		setTargetLanguage(prefs.getString(
-				PreferencesActivity.KEY_TARGET_LANGUAGE_PREFERENCE,
-				CaptureActivity.DEFAULT_TARGET_LANGUAGE_CODE));
-		isTranslationActive = prefs.getBoolean(
-				PreferencesActivity.KEY_TOGGLE_TRANSLATION, false);
-
-		// Retrieve from preferences, and set in this Activity, the capture mode
-		// preference
-		if (prefs.getBoolean(PreferencesActivity.KEY_CONTINUOUS_PREVIEW,
-				CaptureActivity.DEFAULT_TOGGLE_CONTINUOUS)) {
-			isContinuousModeActive = true;
-		} else {
-			isContinuousModeActive = false;
-		}
-
-		// Retrieve from preferences, and set in this Activity, the page
-		// segmentation mode preference
-		String[] pageSegmentationModes = getResources().getStringArray(
-				R.array.pagesegmentationmodes);
-		String pageSegmentationModeName = prefs.getString(
-				PreferencesActivity.KEY_PAGE_SEGMENTATION_MODE,
-				pageSegmentationModes[0]);
-		if (pageSegmentationModeName.equals(pageSegmentationModes[0])) {
-			pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_AUTO_OSD;
-		} else if (pageSegmentationModeName.equals(pageSegmentationModes[1])) {
-			pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_AUTO;
-		} else if (pageSegmentationModeName.equals(pageSegmentationModes[2])) {
-			pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_BLOCK;
-		} else if (pageSegmentationModeName.equals(pageSegmentationModes[3])) {
-			pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_CHAR;
-		} else if (pageSegmentationModeName.equals(pageSegmentationModes[4])) {
-			pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_COLUMN;
-		} else if (pageSegmentationModeName.equals(pageSegmentationModes[5])) {
-			pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_LINE;
-		} else if (pageSegmentationModeName.equals(pageSegmentationModes[6])) {
-			pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_WORD;
-		} else if (pageSegmentationModeName.equals(pageSegmentationModes[7])) {
-			pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SINGLE_BLOCK_VERT_TEXT;
-		} else if (pageSegmentationModeName.equals(pageSegmentationModes[8])) {
-			pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_SPARSE_TEXT;
-		}
-
-		// Retrieve from preferences, and set in this Activity, the OCR engine
-		// mode
-		String[] ocrEngineModes = getResources().getStringArray(
-				R.array.ocrenginemodes);
-		String ocrEngineModeName = prefs.getString(
-				PreferencesActivity.KEY_OCR_ENGINE_MODE, ocrEngineModes[0]);
-		if (ocrEngineModeName.equals(ocrEngineModes[0])) {
-			ocrEngineMode = TessBaseAPI.OEM_TESSERACT_ONLY;
-		} else if (ocrEngineModeName.equals(ocrEngineModes[1])) {
-			ocrEngineMode = TessBaseAPI.OEM_CUBE_ONLY;
-		} else if (ocrEngineModeName.equals(ocrEngineModes[2])) {
-			ocrEngineMode = TessBaseAPI.OEM_TESSERACT_CUBE_COMBINED;
-		}
-
-		prefs.registerOnSharedPreferenceChangeListener(listener);
-
 	}
 
 	void displayProgressDialog() {
