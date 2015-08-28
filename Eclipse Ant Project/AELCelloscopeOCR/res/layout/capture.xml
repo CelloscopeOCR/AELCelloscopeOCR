@@ -19,13 +19,13 @@
         android:id="@+id/shutter_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
         android:layout_marginBottom="8dip"
         android:layout_marginTop="8dip"
         android:background="@drawable/shutter_button"
         android:clickable="true"
         android:focusable="true"
-        android:gravity="center_vertical"
+        android:gravity="right"
         android:scaleType="center"
         android:visibility="gone" />
 
