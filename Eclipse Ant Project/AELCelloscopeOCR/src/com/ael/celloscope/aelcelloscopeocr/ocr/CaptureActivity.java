@@ -143,8 +143,7 @@ public final class CaptureActivity extends Activity implements
 	private ViewfinderView viewfinderView;
 	private SurfaceView surfaceView;
 	private SurfaceHolder surfaceHolder;
-	private TextView statusViewBottom;
-	private TextView statusViewTop;
+
 	private TextView ocrResultView;
 	private TextView translationView;
 	private View cameraButtonView;
@@ -196,11 +195,6 @@ public final class CaptureActivity extends Activity implements
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 		cameraButtonView = findViewById(R.id.camera_button_view);
 		resultView = findViewById(R.id.result_view);
-
-		statusViewBottom = (TextView) findViewById(R.id.status_view_bottom);
-		registerForContextMenu(statusViewBottom);
-		statusViewTop = (TextView) findViewById(R.id.status_view_top);
-		registerForContextMenu(statusViewTop);
 
 		handler = null;
 		lastResult = null;
@@ -651,7 +645,6 @@ public final class CaptureActivity extends Activity implements
 	boolean handleOcrDecode(String ocrResult) {
 		lastResult = ocrResult;
 
-		// Test whether the result is null
 		if (ocrResult == null || ocrResult.equals("")) {
 			Toast toast = Toast.makeText(this, "OCR failed. Please try again.",
 					Toast.LENGTH_SHORT);
@@ -662,8 +655,6 @@ public final class CaptureActivity extends Activity implements
 
 		// Turn off capture-related UI elements
 		shutterButton.setVisibility(View.GONE);
-		statusViewBottom.setVisibility(View.GONE);
-		statusViewTop.setVisibility(View.GONE);
 		cameraButtonView.setVisibility(View.GONE);
 		viewfinderView.setVisibility(View.GONE);
 		resultView.setVisibility(View.VISIBLE);
@@ -702,18 +693,7 @@ public final class CaptureActivity extends Activity implements
 	 */
 	private void resetStatusView() {
 		resultView.setVisibility(View.GONE);
-		if (CONTINUOUS_DISPLAY_METADATA) {
-			statusViewBottom.setText("");
-			statusViewBottom.setTextSize(14);
-			statusViewBottom.setTextColor(getResources().getColor(
-					R.color.status_text));
-			statusViewBottom.setVisibility(View.VISIBLE);
-		}
-		if (CONTINUOUS_DISPLAY_RECOGNIZED_TEXT) {
-			statusViewTop.setText("");
-			statusViewTop.setTextSize(14);
-			statusViewTop.setVisibility(View.VISIBLE);
-		}
+
 		viewfinderView.setVisibility(View.VISIBLE);
 		cameraButtonView.setVisibility(View.VISIBLE);
 		if (DISPLAY_SHUTTER_BUTTON) {
