@@ -58,16 +58,7 @@ public final class CaptureActivity extends Activity implements
 
 	private static final String TAG = CaptureActivity.class.getSimpleName();
 
-	static final String[] CUBE_SUPPORTED_LANGUAGES = { "ara", // Arabic
-			"eng", // English
-			"hin" // Hindi
-	};
 
-	static final String DOWNLOAD_BASE = "http://tesseract-ocr.googlecode.com/files/";
-
-	static final String OSD_FILENAME = "tesseract-ocr-3.01.osd.tar";
-
-	static final String OSD_FILENAME_BASE = "osd.traineddata";
 
 	private CameraManager cameraManager;
 	private CaptureActivityHandler handler;

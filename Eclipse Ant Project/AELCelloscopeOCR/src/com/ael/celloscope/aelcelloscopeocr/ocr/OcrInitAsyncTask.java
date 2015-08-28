@@ -36,6 +36,17 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 			// ".cube.size", // This file is not available for Hindi
 			".cube.word-freq", ".tesseract_cube.nn", ".traineddata" };
 
+	static final String[] CUBE_SUPPORTED_LANGUAGES = { "ara", // Arabic
+			"eng", // English
+			"hin" // Hindi
+	};
+
+	static final String DOWNLOAD_BASE = "http://tesseract-ocr.googlecode.com/files/";
+
+	static final String OSD_FILENAME = "tesseract-ocr-3.01.osd.tar";
+
+	static final String OSD_FILENAME_BASE = "osd.traineddata";
+
 	private CaptureActivity activity;
 	private Context context;
 	private TessBaseAPI baseApi;
@@ -73,7 +84,7 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 
 		String destinationFilenameBase = languageCode + ".traineddata";
 		boolean isCubeSupported = false;
-		for (String s : CaptureActivity.CUBE_SUPPORTED_LANGUAGES) {
+		for (String s : CUBE_SUPPORTED_LANGUAGES) {
 			if (s.equals(languageCode)) {
 				isCubeSupported = true;
 			}
@@ -173,7 +184,7 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 		}
 
 		// If OSD data file is not present, download it
-		File osdFile = new File(tessdataDir, CaptureActivity.OSD_FILENAME_BASE);
+		File osdFile = new File(tessdataDir, OSD_FILENAME_BASE);
 		boolean osdInstallSuccess = false;
 		if (!osdFile.exists()) {
 			// Check assets for language data to install. If not present,
@@ -182,9 +193,9 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 			try {
 				// Check for, and delete, partially-downloaded OSD files
 				String[] badFiles = {
-						CaptureActivity.OSD_FILENAME + ".gz.download",
-						CaptureActivity.OSD_FILENAME + ".gz",
-						CaptureActivity.OSD_FILENAME };
+						OSD_FILENAME + ".gz.download",
+						OSD_FILENAME + ".gz",
+						OSD_FILENAME };
 				for (String filename : badFiles) {
 					File file = new File(tessdataDir, filename);
 					if (file.exists()) {
@@ -193,12 +204,12 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 				}
 
 				Log.d(TAG, "Checking for OSD data ("
-						+ CaptureActivity.OSD_FILENAME_BASE
+						+ OSD_FILENAME_BASE
 						+ ".zip) in application assets...");
 				// Check for "osd.traineddata.zip"
 				osdInstallSuccess = installFromAssets(
-						CaptureActivity.OSD_FILENAME_BASE + ".zip",
-						tessdataDir, new File(CaptureActivity.OSD_FILENAME));
+						OSD_FILENAME_BASE + ".zip",
+						tessdataDir, new File(OSD_FILENAME));
 			} catch (IOException e) {
 				Log.e(TAG, "IOException", e);
 			} catch (Exception e) {
@@ -207,12 +218,12 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 
 			if (!osdInstallSuccess) {
 				// File was not packaged in assets, so download it
-				Log.d(TAG, "Downloading " + CaptureActivity.OSD_FILENAME
+				Log.d(TAG, "Downloading " + OSD_FILENAME
 						+ ".gz...");
 				try {
 					osdInstallSuccess = downloadFile(
-							CaptureActivity.OSD_FILENAME, new File(tessdataDir,
-									CaptureActivity.OSD_FILENAME));
+							OSD_FILENAME, new File(tessdataDir,
+									OSD_FILENAME));
 					if (!osdInstallSuccess) {
 						Log.e(TAG, "Download failed");
 						return false;
@@ -227,7 +238,7 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 			// Untar the OSD tar file
 			try {
 				untar(new File(tessdataDir.toString() + File.separator
-						+ CaptureActivity.OSD_FILENAME), tessdataDir);
+						+ OSD_FILENAME), tessdataDir);
 			} catch (IOException e) {
 				Log.e(TAG, "Untar failed");
 				return false;
@@ -288,7 +299,7 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 			throws IOException {
 		try {
 			return downloadGzippedFileHttp(
-					new URL(CaptureActivity.DOWNLOAD_BASE + sourceFilenameBase
+					new URL(DOWNLOAD_BASE + sourceFilenameBase
 							+ ".gz"), destinationFile);
 		} catch (MalformedURLException e) {
 			throw new IllegalArgumentException("Bad URL string.");
