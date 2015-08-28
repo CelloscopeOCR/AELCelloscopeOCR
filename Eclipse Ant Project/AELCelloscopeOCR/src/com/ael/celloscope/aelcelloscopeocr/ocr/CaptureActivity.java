@@ -410,8 +410,7 @@ public final class CaptureActivity extends Activity implements
 
 			File storageDirectory = getStorageDirectory();
 			if (storageDirectory != null) {
-				initOcrEngine(storageDirectory, sourceLanguageCodeOcr,
-						sourceLanguageReadable);
+				initOcrEngine(storageDirectory);
 			}
 		} else {
 			// We already have the engine initialized, so just start the camera.
@@ -635,13 +634,8 @@ public final class CaptureActivity extends Activity implements
 	 * 
 	 * @param storageRoot
 	 *            Path to location of the tessdata directory to use
-	 * @param languageCode
-	 *            Three-letter ISO 639-3 language code for OCR
-	 * @param languageName
-	 *            Name of the language for OCR, for example, "English"
 	 */
-	private void initOcrEngine(File storageRoot, String languageCode,
-			String languageName) {
+	private void initOcrEngine(File storageRoot) {
 		isEngineReady = false;
 
 		if (dialog != null) {
@@ -649,24 +643,9 @@ public final class CaptureActivity extends Activity implements
 		}
 		dialog = new ProgressDialog(this);
 
-		ocrEngineMode = TessBaseAPI.OEM_TESSERACT_ONLY;
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		prefs.edit()
-				.putString(PreferencesActivity.KEY_OCR_ENGINE_MODE,
-						getOcrEngineModeName()).commit();
-
 		indeterminateDialog = new ProgressDialog(this);
 		indeterminateDialog.setTitle("Please wait");
-		String ocrEngineModeName = getOcrEngineModeName();
-		if (ocrEngineModeName.equals("Both")) {
-			indeterminateDialog
-					.setMessage("Initializing Cube and Tesseract OCR engines for "
-							+ languageName + "...");
-		} else {
-			indeterminateDialog.setMessage("Initializing " + ocrEngineModeName
-					+ " OCR engine for " + languageName + "...");
-		}
+		indeterminateDialog.setMessage("Initializing OCR engine ...");
 		indeterminateDialog.setCancelable(false);
 		indeterminateDialog.show();
 
@@ -676,9 +655,8 @@ public final class CaptureActivity extends Activity implements
 
 		// Start AsyncTask to install language data and init OCR
 		baseApi = new TessBaseAPI();
-		new OcrInitAsyncTask(this, baseApi, dialog, indeterminateDialog,
-				languageCode, languageName, ocrEngineMode).execute(storageRoot
-				.toString());
+		new OcrInitAsyncTask(this, baseApi, dialog, indeterminateDialog)
+				.execute(storageRoot.toString());
 	}
 
 	/**
@@ -939,26 +917,6 @@ public final class CaptureActivity extends Activity implements
 			Log.w(TAG, e);
 		}
 		return false;
-	}
-
-	/**
-	 * Returns a string that represents which OCR engine(s) are currently set to
-	 * be run.
-	 * 
-	 * @return OCR engine mode
-	 */
-	String getOcrEngineModeName() {
-		String ocrEngineModeName = "";
-		String[] ocrEngineModes = getResources().getStringArray(
-				R.array.ocrenginemodes);
-		if (ocrEngineMode == TessBaseAPI.OEM_TESSERACT_ONLY) {
-			ocrEngineModeName = ocrEngineModes[0];
-		} else if (ocrEngineMode == TessBaseAPI.OEM_CUBE_ONLY) {
-			ocrEngineModeName = ocrEngineModes[1];
-		} else if (ocrEngineMode == TessBaseAPI.OEM_TESSERACT_CUBE_COMBINED) {
-			ocrEngineModeName = ocrEngineModes[2];
-		}
-		return ocrEngineModeName;
 	}
 
 	void displayProgressDialog() {

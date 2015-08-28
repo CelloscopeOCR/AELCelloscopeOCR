@@ -46,16 +46,15 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 	private int ocrEngineMode;
 
 	OcrInitAsyncTask(CaptureActivity activity, TessBaseAPI baseApi,
-			ProgressDialog dialog, ProgressDialog indeterminateDialog,
-			String languageCode, String languageName, int ocrEngineMode) {
+			ProgressDialog dialog, ProgressDialog indeterminateDialog) {
 		this.activity = activity;
 		this.context = activity.getBaseContext();
 		this.baseApi = baseApi;
 		this.dialog = dialog;
 		this.indeterminateDialog = indeterminateDialog;
-		this.languageCode = languageCode;
-		this.languageName = languageName;
-		this.ocrEngineMode = ocrEngineMode;
+		this.languageCode = "eng";
+		this.languageName = "English";
+		this.ocrEngineMode = 0;
 	}
 
 	@Override
