@@ -78,7 +78,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
 
-		Handler handler = activity.getHandler();
+		Handler handler = activity.getcaptureActivityHandler();
 		if (handler != null) {
 
 			if (result) {

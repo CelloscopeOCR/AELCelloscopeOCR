@@ -58,40 +58,29 @@ public final class CaptureActivity extends Activity implements
 
 	private static final String TAG = CaptureActivity.class.getSimpleName();
 
-
-
 	private CameraManager cameraManager;
-	private CaptureActivityHandler handler;
+	private CaptureActivityHandler captureActivityHandler;
 	private ViewfinderView viewfinderView;
 	private SurfaceView surfaceView;
 	private SurfaceHolder surfaceHolder;
-
-	private String lastResult;
 	private boolean hasSurface;
-	private TessBaseAPI baseApi; // Java interface for the Tesseract OCR engine
-	private String sourceLanguageCodeOcr = "eng";
-	private int pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_AUTO_OSD;
-	private int ocrEngineMode = TessBaseAPI.OEM_TESSERACT_ONLY;
-	private final String characterBlacklist = "";
-	private final String characterWhitelist = "!?@#$%&*()<>_-+=/.,:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	private ShutterButton shutterButton;
-	private boolean isContinuousModeActive;
-	private ProgressDialog dialog; // for initOcr - language download & unzip
-	private ProgressDialog indeterminateDialog; // also for initOcr - init OCR
-												// engine
+
+	private TessBaseAPI baseApi;
+	private ProgressDialog dialog;
+	private ProgressDialog indeterminateDialog;
 	private boolean isEngineReady;
-	private boolean isPaused;
 
-	Handler getHandler() {
-		return handler;
-	}
-
-	TessBaseAPI getBaseApi() {
-		return baseApi;
+	Handler getcaptureActivityHandler() {
+		return captureActivityHandler;
 	}
 
 	CameraManager getCameraManager() {
 		return cameraManager;
+	}
+
+	TessBaseAPI getBaseApi() {
+		return baseApi;
 	}
 
 	@Override
@@ -104,8 +93,7 @@ public final class CaptureActivity extends Activity implements
 		setContentView(R.layout.capture);
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 
-		handler = null;
-		lastResult = null;
+		captureActivityHandler = null;
 		hasSurface = false;
 
 		shutterButton = (ShutterButton) findViewById(R.id.shutter_button);
@@ -261,9 +249,6 @@ public final class CaptureActivity extends Activity implements
 		super.onResume();
 		resetStatusView();
 
-		String previousSourceLanguageCodeOcr = sourceLanguageCodeOcr;
-		int previousOcrEngineMode = ocrEngineMode;
-
 		// Set up the camera preview surface.
 		surfaceView = (SurfaceView) findViewById(R.id.preview_view);
 		surfaceHolder = surfaceView.getHolder();
@@ -276,9 +261,7 @@ public final class CaptureActivity extends Activity implements
 		// SD card
 
 		// Do OCR engine initialization, if necessary
-		boolean doNewInit = (baseApi == null)
-				|| !sourceLanguageCodeOcr.equals(previousSourceLanguageCodeOcr)
-				|| ocrEngineMode != previousOcrEngineMode;
+		boolean doNewInit = (baseApi == null);
 		if (doNewInit) {
 
 			File storageDirectory = getStorageDirectory();
@@ -298,24 +281,17 @@ public final class CaptureActivity extends Activity implements
 	 */
 	void resumeOCR() {
 		Log.d(TAG, "resumeOCR()");
-
-		// This method is called when Tesseract has already been successfully
-		// initialized
 		isEngineReady = true;
-		isPaused = false;
 
 		if (baseApi != null) {
-			baseApi.setPageSegMode(pageSegmentationMode);
-			baseApi.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST,
-					characterBlacklist);
-			baseApi.setVariable(TessBaseAPI.VAR_CHAR_WHITELIST,
-					characterWhitelist);
+			baseApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_AUTO_OSD);
+			baseApi.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, "");
+			baseApi.setVariable(
+					TessBaseAPI.VAR_CHAR_WHITELIST,
+					"!?@#$%&*()<>_-+=/.,:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 		}
 
 		if (hasSurface) {
-			// The activity was paused but not stopped, so the surface still
-			// exists. Therefore
-			// surfaceCreated() won't be called, so init the camera here.
 			initCamera(surfaceHolder);
 		}
 	}
@@ -344,7 +320,8 @@ public final class CaptureActivity extends Activity implements
 		try {
 
 			cameraManager.openDriver(surfaceHolder);
-			handler = new CaptureActivityHandler(this, cameraManager);
+			captureActivityHandler = new CaptureActivityHandler(this,
+					cameraManager);
 
 		} catch (IOException ioe) {
 			showErrorMessage("Error",
@@ -358,8 +335,8 @@ public final class CaptureActivity extends Activity implements
 
 	@Override
 	protected void onPause() {
-		if (handler != null) {
-			handler.quitSynchronously();
+		if (captureActivityHandler != null) {
+			captureActivityHandler.quitSynchronously();
 		}
 
 		// Stop using the camera, to avoid conflicting with other camera-based
@@ -375,8 +352,8 @@ public final class CaptureActivity extends Activity implements
 	}
 
 	void stopHandler() {
-		if (handler != null) {
-			handler.stop();
+		if (captureActivityHandler != null) {
+			captureActivityHandler.stop();
 		}
 	}
 
@@ -392,34 +369,11 @@ public final class CaptureActivity extends Activity implements
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 
-			// First check if we're paused in continuous mode, and if so, just
-			// unpause.
-			if (isPaused) {
-				Log.d(TAG,
-						"only resuming continuous recognition, not quitting...");
-
-				return true;
-			}
-
-			// Exit the app if we're not viewing an OCR result.
-			if (lastResult == null) {
-				setResult(RESULT_CANCELED);
-				finish();
-				return true;
-			} else {
-				// Go back to previewing in regular OCR mode.
-				resetStatusView();
-				if (handler != null) {
-					handler.sendEmptyMessage(R.id.restart_preview);
-				}
-				return true;
-			}
+			setResult(RESULT_CANCELED);
+			finish();
+			return true;
 		} else if (keyCode == KeyEvent.KEYCODE_CAMERA) {
-			if (isContinuousModeActive) {
-
-			} else {
-				handler.hardwareShutterButtonClick();
-			}
+			captureActivityHandler.hardwareShutterButtonClick();
 			return true;
 		} else if (keyCode == KeyEvent.KEYCODE_FOCUS) {
 			// Only perform autofocus if user is not holding down the button.
@@ -496,8 +450,8 @@ public final class CaptureActivity extends Activity implements
 		indeterminateDialog.setCancelable(false);
 		indeterminateDialog.show();
 
-		if (handler != null) {
-			handler.quitSynchronously();
+		if (captureActivityHandler != null) {
+			captureActivityHandler.quitSynchronously();
 		}
 
 		// Start AsyncTask to install language data and init OCR
@@ -505,7 +459,6 @@ public final class CaptureActivity extends Activity implements
 		new OcrInitAsyncTask(this, baseApi, dialog, indeterminateDialog)
 				.execute(storageRoot.toString());
 	}
-
 
 	/**
 	 * Resets view elements.
@@ -515,7 +468,6 @@ public final class CaptureActivity extends Activity implements
 		viewfinderView.setVisibility(View.VISIBLE);
 
 		shutterButton.setVisibility(View.VISIBLE);
-		lastResult = null;
 		viewfinderView.removeResultText();
 	}
 
@@ -537,8 +489,8 @@ public final class CaptureActivity extends Activity implements
 
 	@Override
 	public void onShutterButtonClick(ShutterButton b) {
-		if (handler != null) {
-			handler.shutterButtonClick();
+		if (captureActivityHandler != null) {
+			captureActivityHandler.shutterButtonClick();
 		}
 	}
 
