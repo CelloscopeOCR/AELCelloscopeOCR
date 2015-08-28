@@ -118,10 +118,6 @@ public final class CaptureActivity extends Activity implements
 			"hin" // Hindi
 	};
 
-	/** Languages that require Cube, and cannot run using Tesseract. */
-	private static final String[] CUBE_REQUIRED_LANGUAGES = { "ara" // Arabic
-	};
-
 	/** Resource to use for data file downloads. */
 	static final String DOWNLOAD_BASE = "http://tesseract-ocr.googlecode.com/files/";
 
@@ -142,12 +138,6 @@ public final class CaptureActivity extends Activity implements
 	private static final int SETTINGS_ID = Menu.FIRST;
 	private static final int ABOUT_ID = Menu.FIRST + 1;
 
-	// Options menu, for copy to clipboard
-	private static final int OPTIONS_COPY_RECOGNIZED_TEXT_ID = Menu.FIRST;
-	private static final int OPTIONS_COPY_TRANSLATED_TEXT_ID = Menu.FIRST + 1;
-	private static final int OPTIONS_SHARE_RECOGNIZED_TEXT_ID = Menu.FIRST + 2;
-	private static final int OPTIONS_SHARE_TRANSLATED_TEXT_ID = Menu.FIRST + 3;
-
 	private CameraManager cameraManager;
 	private CaptureActivityHandler handler;
 	private ViewfinderView viewfinderView;
@@ -167,10 +157,6 @@ public final class CaptureActivity extends Activity implements
 	private TessBaseAPI baseApi; // Java interface for the Tesseract OCR engine
 	private String sourceLanguageCodeOcr = "eng";
 	private String sourceLanguageReadable = "English";
-	private String sourceLanguageCodeTranslation = "en";
-	private String targetLanguageCodeTranslation = "es"; // ISO 639-1 language
-															// code
-	private String targetLanguageReadable = "Spanish";
 
 	private int pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_AUTO_OSD;
 	private int ocrEngineMode = TessBaseAPI.OEM_TESSERACT_ONLY;
@@ -180,15 +166,12 @@ public final class CaptureActivity extends Activity implements
 
 	private boolean isContinuousModeActive; // Whether we are doing OCR in
 											// continuous mode
-	private SharedPreferences prefs;
-	private OnSharedPreferenceChangeListener listener;
+
 	private ProgressDialog dialog; // for initOcr - language download & unzip
 	private ProgressDialog indeterminateDialog; // also for initOcr - init OCR
 												// engine
 	private boolean isEngineReady;
 	private boolean isPaused;
-	private static boolean isFirstLaunch; // True if this is the first time the
-											// app is being run
 
 	Handler getHandler() {
 		return handler;
@@ -205,8 +188,6 @@ public final class CaptureActivity extends Activity implements
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-
-		checkFirstLaunch();
 
 		Window window = getWindow();
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -716,70 +697,6 @@ public final class CaptureActivity extends Activity implements
 		return true;
 	}
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		if (v.equals(ocrResultView)) {
-			menu.add(Menu.NONE, OPTIONS_COPY_RECOGNIZED_TEXT_ID, Menu.NONE,
-					"Copy recognized text");
-			menu.add(Menu.NONE, OPTIONS_SHARE_RECOGNIZED_TEXT_ID, Menu.NONE,
-					"Share recognized text");
-		} else if (v.equals(translationView)) {
-			menu.add(Menu.NONE, OPTIONS_COPY_TRANSLATED_TEXT_ID, Menu.NONE,
-					"Copy translated text");
-			menu.add(Menu.NONE, OPTIONS_SHARE_TRANSLATED_TEXT_ID, Menu.NONE,
-					"Share translated text");
-		}
-	}
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-		switch (item.getItemId()) {
-
-		case OPTIONS_COPY_RECOGNIZED_TEXT_ID:
-			clipboardManager.setText(ocrResultView.getText());
-			if (clipboardManager.hasText()) {
-				Toast toast = Toast.makeText(this, "Text copied.",
-						Toast.LENGTH_LONG);
-				toast.setGravity(Gravity.BOTTOM, 0, 0);
-				toast.show();
-			}
-			return true;
-		case OPTIONS_SHARE_RECOGNIZED_TEXT_ID:
-			Intent shareRecognizedTextIntent = new Intent(
-					android.content.Intent.ACTION_SEND);
-			shareRecognizedTextIntent.setType("text/plain");
-			shareRecognizedTextIntent.putExtra(
-					android.content.Intent.EXTRA_TEXT, ocrResultView.getText());
-			startActivity(Intent.createChooser(shareRecognizedTextIntent,
-					"Share via"));
-			return true;
-		case OPTIONS_COPY_TRANSLATED_TEXT_ID:
-			clipboardManager.setText(translationView.getText());
-			if (clipboardManager.hasText()) {
-				Toast toast = Toast.makeText(this, "Text copied.",
-						Toast.LENGTH_LONG);
-				toast.setGravity(Gravity.BOTTOM, 0, 0);
-				toast.show();
-			}
-			return true;
-		case OPTIONS_SHARE_TRANSLATED_TEXT_ID:
-			Intent shareTranslatedTextIntent = new Intent(
-					android.content.Intent.ACTION_SEND);
-			shareTranslatedTextIntent.setType("text/plain");
-			shareTranslatedTextIntent.putExtra(
-					android.content.Intent.EXTRA_TEXT,
-					translationView.getText());
-			startActivity(Intent.createChooser(shareTranslatedTextIntent,
-					"Share via"));
-			return true;
-		default:
-			return super.onContextItemSelected(item);
-		}
-	}
-
 	/**
 	 * Resets view elements.
 	 */
@@ -806,30 +723,6 @@ public final class CaptureActivity extends Activity implements
 		viewfinderView.removeResultText();
 	}
 
-	/**
-	 * Displays a pop-up message showing the name of the current OCR source
-	 * language.
-	 */
-	void showLanguageName() {
-		Toast toast = Toast.makeText(this, "OCR: " + sourceLanguageReadable,
-				Toast.LENGTH_LONG);
-		toast.setGravity(Gravity.TOP, 0, 0);
-		toast.show();
-	}
-
-	/**
-	 * Displays an initial message to the user while waiting for the first OCR
-	 * request to be completed after starting realtime OCR.
-	 */
-	void setStatusViewForContinuous() {
-		viewfinderView.removeResultText();
-		if (CONTINUOUS_DISPLAY_METADATA) {
-			statusViewBottom.setText("OCR: " + sourceLanguageReadable
-					+ " - waiting for OCR...");
-		}
-	}
-
-	@SuppressWarnings("unused")
 	void setButtonVisibility(boolean visible) {
 		if (shutterButton != null && visible == true && DISPLAY_SHUTTER_BUTTON) {
 			shutterButton.setVisibility(View.VISIBLE);
@@ -838,18 +731,10 @@ public final class CaptureActivity extends Activity implements
 		}
 	}
 
-	/**
-	 * Enables/disables the shutter button to prevent double-clicks on the
-	 * button.
-	 * 
-	 * @param clickable
-	 *            True if the button should accept a click
-	 */
 	void setShutterButtonClickable(boolean clickable) {
 		shutterButton.setClickable(clickable);
 	}
 
-	/** Request the viewfinder to be invalidated. */
 	void drawViewfinder() {
 		viewfinderView.drawViewfinder();
 	}
@@ -863,60 +748,7 @@ public final class CaptureActivity extends Activity implements
 
 	@Override
 	public void onShutterButtonFocus(ShutterButton b, boolean pressed) {
-		requestDelayedAutoFocus();
-	}
-
-	/**
-	 * Requests autofocus after a 350 ms delay. This delay prevents requesting
-	 * focus when the user just wants to click the shutter button without
-	 * focusing. Quick button press/release will trigger onShutterButtonClick()
-	 * before the focus kicks in.
-	 */
-	private void requestDelayedAutoFocus() {
-		// Wait 350 ms before focusing to avoid interfering with quick button
-		// presses when
-		// the user just wants to take a picture without focusing.
 		cameraManager.requestAutoFocus(350L);
-	}
-
-	static boolean getFirstLaunch() {
-		return isFirstLaunch;
-	}
-
-	/**
-	 * We want the help screen to be shown automatically the first time a new
-	 * version of the app is run. The easiest way to do this is to check
-	 * android:versionCode from the manifest, and compare it to a value stored
-	 * as a preference.
-	 */
-	private boolean checkFirstLaunch() {
-		try {
-			PackageInfo info = getPackageManager().getPackageInfo(
-					getPackageName(), 0);
-			int currentVersion = info.versionCode;
-			SharedPreferences prefs = PreferenceManager
-					.getDefaultSharedPreferences(this);
-			int lastVersion = prefs.getInt(
-					PreferencesActivity.KEY_HELP_VERSION_SHOWN, 0);
-			if (lastVersion == 0) {
-				isFirstLaunch = true;
-			} else {
-				isFirstLaunch = false;
-			}
-			if (currentVersion > lastVersion) {
-
-				// Record the last version for which we last displayed the
-				// What's New (Help) page
-				prefs.edit()
-						.putInt(PreferencesActivity.KEY_HELP_VERSION_SHOWN,
-								currentVersion).commit();
-
-				return true;
-			}
-		} catch (PackageManager.NameNotFoundException e) {
-			Log.w(TAG, e);
-		}
-		return false;
 	}
 
 	void displayProgressDialog() {
