@@ -28,69 +28,39 @@ import com.ael.celloscope.aelcelloscopeocr.ocr.CaptureActivity;
 /**
  * Class to perform translations in the background.
  */
-public final class TranslateAsyncTask extends AsyncTask<String, String, Boolean> {
+public final class TranslateAsyncTask extends
+		AsyncTask<String, String, Boolean> {
 
-  private static final String TAG = TranslateAsyncTask.class.getSimpleName();
+	private static final String TAG = TranslateAsyncTask.class.getSimpleName();
 
-  private CaptureActivity activity;
-  private TextView textView;
-  private View progressView;
-  private TextView targetLanguageTextView;
-  private String sourceLanguageCode;
-  private String targetLanguageCode;
-  private String sourceText;
-  private String translatedText = "";
+	private CaptureActivity activity;
 
-  public TranslateAsyncTask(CaptureActivity activity, String sourceLanguageCode, String targetLanguageCode, 
-      String sourceText) {
-    this.activity = activity;
-    this.sourceLanguageCode = sourceLanguageCode;
-    this.targetLanguageCode = targetLanguageCode;
-    this.sourceText = sourceText;
-    textView = (TextView) activity.findViewById(R.id.translation_text_view);
-    progressView = (View) activity.findViewById(R.id.indeterminate_progress_indicator_view);
-    targetLanguageTextView = (TextView) activity.findViewById(R.id.translation_language_text_view);
-  }
-  
-  @Override
-  protected Boolean doInBackground(String... arg0) {
-    translatedText = Translator.translate(activity, sourceLanguageCode, targetLanguageCode, sourceText);
+	private String sourceLanguageCode;
+	private String targetLanguageCode;
+	private String sourceText;
+	private String translatedText = "";
 
-    // Check for failed translations.
-    if (translatedText.equals(Translator.BAD_TRANSLATION_MSG)) {
-      return false;
-    }
-    
-    return true;
-  }
+	public TranslateAsyncTask(CaptureActivity activity,
+			String sourceLanguageCode, String targetLanguageCode,
+			String sourceText) {
+		this.activity = activity;
+		this.sourceLanguageCode = sourceLanguageCode;
+		this.targetLanguageCode = targetLanguageCode;
+		this.sourceText = sourceText;
 
-  @Override
-  protected synchronized void onPostExecute(Boolean result) {
-    super.onPostExecute(result);
-    
-    if (result) {
-      //Log.i(TAG, "SUCCESS");
-      if (targetLanguageTextView != null) {
-        targetLanguageTextView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL), Typeface.NORMAL);
-      }
-      textView.setText(translatedText);
-      textView.setVisibility(View.VISIBLE);
-      textView.setTextColor(activity.getResources().getColor(R.color.translation_text));
+	}
 
-      // Crudely scale betweeen 22 and 32 -- bigger font for shorter text
-      int scaledSize = Math.max(22, 32 - translatedText.length() / 4);
-      textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, scaledSize);
+	@Override
+	protected Boolean doInBackground(String... arg0) {
+		translatedText = Translator.translate(activity, sourceLanguageCode,
+				targetLanguageCode, sourceText);
 
-    } else {
-      Log.e(TAG, "FAILURE");
-      targetLanguageTextView.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC), Typeface.ITALIC);
-      targetLanguageTextView.setText("Unavailable");
+		// Check for failed translations.
+		if (translatedText.equals(Translator.BAD_TRANSLATION_MSG)) {
+			return false;
+		}
 
-    }
-    
-    // Turn off the indeterminate progress indicator
-    if (progressView != null) {
-      progressView.setVisibility(View.GONE);
-    }
-  }
+		return true;
+	}
+
 }

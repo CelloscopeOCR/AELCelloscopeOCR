@@ -144,18 +144,12 @@ public final class CaptureActivity extends Activity implements
 	private SurfaceView surfaceView;
 	private SurfaceHolder surfaceHolder;
 
-	private TextView ocrResultView;
-	private TextView translationView;
-	private View cameraButtonView;
-	private View resultView;
-	private View progressView;
 	private String lastResult;
-	private Bitmap lastBitmap;
+
 	private boolean hasSurface;
 
 	private TessBaseAPI baseApi; // Java interface for the Tesseract OCR engine
 	private String sourceLanguageCodeOcr = "eng";
-	private String sourceLanguageReadable = "English";
 
 	private int pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_AUTO_OSD;
 	private int ocrEngineMode = TessBaseAPI.OEM_TESSERACT_ONLY;
@@ -193,8 +187,6 @@ public final class CaptureActivity extends Activity implements
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.capture);
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
-		cameraButtonView = findViewById(R.id.camera_button_view);
-		resultView = findViewById(R.id.result_view);
 
 		handler = null;
 		lastResult = null;
@@ -205,13 +197,6 @@ public final class CaptureActivity extends Activity implements
 			shutterButton = (ShutterButton) findViewById(R.id.shutter_button);
 			shutterButton.setOnShutterButtonListener(this);
 		}
-
-		ocrResultView = (TextView) findViewById(R.id.ocr_result_text_view);
-		registerForContextMenu(ocrResultView);
-		translationView = (TextView) findViewById(R.id.translation_text_view);
-		registerForContextMenu(translationView);
-
-		progressView = (View) findViewById(R.id.indeterminate_progress_indicator_view);
 
 		cameraManager = new CameraManager(getApplication());
 		viewfinderView.setCameraManager(cameraManager);
@@ -655,35 +640,9 @@ public final class CaptureActivity extends Activity implements
 
 		// Turn off capture-related UI elements
 		shutterButton.setVisibility(View.GONE);
-		cameraButtonView.setVisibility(View.GONE);
+
 		viewfinderView.setVisibility(View.GONE);
-		resultView.setVisibility(View.VISIBLE);
 
-		ImageView bitmapImageView = (ImageView) findViewById(R.id.image_view);
-
-		if (lastBitmap == null) {
-			bitmapImageView.setImageBitmap(BitmapFactory.decodeResource(
-					getResources(), R.drawable.ic_launcher));
-		} else {
-			bitmapImageView.setImageBitmap(lastBitmap);
-		}
-
-		// Display the recognized text
-		TextView sourceLanguageTextView = (TextView) findViewById(R.id.source_language_text_view);
-		sourceLanguageTextView.setText(sourceLanguageReadable);
-		TextView ocrResultTextView = (TextView) findViewById(R.id.ocr_result_text_view);
-		ocrResultTextView.setText(ocrResult);
-		// Crudely scale betweeen 22 and 32 -- bigger font for shorter text
-		int scaledSize = Math.max(22, 32 - ocrResult.length() / 4);
-		ocrResultTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, scaledSize);
-
-		TextView translationLanguageLabelTextView = (TextView) findViewById(R.id.translation_language_label_text_view);
-		TextView translationLanguageTextView = (TextView) findViewById(R.id.translation_language_text_view);
-		TextView translationTextView = (TextView) findViewById(R.id.translation_text_view);
-		translationLanguageLabelTextView.setVisibility(View.GONE);
-		translationLanguageTextView.setVisibility(View.GONE);
-		translationTextView.setVisibility(View.GONE);
-		progressView.setVisibility(View.GONE);
 		setProgressBarVisibility(false);
 		return true;
 	}
@@ -692,10 +651,9 @@ public final class CaptureActivity extends Activity implements
 	 * Resets view elements.
 	 */
 	private void resetStatusView() {
-		resultView.setVisibility(View.GONE);
 
 		viewfinderView.setVisibility(View.VISIBLE);
-		cameraButtonView.setVisibility(View.VISIBLE);
+
 		if (DISPLAY_SHUTTER_BUTTON) {
 			shutterButton.setVisibility(View.VISIBLE);
 		}
