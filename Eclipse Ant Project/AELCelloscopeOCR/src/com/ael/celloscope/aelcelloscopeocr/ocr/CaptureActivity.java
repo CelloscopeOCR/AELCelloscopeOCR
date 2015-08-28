@@ -58,82 +58,16 @@ public final class CaptureActivity extends Activity implements
 
 	private static final String TAG = CaptureActivity.class.getSimpleName();
 
-	/** ISO 639-3 language code indicating the default recognition language. */
-	public static final String DEFAULT_SOURCE_LANGUAGE_CODE = "eng";
-
-	/**
-	 * ISO 639-1 language code indicating the default target language for
-	 * translation.
-	 */
-	public static final String DEFAULT_TARGET_LANGUAGE_CODE = "es";
-
-	/** The default online machine translation service to use. */
-	public static final String DEFAULT_TRANSLATOR = "Google Translate";
-
-	/** The default OCR engine to use. */
-	public static final String DEFAULT_OCR_ENGINE_MODE = "Tesseract";
-
-	/** The default page segmentation mode to use. */
-	public static final String DEFAULT_PAGE_SEGMENTATION_MODE = "Auto";
-
-	/** Whether to use autofocus by default. */
-	public static final boolean DEFAULT_TOGGLE_AUTO_FOCUS = true;
-
-	/**
-	 * Whether to initially disable continuous-picture and continuous-video
-	 * focus modes.
-	 */
-	public static final boolean DEFAULT_DISABLE_CONTINUOUS_FOCUS = true;
-
-	/** Whether to beep by default when the shutter button is pressed. */
-	public static final boolean DEFAULT_TOGGLE_BEEP = false;
-
-	/** Whether to initially reverse the image returned by the camera. */
-	public static final boolean DEFAULT_TOGGLE_REVERSED_IMAGE = false;
-
-	/** Whether to enable the use of online translation services be default. */
-	public static final boolean DEFAULT_TOGGLE_TRANSLATION = true;
-
-	/** Whether the light should be initially activated by default. */
-	public static final boolean DEFAULT_TOGGLE_LIGHT = false;
-
-	/**
-	 * Flag to display the real-time recognition results at the top of the
-	 * scanning screen.
-	 */
-	private static final boolean CONTINUOUS_DISPLAY_RECOGNIZED_TEXT = true;
-
-	/** Flag to display recognition-related statistics on the scanning screen. */
-	private static final boolean CONTINUOUS_DISPLAY_METADATA = true;
-
-	/** Flag to enable display of the on-screen shutter button. */
-	private static final boolean DISPLAY_SHUTTER_BUTTON = true;
-
-	/** Languages for which Cube data is available. */
 	static final String[] CUBE_SUPPORTED_LANGUAGES = { "ara", // Arabic
 			"eng", // English
 			"hin" // Hindi
 	};
 
-	/** Resource to use for data file downloads. */
 	static final String DOWNLOAD_BASE = "http://tesseract-ocr.googlecode.com/files/";
 
-	/** Download filename for orientation and script detection (OSD) data. */
 	static final String OSD_FILENAME = "tesseract-ocr-3.01.osd.tar";
 
-	/** Destination filename for orientation and script detection (OSD) data. */
 	static final String OSD_FILENAME_BASE = "osd.traineddata";
-
-	/**
-	 * Minimum mean confidence score necessary to not reject single-shot OCR
-	 * result. Currently unused.
-	 */
-	static final int MINIMUM_MEAN_CONFIDENCE = 0; // 0 means don't reject any
-													// scored results
-
-	// Context menu
-	private static final int SETTINGS_ID = Menu.FIRST;
-	private static final int ABOUT_ID = Menu.FIRST + 1;
 
 	private CameraManager cameraManager;
 	private CaptureActivityHandler handler;
@@ -142,21 +76,15 @@ public final class CaptureActivity extends Activity implements
 	private SurfaceHolder surfaceHolder;
 
 	private String lastResult;
-
 	private boolean hasSurface;
-
 	private TessBaseAPI baseApi; // Java interface for the Tesseract OCR engine
 	private String sourceLanguageCodeOcr = "eng";
-
 	private int pageSegmentationMode = TessBaseAPI.PageSegMode.PSM_AUTO_OSD;
 	private int ocrEngineMode = TessBaseAPI.OEM_TESSERACT_ONLY;
 	private final String characterBlacklist = "";
 	private final String characterWhitelist = "!?@#$%&*()<>_-+=/.,:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	private ShutterButton shutterButton;
-
-	private boolean isContinuousModeActive; // Whether we are doing OCR in
-											// continuous mode
-
+	private boolean isContinuousModeActive;
 	private ProgressDialog dialog; // for initOcr - language download & unzip
 	private ProgressDialog indeterminateDialog; // also for initOcr - init OCR
 												// engine
@@ -189,11 +117,8 @@ public final class CaptureActivity extends Activity implements
 		lastResult = null;
 		hasSurface = false;
 
-		// Camera shutter button
-		if (DISPLAY_SHUTTER_BUTTON) {
-			shutterButton = (ShutterButton) findViewById(R.id.shutter_button);
-			shutterButton.setOnShutterButtonListener(this);
-		}
+		shutterButton = (ShutterButton) findViewById(R.id.shutter_button);
+		shutterButton.setOnShutterButtonListener(this);
 
 		cameraManager = new CameraManager(getApplication());
 		viewfinderView.setCameraManager(cameraManager);
@@ -515,18 +440,6 @@ public final class CaptureActivity extends Activity implements
 		return super.onKeyDown(keyCode, event);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// MenuInflater inflater = getMenuInflater();
-		// inflater.inflate(R.menu.options_menu, menu);
-		super.onCreateOptionsMenu(menu);
-		menu.add(0, SETTINGS_ID, 0, "Settings").setIcon(
-				android.R.drawable.ic_menu_preferences);
-		menu.add(0, ABOUT_ID, 0, "About").setIcon(
-				android.R.drawable.ic_menu_info_details);
-		return true;
-	}
-
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		hasSurface = false;
 	}
@@ -637,15 +550,13 @@ public final class CaptureActivity extends Activity implements
 
 		viewfinderView.setVisibility(View.VISIBLE);
 
-		if (DISPLAY_SHUTTER_BUTTON) {
-			shutterButton.setVisibility(View.VISIBLE);
-		}
+		shutterButton.setVisibility(View.VISIBLE);
 		lastResult = null;
 		viewfinderView.removeResultText();
 	}
 
 	void setButtonVisibility(boolean visible) {
-		if (shutterButton != null && visible == true && DISPLAY_SHUTTER_BUTTON) {
+		if (shutterButton != null && visible == true) {
 			shutterButton.setVisibility(View.VISIBLE);
 		} else if (shutterButton != null) {
 			shutterButton.setVisibility(View.GONE);

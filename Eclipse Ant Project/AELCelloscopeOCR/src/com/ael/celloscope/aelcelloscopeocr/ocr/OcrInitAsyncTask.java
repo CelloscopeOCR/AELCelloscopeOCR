@@ -284,17 +284,6 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 		}
 	}
 
-	/**
-	 * Download a file from the site specified by DOWNLOAD_BASE, and gunzip to
-	 * the given destination.
-	 * 
-	 * @param sourceFilenameBase
-	 *            Name of file to download, minus the required ".gz" extension
-	 * @param destinationFile
-	 *            Name of file to save the unzipped data to, including path
-	 * @return True if download and unzip are successful
-	 * @throws IOException
-	 */
 	private boolean downloadFile(String sourceFilenameBase, File destinationFile)
 			throws IOException {
 		try {
