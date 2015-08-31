@@ -54,12 +54,6 @@ public final class CaptureActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.capture);
 		captureActivityHandler = null;
-		Button button = (Button) findViewById(R.id.shutter_button);
-		button.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				startEmbeddedCropActivity();
-			}
-		});
 	}
 
 	@Override
@@ -67,6 +61,7 @@ public final class CaptureActivity extends Activity {
 		super.onResume();
 		this.initializeOCREngine();
 		captureActivityHandler = new CaptureActivityHandler(this);
+
 	}
 
 	/**
@@ -78,12 +73,13 @@ public final class CaptureActivity extends Activity {
 		Log.d(TAG, "resumeOCR()");
 
 		if (baseApi != null) {
-			baseApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_AUTO_OSD);
-			baseApi.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, "");
+			baseApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_AUTO);
+			//baseApi.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, "");
 			baseApi.setVariable(
 					TessBaseAPI.VAR_CHAR_WHITELIST,
 					"[]!?@#$%&*()<>_-+=/.,:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 		}
+
 	}
 
 	@Override
@@ -103,7 +99,7 @@ public final class CaptureActivity extends Activity {
 				+ "/sourceForOcr.jpg");
 		Uri destination = Uri.parse("file://"
 				+ Environment.getExternalStorageDirectory() + "/ocr.jpg");
-		Crop.of(sourceUri, destination).withAspect(0, 1).at(Position.BOTTOM)
+		Crop.of(sourceUri, destination).withMICRAspect().at(Position.BOTTOM)
 				.start(this);
 	}
 
@@ -197,6 +193,7 @@ public final class CaptureActivity extends Activity {
 				new OcrInitAsyncTask(this, baseApi).execute(storageDirectory
 						.toString());
 			}
+			startEmbeddedCropActivity();
 		} else {
 			// We already have the engine initialized, so just start the camera.
 			resumeOCR();
