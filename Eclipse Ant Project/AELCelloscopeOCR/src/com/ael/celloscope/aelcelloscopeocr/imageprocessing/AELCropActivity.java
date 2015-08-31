@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.ael.celloscope.aelcelloscopeocr.ocr.CaptureActivity;
 import com.soundcloud.android.crop.Crop;
+import com.soundcloud.android.crop.Crop.Position;
 
 public class AELCropActivity extends Activity {
 	private static final String TAG = AELCropActivity.class.getSimpleName();
@@ -47,7 +48,8 @@ public class AELCropActivity extends Activity {
 			Uri destination = Uri.parse("file://"
 					+ Environment.getExternalStorageDirectory()
 					+ "/ael_image_cropped.jpg");
-			Crop.of(sourceUri, destination).withAspect(0, 1).start(this);
+			Crop.of(sourceUri, destination).withMICRAspect()
+					.at(Position.BOTTOM).start(this);
 		} else if (requestCode == Crop.REQUEST_CROP) {
 			Log.v("handle", "CROP__");
 			handleCrop(resultCode, data);
@@ -58,9 +60,7 @@ public class AELCropActivity extends Activity {
 	private void handleCrop(int resultCode, Intent result) {
 		if (resultCode == RESULT_OK) {
 			Log.v(TAG, "CROPPING DONE");
-			 startActivity(new Intent(this, CaptureActivity.class));
-
-			
+			startActivity(new Intent(this, CaptureActivity.class));
 
 		} else if (resultCode == Crop.RESULT_ERROR) {
 			Toast.makeText(this, Crop.getError(result).getMessage(),

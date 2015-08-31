@@ -33,8 +33,7 @@ final class CaptureActivityHandler extends Handler {
 		decodeThread.start();
 
 		state = State.SUCCESS;
-		// Show the shutter and torch buttons
-		activity.setButtonVisibility(true);
+	
 		restartOcrPreview();
 	}
 
@@ -47,7 +46,7 @@ final class CaptureActivityHandler extends Handler {
 			break;
 		case R.id.ocr_decode_succeeded:
 			state = State.SUCCESS;
-			activity.setShutterButtonClickable(true);
+			
 			// activity.handleOcrDecode((OcrResult) message.obj);
 			Toast toastSuccess = Toast.makeText(activity.getBaseContext(),
 					message.obj.toString(), Toast.LENGTH_LONG);
@@ -56,7 +55,7 @@ final class CaptureActivityHandler extends Handler {
 			break;
 		case R.id.ocr_decode_failed:
 			state = State.PREVIEW;
-			activity.setShutterButtonClickable(true);
+			
 			Toast toast = Toast.makeText(activity.getBaseContext(),
 					"OCR failed. Please try again.", Toast.LENGTH_SHORT);
 			toast.setGravity(Gravity.TOP, 0, 0);
@@ -108,7 +107,7 @@ final class CaptureActivityHandler extends Handler {
 	 */
 	private void restartOcrPreview() {
 		// Display the shutter and torch buttons
-		activity.setButtonVisibility(true);
+	
 
 		if (state == State.SUCCESS) {
 			state = State.PREVIEW;
@@ -144,7 +143,7 @@ final class CaptureActivityHandler extends Handler {
 	 */
 	void shutterButtonClick() {
 
-		activity.setShutterButtonClickable(false);
+	
 		ocrDecode();
 	}
 

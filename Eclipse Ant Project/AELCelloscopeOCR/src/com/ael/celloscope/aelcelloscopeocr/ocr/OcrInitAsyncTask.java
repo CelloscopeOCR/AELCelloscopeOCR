@@ -71,7 +71,7 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		dialog.setCancelable(false);
 		dialog.show();
-		activity.setButtonVisibility(false);
+	
 	}
 
 	protected Boolean doInBackground(String... params) {

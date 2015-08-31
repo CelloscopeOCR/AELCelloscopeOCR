@@ -4,19 +4,24 @@ import java.io.File;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
+import android.widget.Button;
 
 import com.ael.celloscope.aelcelloscopeocr.R;
 import com.ael.celloscope.aelcelloscopeocr.camera.ShutterButton;
 import com.googlecode.tesseract.android.TessBaseAPI;
+import com.soundcloud.android.crop.Crop;
+import com.soundcloud.android.crop.Crop.Position;
 
 /**
  * This activity opens the camera and does the actual scanning on a background
@@ -24,13 +29,11 @@ import com.googlecode.tesseract.android.TessBaseAPI;
  * shows feedback as the image processing is happening, and then overlays the
  * results when a scan is successful.
  */
-public final class CaptureActivity extends Activity implements
-		ShutterButton.OnShutterButtonListener {
+public final class CaptureActivity extends Activity {
 
 	private static final String TAG = CaptureActivity.class.getSimpleName();
 
 	private CaptureActivityHandler captureActivityHandler;
-	private ShutterButton shutterButton;
 
 	private TessBaseAPI baseApi;
 
@@ -51,16 +54,17 @@ public final class CaptureActivity extends Activity implements
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.capture);
 		captureActivityHandler = null;
-
-		shutterButton = (ShutterButton) findViewById(R.id.shutter_button);
-		shutterButton.setOnShutterButtonListener(this);
-
+		Button button = (Button) findViewById(R.id.shutter_button);
+		button.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				startEmbeddedCropActivity();
+			}
+		});
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		resetStatusView();
 		this.initializeOCREngine();
 		captureActivityHandler = new CaptureActivityHandler(this);
 	}
@@ -80,6 +84,17 @@ public final class CaptureActivity extends Activity implements
 					TessBaseAPI.VAR_CHAR_WHITELIST,
 					"!?@#$%&*()<>_-+=/.,:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 		}
+
+		if (!handleCropping) {
+			try {
+				Thread.sleep(800);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// startEmbeddedCropActivity();
+		}
+
 	}
 
 	@Override
@@ -88,6 +103,30 @@ public final class CaptureActivity extends Activity implements
 			captureActivityHandler.quitSynchronously();
 		}
 		super.onPause();
+	}
+
+	Uri sourceUri;
+	int CAMERA_REQUEST = 0xff00;
+
+	private void startEmbeddedCropActivity() {
+		sourceUri = Uri.parse("file://"
+				+ Environment.getExternalStorageDirectory()
+				+ "/sourceForOcr.jpg");
+		Uri destination = Uri.parse("file://"
+				+ Environment.getExternalStorageDirectory() + "/ocr.jpg");
+		Crop.of(sourceUri, destination).withAspect(0, 1).at(Position.BOTTOM)
+				.start(this);
+	}
+
+	boolean handleCropping = false;
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == Crop.REQUEST_CROP && resultCode == RESULT_OK) {
+			if (captureActivityHandler != null) {
+				captureActivityHandler.shutterButtonClick();
+			}
+			handleCropping = true;
+		}
 	}
 
 	void stopHandler() {
@@ -155,11 +194,6 @@ public final class CaptureActivity extends Activity implements
 		return null;
 	}
 
-	private void resetStatusView() {
-
-		shutterButton.setVisibility(View.VISIBLE);
-	}
-
 	private void initializeOCREngine() {
 		// Do OCR engine initialization, if necessary
 		boolean doNewInit = (baseApi == null);
@@ -181,30 +215,6 @@ public final class CaptureActivity extends Activity implements
 			// We already have the engine initialized, so just start the camera.
 			resumeOCR();
 		}
-	}
-
-	void setButtonVisibility(boolean visible) {
-		if (shutterButton != null && visible == true) {
-			shutterButton.setVisibility(View.VISIBLE);
-		} else if (shutterButton != null) {
-			shutterButton.setVisibility(View.GONE);
-		}
-	}
-
-	void setShutterButtonClickable(boolean clickable) {
-		shutterButton.setClickable(clickable);
-	}
-
-	@Override
-	public void onShutterButtonClick(ShutterButton b) {
-		if (captureActivityHandler != null) {
-			captureActivityHandler.shutterButtonClick();
-		}
-	}
-
-	@Override
-	public void onShutterButtonFocus(ShutterButton b, boolean pressed) {
-
 	}
 
 	void showErrorMessage(String title, String message) {

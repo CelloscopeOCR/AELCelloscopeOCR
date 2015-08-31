@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.ael.celloscope.aelcelloscopeocr.R;
+import com.ael.celloscope.aelcelloscopeocr.mediaeffects.BitmapEffect;
 import com.googlecode.leptonica.android.ReadFile;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
@@ -56,22 +57,32 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 		// .buildLuminanceSource(data, width, height)
 		// .renderCroppedGreyscaleBitmap();
 
-		File path = Environment
-				.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-		File file = new File(path, "/test.jpg");
-		Bitmap imutableBitmap = BitmapFactory
-				.decodeFile(file.getAbsolutePath());
-		Bitmap bitmap = imutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
+		/*
+		 * File path = Environment
+		 * .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM); File
+		 * file = new File(path, "/ocr.jpg"); Bitmap imutableBitmap =
+		 * BitmapFactory .decodeFile(file.getAbsolutePath()); Bitmap bitmap =
+		 * imutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
+		 */
 
-		// Uri sourceUri = Uri.parse("file://"
-		// + Environment.getExternalStorageDirectory()
-		// + "/ael_image_cropped.jpg");
-		// Bitmap bitmap;
+		Uri sourceUri = Uri.parse("file://"
+				+ Environment.getExternalStorageDirectory() + "/ocr.jpg");
+		Bitmap bitmap = null;
 
 		try {
-			// bitmap = MediaStore.Images.Media.getBitmap(
-			// this.activity.getContentResolver(), sourceUri);
-			baseApi.setImage(ReadFile.readBitmap(bitmap));
+			try {
+				bitmap = MediaStore.Images.Media.getBitmap(
+						this.activity.getContentResolver(), sourceUri);
+
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			baseApi.setImage(ReadFile.readBitmap(BitmapEffect
+					.decodeSmallBitmap( Environment.getExternalStorageDirectory() + "/ocr.jpg", 1200, 1200/7)));
 			textResult = baseApi.getUTF8Text();
 
 			if (textResult != null && !textResult.equals("")) {
