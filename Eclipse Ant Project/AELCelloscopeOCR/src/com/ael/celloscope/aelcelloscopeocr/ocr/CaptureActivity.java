@@ -82,19 +82,8 @@ public final class CaptureActivity extends Activity {
 			baseApi.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, "");
 			baseApi.setVariable(
 					TessBaseAPI.VAR_CHAR_WHITELIST,
-					"!?@#$%&*()<>_-+=/.,:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+					"[]!?@#$%&*()<>_-+=/.,:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 		}
-
-		if (!handleCropping) {
-			try {
-				Thread.sleep(800);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			// startEmbeddedCropActivity();
-		}
-
 	}
 
 	@Override
@@ -118,14 +107,11 @@ public final class CaptureActivity extends Activity {
 				.start(this);
 	}
 
-	boolean handleCropping = false;
-
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == Crop.REQUEST_CROP && resultCode == RESULT_OK) {
 			if (captureActivityHandler != null) {
 				captureActivityHandler.shutterButtonClick();
 			}
-			handleCropping = true;
 		}
 	}
 
