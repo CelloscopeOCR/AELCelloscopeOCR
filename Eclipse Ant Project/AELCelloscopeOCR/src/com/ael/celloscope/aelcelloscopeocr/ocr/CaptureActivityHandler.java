@@ -1,5 +1,7 @@
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -33,7 +35,7 @@ final class CaptureActivityHandler extends Handler {
 		decodeThread.start();
 
 		state = State.SUCCESS;
-	
+
 		restartOcrPreview();
 	}
 
@@ -46,16 +48,14 @@ final class CaptureActivityHandler extends Handler {
 			break;
 		case R.id.ocr_decode_succeeded:
 			state = State.SUCCESS;
-			
-			// activity.handleOcrDecode((OcrResult) message.obj);
-			Toast toastSuccess = Toast.makeText(activity.getBaseContext(),
-					message.obj.toString(), Toast.LENGTH_LONG);
-			toastSuccess.setGravity(Gravity.TOP, 0, 0);
-			toastSuccess.show();
+
+			new AlertDialog.Builder(activity)
+					.setMessage(message.obj.toString()).create().show();
+
 			break;
 		case R.id.ocr_decode_failed:
 			state = State.PREVIEW;
-			
+
 			Toast toast = Toast.makeText(activity.getBaseContext(),
 					"OCR failed. Please try again.", Toast.LENGTH_SHORT);
 			toast.setGravity(Gravity.TOP, 0, 0);
@@ -107,7 +107,6 @@ final class CaptureActivityHandler extends Handler {
 	 */
 	private void restartOcrPreview() {
 		// Display the shutter and torch buttons
-	
 
 		if (state == State.SUCCESS) {
 			state = State.PREVIEW;
@@ -143,7 +142,6 @@ final class CaptureActivityHandler extends Handler {
 	 */
 	void shutterButtonClick() {
 
-	
 		ocrDecode();
 	}
 
