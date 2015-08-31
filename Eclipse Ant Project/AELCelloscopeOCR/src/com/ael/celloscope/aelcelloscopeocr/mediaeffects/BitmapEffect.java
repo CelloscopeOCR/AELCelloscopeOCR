@@ -16,8 +16,10 @@ public class BitmapEffect {
 		BitmapFactory.decodeFile(filePath, options);
 
 		// Calculate inSampleSize
-		options.inSampleSize = calculateInSampleSize(options, reqWidth,
-				reqHeight);
+		if (reqWidth != 0 && reqHeight != 0) {
+			options.inSampleSize = calculateInSampleSize(options, reqWidth,
+					reqHeight);
+		}
 
 		// Decode bitmap with inSampleSize set
 		options.inJustDecodeBounds = false;

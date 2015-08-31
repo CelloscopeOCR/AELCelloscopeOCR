@@ -1,10 +1,16 @@
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.ael.celloscope.aelcelloscopeocr.R;
@@ -43,10 +49,10 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 	@Override
 	protected Boolean doInBackground(Void... arg0) {
-
-		Bitmap bitmap = activity.getCameraManager()
-				.buildLuminanceSource(data, width, height)
-				.renderCroppedGreyscaleBitmap();
+		//
+		// Bitmap bitmap = activity.getCameraManager()
+		// .buildLuminanceSource(data, width, height)
+		// .renderCroppedGreyscaleBitmap();
 
 		// File path = Environment
 		// .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
@@ -55,7 +61,13 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 		// .decodeFile(file.getAbsolutePath());
 		// Bitmap bitmap = imutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
 
+		Uri sourceUri = Uri.parse("file://"
+				+ Environment.getExternalStorageDirectory()
+				+ "/ael_image_cropped.jpg");
+		Bitmap bitmap;
 		try {
+			bitmap = MediaStore.Images.Media.getBitmap(
+					this.activity.getContentResolver(), sourceUri);
 			baseApi.setImage(ReadFile.readBitmap(bitmap));
 			textResult = baseApi.getUTF8Text();
 
@@ -63,6 +75,12 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 				return true;
 			}
 
+		} catch (FileNotFoundException e2) {
+			Log.e("OcrRecognizeAsyncTask", "File Not Found");
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			Log.e("OcrRecognizeAsyncTask", "File Not Found");
+			e2.printStackTrace();
 		} catch (RuntimeException e) {
 			Log.e("OcrRecognizeAsyncTask",
 					"Caught RuntimeException in request to Tesseract. Setting state to CONTINUOUS_STOPPED.");
