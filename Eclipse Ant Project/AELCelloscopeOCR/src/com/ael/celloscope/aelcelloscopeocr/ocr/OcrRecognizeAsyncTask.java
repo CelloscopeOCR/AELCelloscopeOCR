@@ -1,10 +1,12 @@
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -54,20 +56,21 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 		// .buildLuminanceSource(data, width, height)
 		// .renderCroppedGreyscaleBitmap();
 
-		// File path = Environment
-		// .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-		// File file = new File(path, "/test.jpg");
-		// Bitmap imutableBitmap = BitmapFactory
-		// .decodeFile(file.getAbsolutePath());
-		// Bitmap bitmap = imutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
+		File path = Environment
+				.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+		File file = new File(path, "/test.jpg");
+		Bitmap imutableBitmap = BitmapFactory
+				.decodeFile(file.getAbsolutePath());
+		Bitmap bitmap = imutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
 
-		Uri sourceUri = Uri.parse("file://"
-				+ Environment.getExternalStorageDirectory()
-				+ "/ael_image_cropped.jpg");
-		Bitmap bitmap;
+		// Uri sourceUri = Uri.parse("file://"
+		// + Environment.getExternalStorageDirectory()
+		// + "/ael_image_cropped.jpg");
+		// Bitmap bitmap;
+
 		try {
-			bitmap = MediaStore.Images.Media.getBitmap(
-					this.activity.getContentResolver(), sourceUri);
+			// bitmap = MediaStore.Images.Media.getBitmap(
+			// this.activity.getContentResolver(), sourceUri);
 			baseApi.setImage(ReadFile.readBitmap(bitmap));
 			textResult = baseApi.getUTF8Text();
 
@@ -75,12 +78,6 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 				return true;
 			}
 
-		} catch (FileNotFoundException e2) {
-			Log.e("OcrRecognizeAsyncTask", "File Not Found");
-			e2.printStackTrace();
-		} catch (IOException e2) {
-			Log.e("OcrRecognizeAsyncTask", "File Not Found");
-			e2.printStackTrace();
 		} catch (RuntimeException e) {
 			Log.e("OcrRecognizeAsyncTask",
 					"Caught RuntimeException in request to Tesseract. Setting state to CONTINUOUS_STOPPED.");

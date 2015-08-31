@@ -21,17 +21,13 @@ final class CaptureActivityHandler extends Handler {
 	private final CaptureActivity activity;
 	private final DecodeThread decodeThread;
 	private static State state;
-	private final CameraManager cameraManager;
 
 	private enum State {
 		PREVIEW, PREVIEW_PAUSED, CONTINUOUS, CONTINUOUS_PAUSED, SUCCESS, DONE
 	}
 
-	CaptureActivityHandler(CaptureActivity activity, CameraManager cameraManager) {
+	CaptureActivityHandler(CaptureActivity activity) {
 		this.activity = activity;
-		this.cameraManager = cameraManager;
-
-		cameraManager.startPreview();
 
 		decodeThread = new DecodeThread(activity);
 		decodeThread.start();
@@ -81,9 +77,7 @@ final class CaptureActivityHandler extends Handler {
 
 	void quitSynchronously() {
 		state = State.DONE;
-		if (cameraManager != null) {
-			cameraManager.stopPreview();
-		}
+
 		// Message quit = Message.obtain(decodeThread.getHandler(), R.id.quit);
 		try {
 			// quit.sendToTarget(); // This always gives
@@ -120,7 +114,7 @@ final class CaptureActivityHandler extends Handler {
 			state = State.PREVIEW;
 
 			// Draw the viewfinder.
-			activity.drawViewfinder();
+
 		}
 	}
 
@@ -129,8 +123,10 @@ final class CaptureActivityHandler extends Handler {
 	 */
 	private void ocrDecode() {
 		state = State.PREVIEW_PAUSED;
-		cameraManager.requestOcrDecode(decodeThread.getHandler(),
-				R.id.ocr_decode);
+		Message message = decodeThread.getHandler().obtainMessage(
+				R.id.ocr_decode, 0, 0, 0);
+		message.sendToTarget();
+
 	}
 
 	/**
@@ -147,7 +143,7 @@ final class CaptureActivityHandler extends Handler {
 	 * Request OCR when the on-screen shutter button is clicked.
 	 */
 	void shutterButtonClick() {
-		// Disable further clicks on this button until OCR request is finished
+
 		activity.setShutterButtonClickable(false);
 		ocrDecode();
 	}

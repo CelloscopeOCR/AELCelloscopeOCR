@@ -3,18 +3,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <SurfaceView
-        android:id="@+id/preview_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_centerInParent="true" />
-
-    <com.ael.celloscope.aelcelloscopeocr.ocr.ViewfinderView
-        android:id="@+id/viewfinder_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="#0000" />
-
     <com.ael.celloscope.aelcelloscopeocr.camera.ShutterButton
         android:id="@+id/shutter_button"
         android:layout_width="wrap_content"
@@ -28,5 +16,7 @@
         android:gravity="right"
         android:scaleType="center"
         android:visibility="gone" />
+
+   
 
 </FrameLayout>
