@@ -97,7 +97,7 @@ public final class CaptureActivity extends Activity {
 	Uri sourceUri;
 	int CAMERA_REQUEST = 0xff00;
 
-	private void startEmbeddedCropActivity() {
+	public void startEmbeddedCropActivity() {
 		sourceUri = Uri.parse("file://"
 				+ Environment.getExternalStorageDirectory()
 				+ "/sourceForOcr.jpg");

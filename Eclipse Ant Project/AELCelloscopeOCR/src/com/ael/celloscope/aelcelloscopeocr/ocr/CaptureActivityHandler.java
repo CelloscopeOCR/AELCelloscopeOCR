@@ -2,6 +2,7 @@ package com.ael.celloscope.aelcelloscopeocr.ocr;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -50,7 +51,14 @@ final class CaptureActivityHandler extends Handler {
 			state = State.SUCCESS;
 
 			new AlertDialog.Builder(activity)
-					.setMessage(message.obj.toString()).create().show();
+					.setMessage(message.obj.toString())
+					.setPositiveButton("OCR", new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							activity.startEmbeddedCropActivity();
+
+						}
+					}).setCancelable(false).create().show();
 
 			break;
 		case R.id.ocr_decode_failed:
