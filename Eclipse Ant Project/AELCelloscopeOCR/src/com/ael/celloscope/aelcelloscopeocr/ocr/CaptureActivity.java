@@ -74,7 +74,7 @@ public final class CaptureActivity extends Activity {
 
 		if (baseApi != null) {
 			baseApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_AUTO);
-			//baseApi.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, "");
+			// baseApi.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, "");
 			baseApi.setVariable(
 					TessBaseAPI.VAR_CHAR_WHITELIST,
 					"[]!?@#$%&*()<>_-+=/.,:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
@@ -99,8 +99,8 @@ public final class CaptureActivity extends Activity {
 				+ "/sourceForOcr.jpg");
 		Uri destination = Uri.parse("file://"
 				+ Environment.getExternalStorageDirectory() + "/ocr.jpg");
-		Crop.of(sourceUri, destination).withMICRAspect().at(Position.BOTTOM)
-				.start(this);
+		Crop.of(sourceUri, destination).withMICRAspect()
+				.at(Position.BOTTOM_LEFT).start(this);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

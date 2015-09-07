@@ -60,7 +60,7 @@ public class AELCropActivity extends Activity {
 	private void handleCrop(int resultCode, Intent result) {
 		if (resultCode == RESULT_OK) {
 			Log.v(TAG, "CROPPING DONE");
-			startActivity(new Intent(this, CaptureActivity.class));
+			startActivity(new Intent(this, EditActivity.class));
 
 		} else if (resultCode == Crop.RESULT_ERROR) {
 			Toast.makeText(this, Crop.getError(result).getMessage(),
