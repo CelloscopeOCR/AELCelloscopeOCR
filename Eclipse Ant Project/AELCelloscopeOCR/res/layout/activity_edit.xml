@@ -1,124 +1,143 @@
 <LinearLayout xmlns:tools="http://schemas.android.com/tools"
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/edit_layout"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="horizontal" >
-	<RelativeLayout
-		android:layout_width="0dp"
-		android:layout_height="match_parent"
-		android:layout_weight="1" >
-		<android.opengl.GLSurfaceView
-			android:id="@+id/effectsview"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent" />
-		<SeekBar
-			android:id="@+id/rotateSeekbar"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:max="360"
-			android:visibility="gone" />
-	</RelativeLayout>
-	<LinearLayout
-		android:id="@+id/brightnessLinearLayout"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:orientation="vertical"
-		android:visibility="gone" >
-		<ImageButton
-			android:id="@+id/increaseBrightness"
-			android:layout_width="35dp"
-			android:layout_height="35dp"
-			android:background="#55000000"
-			android:contentDescription="@string/plus"
-			android:onClick="adjustBrightnessContrast"
-			android:src="@drawable/plus" />
-		<com.ael.celloscope.aelcelloscopeocr.mediaeffects.VerticalSeekBar
-			android:id="@+id/brightnessSeekbar"
-			android:layout_width="wrap_content"
-			android:layout_height="0dp"
-			android:layout_gravity="center_horizontal"
-			android:layout_weight="1"
-			android:max="100" />
-		<ImageButton
-			android:id="@+id/decreaseBrightness"
-			android:layout_width="35dp"
-			android:layout_height="35dp"
-			android:background="#55000000"
-			android:contentDescription="@string/minus"
-			android:onClick="adjustBrightnessContrast"
-			android:src="@drawable/minus" />
-	</LinearLayout>
-	<LinearLayout
-		android:id="@+id/contrastLinearLayout"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:orientation="vertical"
-		android:visibility="gone" >
-		<ImageButton
-			android:id="@+id/increaseContrast"
-			android:layout_width="35dp"
-			android:layout_height="35dp"
-			android:background="#55000000"
-			android:contentDescription="@string/plus"
-			android:onClick="adjustBrightnessContrast"
-			android:src="@drawable/plus" />
-		<com.ael.celloscope.aelcelloscopeocr.mediaeffects.VerticalSeekBar
-			android:id="@+id/contrastSeekbar"
-			android:layout_width="wrap_content"
-			android:layout_height="0dp"
-			android:layout_gravity="center_horizontal"
-			android:layout_weight="1"
-			android:max="100" />
-		<ImageButton
-			android:id="@+id/decreaseContrast"
-			android:layout_width="35dp"
-			android:layout_height="35dp"
-			android:background="#55000000"
-			android:contentDescription="@string/minus"
-			android:onClick="adjustBrightnessContrast"
-			android:src="@drawable/minus" />
-	</LinearLayout>
-	<RadioGroup
-		android:id="@+id/radioGroup"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:orientation="vertical" >
-		<RadioButton
-			android:id="@+id/radio_rotate"
-			style="@android:style/Widget.Button"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:text="@string/rotate" />
-		<RadioButton
-			android:id="@+id/radio_crop"
-			style="@android:style/Widget.Button"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:text="@string/crop" />
-		<RadioButton
-			android:id="@+id/radio_bright_cont"
-			style="@android:style/Widget.Button"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:text="@string/bright_cont" />
-		<RadioButton
-			android:id="@+id/radio_undo"
-			style="@android:style/Widget.Button"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:text="@string/undo" />
-		<RadioButton
-			android:id="@+id/radio_redo"
-			style="@android:style/Widget.Button"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:text="@string/redo" />
-		<RadioButton
-			android:id="@+id/radio_reset"
-			style="@android:style/Widget.Button"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:text="@string/reset" />
-	</RadioGroup>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/edit_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+
+        <android.opengl.GLSurfaceView
+            android:id="@+id/effectsview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <SeekBar
+            android:id="@+id/rotateSeekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="360"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/brightnessLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageButton
+            android:id="@+id/increaseBrightness"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="#55000000"
+            android:contentDescription="@string/plus"
+            android:onClick="adjustBrightnessContrast"
+            android:src="@drawable/plus" />
+
+        <com.ael.celloscope.aelcelloscopeocr.mediaeffects.VerticalSeekBar
+            android:id="@+id/brightnessSeekbar"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:max="100" />
+
+        <ImageButton
+            android:id="@+id/decreaseBrightness"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="#55000000"
+            android:contentDescription="@string/minus"
+            android:onClick="adjustBrightnessContrast"
+            android:src="@drawable/minus" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/contrastLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageButton
+            android:id="@+id/increaseContrast"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="#55000000"
+            android:contentDescription="@string/plus"
+            android:onClick="adjustBrightnessContrast"
+            android:src="@drawable/plus" />
+
+        <com.ael.celloscope.aelcelloscopeocr.mediaeffects.VerticalSeekBar
+            android:id="@+id/contrastSeekbar"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:max="100" />
+
+        <ImageButton
+            android:id="@+id/decreaseContrast"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="#55000000"
+            android:contentDescription="@string/minus"
+            android:onClick="adjustBrightnessContrast"
+            android:src="@drawable/minus" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <RadioButton
+            android:id="@+id/radio_rotate"
+            style="@android:style/Widget.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rotate" />
+
+        <RadioButton
+            android:id="@+id/radio_crop"
+            style="@android:style/Widget.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/crop" />
+
+        <RadioButton
+            android:id="@+id/radio_bright_cont"
+            style="@android:style/Widget.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/bright_cont" />
+
+        <RadioButton
+            android:id="@+id/radio_undo"
+            style="@android:style/Widget.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/undo" />
+
+        <RadioButton
+            android:id="@+id/radio_redo"
+            style="@android:style/Widget.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/redo" />
+
+        <RadioButton
+            android:id="@+id/radio_reset"
+            style="@android:style/Widget.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reset" />
+    </RadioGroup>
+
 </LinearLayout>

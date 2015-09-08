@@ -11,7 +11,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.ael.celloscope.aelcelloscopeocr.ocr.CaptureActivity;
+
 import com.soundcloud.android.crop.Crop;
 import com.soundcloud.android.crop.Crop.Position;
 
