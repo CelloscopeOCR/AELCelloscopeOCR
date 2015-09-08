@@ -26,9 +26,6 @@ public class BitmapEffectActivity extends Activity implements
 	private static final String TAG = BitmapEffectActivity.class
 			.getSimpleName();
 
-	private int brightness = 0;
-	private double contrast = 0.0;
-
 	Bitmap targetBitmap;
 
 	@Override
@@ -143,9 +140,7 @@ public class BitmapEffectActivity extends Activity implements
 		}
 	}
 
-	private void resetEdit() {
-		brightness = 0;
-		contrast = 0.0;
+	private void resetEdit() {		
 		rotateSeekbar.setProgress(0);
 		brightnessSeekbar.setProgress(0);
 		contrastSeekbar.setProgress(0);
