@@ -21,22 +21,20 @@ public class BitmapEffectHandler extends Handler {
 	public void handleMessage(Message message) {
 
 		switch (message.what) {
-		case R.id.increaseBrightness:
+		case R.id.change_brightness:
 			Bitmap brightBitmap = BitmapEffect.doBrightness(
 					activity.targetBitmap, (Integer) message.obj);
 
-			Message message2 = activity.bitmapEffectActivityHandler
-					.obtainMessage(R.id.increaseBrightness, 0, 0, brightBitmap);
-			message2.sendToTarget();			
+			activity.bitmapEffectActivityHandler.obtainMessage(R.id.set_image,
+					0, 0, brightBitmap).sendToTarget();
 			break;
 
-		case R.id.increaseContrast:
+		case R.id.change_contrast:
 			Bitmap contrastBitmap = BitmapEffect.doContrast(
 					activity.targetBitmap, (Double) message.obj);
 
-			Message message3 = activity.bitmapEffectActivityHandler
-					.obtainMessage(R.id.increaseContrast, 0, 0, contrastBitmap);
-			message3.sendToTarget();
+			activity.bitmapEffectActivityHandler.obtainMessage(R.id.set_image,
+					0, 0, contrastBitmap).sendToTarget();
 			break;
 		}
 	}

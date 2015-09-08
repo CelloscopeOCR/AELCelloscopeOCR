@@ -27,4 +27,9 @@
 	<item name="ocr_decode_succeeded" type="id"/>
 	<item name="quit" type="id"/>
 	<item name="restart_preview" type="id"/>
+	
+	<item name="change_brightness" type="id"/>
+	<item name="change_contrast" type="id"/>
+	<item name="rotate" type="id"/>
+	<item name="set_image" type="id"/>
 </resources>
