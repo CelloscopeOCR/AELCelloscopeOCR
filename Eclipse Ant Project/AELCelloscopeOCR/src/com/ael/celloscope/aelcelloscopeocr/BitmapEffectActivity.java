@@ -78,7 +78,7 @@ public class BitmapEffectActivity extends Activity implements
 	}
 
 	Bitmap tempTargetBitmap;
-	int rotation = 0;
+	private float rotation = 0f;
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress,
@@ -86,17 +86,18 @@ public class BitmapEffectActivity extends Activity implements
 		switch (seekBar.getId()) {
 		case R.id.rotateSeekbar:
 			rotation = progress - 180;
-			tempTargetBitmap = BitmapEffect.rotate(targetBitmap, rotation);
+			// tempTargetBitmap = BitmapEffect.rotate(targetBitmap, rotation);
+			bitmapEffectActivityHandler.rotate(rotation);
 			break;
 		case R.id.brightnessSeekbar:
 			// brightness += progress;
 			Log.d(TAG, Integer.toString(progress));
-			bitmapEffectActivityHandler.increaseBrightness(progress);
+			bitmapEffectActivityHandler.changeBrightness(progress);
 			break;
 		case R.id.contrastSeekbar:
 			// contrast += progress;
 			Log.d(TAG, Integer.toString(progress));
-			bitmapEffectActivityHandler.increaseContrast(progress);
+			bitmapEffectActivityHandler.changeContrast(progress);
 			break;
 
 		default:
@@ -140,7 +141,7 @@ public class BitmapEffectActivity extends Activity implements
 		}
 	}
 
-	private void resetEdit() {		
+	private void resetEdit() {
 		rotateSeekbar.setProgress(0);
 		brightnessSeekbar.setProgress(0);
 		contrastSeekbar.setProgress(0);

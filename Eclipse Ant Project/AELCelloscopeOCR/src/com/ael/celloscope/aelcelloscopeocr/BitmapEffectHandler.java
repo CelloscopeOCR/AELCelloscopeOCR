@@ -36,6 +36,14 @@ public class BitmapEffectHandler extends Handler {
 			activity.bitmapEffectActivityHandler.obtainMessage(R.id.set_image,
 					0, 0, contrastBitmap).sendToTarget();
 			break;
+			
+		case R.id.rotate:
+			Bitmap rotateBitmap = BitmapEffect.rotate(
+					activity.targetBitmap, (Float) message.obj);
+
+			activity.bitmapEffectActivityHandler.obtainMessage(R.id.set_image,
+					0, 0, rotateBitmap).sendToTarget();
+			break;
 		}
 	}
 
