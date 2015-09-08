@@ -61,7 +61,7 @@ public class BitmapEffect {
 				matrix, true);
 	}
 
-	public static synchronized Bitmap doBrightness(Bitmap src, int value) {
+	public static Bitmap doBrightness(Bitmap src, int value) {
 		// image size
 		int width = src.getWidth();
 		int height = src.getHeight();

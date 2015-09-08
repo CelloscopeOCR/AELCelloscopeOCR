@@ -1,32 +1,40 @@
 package com.ael.celloscope.aelcelloscopeocr;
 
+import com.ael.celloscope.aelcelloscopeocr.mediaeffects.BitmapEffect;
+
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 
 public class BitmapEffectHandler extends Handler {
 
 	private final BitmapEffectActivity activity;
-	private final BitmapEffectThread decodeThread;
 
 	BitmapEffectHandler(BitmapEffectActivity activity) {
 		this.activity = activity;
 
-		decodeThread = new BitmapEffectThread(activity);
-		decodeThread.start();
 	}
 
 	@Override
 	public void handleMessage(Message message) {
 
 		switch (message.what) {
-		case R.id.restart_preview:
+		case R.id.increaseBrightness:
+			Bitmap brightBitmap = BitmapEffect.doBrightness(
+					activity.targetBitmap, activity.brightness);
 
+			Message message2 = activity.bitmapEffectActivityHandler
+					.obtainMessage(R.id.increaseBrightness, 0, 0, brightBitmap);
+			message2.sendToTarget();
 			break;
-		case R.id.ocr_decode_succeeded:
 
-			break;
-		case R.id.ocr_decode_failed:
+		case R.id.increaseContrast:
+			Bitmap contrastBitmap = BitmapEffect.doContrast(
+					activity.targetBitmap, activity.contrast);
 
+			Message message3 = activity.bitmapEffectActivityHandler
+					.obtainMessage(R.id.increaseContrast, 0, 0, contrastBitmap);
+			message3.sendToTarget();
 			break;
 		}
 	}

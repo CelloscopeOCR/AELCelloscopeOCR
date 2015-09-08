@@ -8,6 +8,7 @@ import android.os.Looper;
 public class BitmapEffectThread extends Thread {
 	private final BitmapEffectActivity activity;
 	private Handler handler;
+
 	private final CountDownLatch handlerInitLatch;
 
 	BitmapEffectThread(BitmapEffectActivity activity) {
@@ -19,7 +20,7 @@ public class BitmapEffectThread extends Thread {
 		try {
 			handlerInitLatch.await();
 		} catch (InterruptedException ie) {
-			// continue?
+
 		}
 		return handler;
 	}
@@ -27,7 +28,7 @@ public class BitmapEffectThread extends Thread {
 	@Override
 	public void run() {
 		Looper.prepare();
-		handler = new BitmapEffectHandler(activity);
+		 handler = new BitmapEffectHandler(activity);
 		handlerInitLatch.countDown();
 		Looper.loop();
 	}

@@ -23,6 +23,10 @@ public class BitmapEffectActivity extends Activity implements
 	SeekBar rotateSeekbar;
 	VerticalSeekBar brightnessSeekbar, contrastSeekbar;
 	RadioGroup effectRadioGroup;
+	public BitmapEffectActivityHandler bitmapEffectActivityHandler;
+
+	public int brightness = 0;
+	public double contrast = 0.0;
 
 	Bitmap targetBitmap;
 
@@ -41,6 +45,12 @@ public class BitmapEffectActivity extends Activity implements
 		targetBitmap = BitmapFactory.decodeResource(getResources(),
 				R.drawable.puppy);
 		imageView.setImageBitmap(targetBitmap);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		bitmapEffectActivityHandler = new BitmapEffectActivityHandler(this);
 	}
 
 	private void initViews() {
@@ -72,41 +82,6 @@ public class BitmapEffectActivity extends Activity implements
 		}
 	}
 
-	int brightness = 0;
-	double contrast = 0.0;
-
-	// This method is invoked from activity_bitmap_effect.xml layout
-	public void adjustBrightness(View view) {
-		switch (view.getId()) {
-		case R.id.increaseBrightness:
-			brightness += 5;
-			break;
-		case R.id.decreaseBrightness:
-			brightness -= 5;
-			break;
-		default:
-			break;
-		}
-		tempTargetBitmap = BitmapEffect.doBrightness(targetBitmap, brightness);
-		imageView.setImageBitmap(tempTargetBitmap);
-	}
-
-	public void adjustContrast(View view) {
-		switch (view.getId()) {
-		case R.id.increaseContrast:
-			contrast += 5.0;
-			break;
-		case R.id.decreaseContrast:
-			contrast -= 5.0;
-			break;
-
-		default:
-			break;
-		}
-		tempTargetBitmap = BitmapEffect.doContrast(targetBitmap, contrast);
-		imageView.setImageBitmap(tempTargetBitmap);
-	}
-
 	Bitmap tempTargetBitmap;
 	int rotation = 0;
 
@@ -119,19 +94,23 @@ public class BitmapEffectActivity extends Activity implements
 			tempTargetBitmap = BitmapEffect.rotate(targetBitmap, rotation);
 			break;
 		case R.id.brightnessSeekbar:
-			tempTargetBitmap = BitmapEffect.doBrightness(targetBitmap,
-					brightness + progress);
+			// tempTargetBitmap = BitmapEffect.doBrightness(targetBitmap,
+			// brightness + progress);
+			brightness += progress;
+			 bitmapEffectActivityHandler.increaseBrightness();
 			break;
 		case R.id.contrastSeekbar:
-			tempTargetBitmap = BitmapEffect.doContrast(targetBitmap, contrast
-					+ progress);
+			// tempTargetBitmap = BitmapEffect.doContrast(targetBitmap, contrast
+			// + progress);
+			contrast += progress;
+			 bitmapEffectActivityHandler.increaseContrast();
 			break;
 
 		default:
 			break;
 		}
 
-		imageView.setImageBitmap(tempTargetBitmap);
+		// imageView.setImageBitmap(tempTargetBitmap);
 	}
 
 	@Override
@@ -176,9 +155,9 @@ public class BitmapEffectActivity extends Activity implements
 		rotateSeekbar.setProgress(0);
 		brightnessSeekbar.setProgress(0);
 		contrastSeekbar.setProgress(0);
-//		targetBitmap = BitmapEffect.decodeSmallBitmap(
-//				new File(this.getCacheDir(), "cropped").getAbsolutePath(), 100,
-//				50);
+		// targetBitmap = BitmapEffect.decodeSmallBitmap(
+		// new File(this.getCacheDir(), "cropped").getAbsolutePath(), 100,
+		// 50);
 		targetBitmap = BitmapFactory.decodeResource(getResources(),
 				R.drawable.puppy);
 		imageView.setImageBitmap(targetBitmap);
