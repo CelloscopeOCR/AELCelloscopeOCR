@@ -4,6 +4,7 @@ import java.io.File;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,9 +35,11 @@ public class BitmapEffectActivity extends Activity implements
 
 		setControllers();
 
-		targetBitmap = BitmapEffect.decodeSmallBitmap(
-				new File(this.getCacheDir(), "cropped").getAbsolutePath(), 320,
-				240);
+		// targetBitmap = BitmapEffect.decodeSmallBitmap(
+		// new File(this.getCacheDir(), "cropped").getAbsolutePath(), 320,
+		// 240);
+		targetBitmap = BitmapFactory.decodeResource(getResources(),
+				R.drawable.puppy);
 		imageView.setImageBitmap(targetBitmap);
 	}
 
@@ -145,7 +148,7 @@ public class BitmapEffectActivity extends Activity implements
 
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
-		/*targetBitmap = tempTargetBitmap;*/
+		/* targetBitmap = tempTargetBitmap; */
 		switch (checkedId) {
 		case R.id.radio_rotate:
 			rotateLayout.setVisibility(View.VISIBLE);

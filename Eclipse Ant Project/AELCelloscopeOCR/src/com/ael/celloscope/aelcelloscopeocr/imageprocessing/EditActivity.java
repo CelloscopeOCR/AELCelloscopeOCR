@@ -62,7 +62,8 @@ public class EditActivity extends Activity {
 					findViewById(R.id.contrastLinearLayout).setVisibility(
 							View.GONE);
 					rotateSeek.setVisibility(View.VISIBLE);
-					mSurfaceViewRenderer.ApplyEffect(R.id.rotate);
+					mSurfaceViewRenderer.ApplyEffect(R.id.rotate,
+							rotateSeek.getProgress());
 					break;
 				case R.id.radio_brightness:
 					rotateSeek.setVisibility(View.GONE);
@@ -130,7 +131,8 @@ public class EditActivity extends Activity {
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				if (fromUser) {
-					// TODO
+					mSurfaceViewRenderer.ApplyEffect(R.id.rotate,
+							rotateSeek.getProgress());
 				}
 
 			}

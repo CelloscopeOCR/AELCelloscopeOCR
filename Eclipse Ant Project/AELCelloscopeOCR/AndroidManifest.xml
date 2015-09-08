@@ -63,11 +63,11 @@
             android:name=".imageprocessing.EditActivity"
             android:screenOrientation="sensorLandscape"
             android:theme="@android:style/Theme.NoTitleBar" >
-            <intent-filter>
+           <!--  <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter> -->
         </activity>
         <activity android:name=".ocr.PreferencesActivity" />
         <activity
@@ -77,6 +77,11 @@
             android:name=".BitmapEffectActivity"
             android:label="@string/title_activity_bitmap_effect"
             android:screenOrientation="sensorLandscape" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

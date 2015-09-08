@@ -43,6 +43,14 @@ public class SurfaceViewRenderer implements GLSurfaceView.Renderer {
 		mGLSurfaceView.requestRender();
 	}
 
+	int mDegree;
+
+	public void ApplyEffect(int currentEffect, int degree) {
+		mCurrentEffect = currentEffect;
+		this.mDegree = degree;
+		mGLSurfaceView.requestRender();
+	}
+
 	private void initializeGLSurfaceView(GLSurfaceView view) {
 
 		view.setEGLContextClientVersion(2);
@@ -204,11 +212,11 @@ public class SurfaceViewRenderer implements GLSurfaceView.Renderer {
 		case R.id.posterize:
 			mEffect = effectFactory
 					.createEffect(EffectFactory.EFFECT_POSTERIZE);
-			break;
+			break; 
 
 		case R.id.rotate:
 			mEffect = effectFactory.createEffect(EffectFactory.EFFECT_ROTATE);
-			mEffect.setParameter("angle", 180);
+			mEffect.setParameter("angle", mDegree);
 			break;
 
 		case R.id.saturate:
