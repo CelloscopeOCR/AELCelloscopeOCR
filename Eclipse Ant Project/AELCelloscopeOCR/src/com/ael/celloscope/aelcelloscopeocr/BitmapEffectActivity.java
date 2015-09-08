@@ -176,9 +176,11 @@ public class BitmapEffectActivity extends Activity implements
 		rotateSeekbar.setProgress(0);
 		brightnessSeekbar.setProgress(0);
 		contrastSeekbar.setProgress(0);
-		targetBitmap = BitmapEffect.decodeSmallBitmap(
-				new File(this.getCacheDir(), "cropped").getAbsolutePath(), 100,
-				50);
+//		targetBitmap = BitmapEffect.decodeSmallBitmap(
+//				new File(this.getCacheDir(), "cropped").getAbsolutePath(), 100,
+//				50);
+		targetBitmap = BitmapFactory.decodeResource(getResources(),
+				R.drawable.puppy);
 		imageView.setImageBitmap(targetBitmap);
 		if (tempTargetBitmap != null) {
 			tempTargetBitmap.recycle();
