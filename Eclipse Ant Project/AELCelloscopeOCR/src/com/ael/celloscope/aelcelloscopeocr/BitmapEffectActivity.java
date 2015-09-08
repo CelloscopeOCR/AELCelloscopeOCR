@@ -25,8 +25,8 @@ public class BitmapEffectActivity extends Activity implements
 	RadioGroup effectRadioGroup;
 	public BitmapEffectActivityHandler bitmapEffectActivityHandler;
 
-	public int brightness = 0;
-	public double contrast = 0.0;
+	private int brightness = 0;
+	private double contrast = 0.0;
 
 	Bitmap targetBitmap;
 
@@ -97,13 +97,13 @@ public class BitmapEffectActivity extends Activity implements
 			// tempTargetBitmap = BitmapEffect.doBrightness(targetBitmap,
 			// brightness + progress);
 			brightness += progress;
-			 bitmapEffectActivityHandler.increaseBrightness();
+			bitmapEffectActivityHandler.increaseBrightness(brightness);
 			break;
 		case R.id.contrastSeekbar:
 			// tempTargetBitmap = BitmapEffect.doContrast(targetBitmap, contrast
 			// + progress);
 			contrast += progress;
-			 bitmapEffectActivityHandler.increaseContrast();
+			bitmapEffectActivityHandler.increaseContrast(contrast);
 			break;
 
 		default:

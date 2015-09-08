@@ -31,17 +31,17 @@ public class BitmapEffectActivityHandler extends Handler {
 		}
 	}
 
-	public void increaseBrightness() {
+	public void increaseBrightness(int brightness) {
 
 		 Message message = bitmapEffectThread.getHandler().obtainMessage(
-		 R.id.increaseBrightness, 0, 0, 0);
+		 R.id.increaseBrightness, 0, 0, brightness);
 		 message.sendToTarget();
 	}
 
-	public void increaseContrast() {
+	public void increaseContrast(double contrast) {
 
 		Message message = bitmapEffectThread.getHandler().obtainMessage(
-				R.id.increaseContrast, 0, 0, 0);
+				R.id.increaseContrast, 0, 0, contrast);
 		message.sendToTarget();
 	}
 
