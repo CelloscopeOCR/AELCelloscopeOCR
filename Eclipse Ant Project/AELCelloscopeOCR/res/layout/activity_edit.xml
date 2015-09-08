@@ -105,32 +105,32 @@
             android:text="@string/rotate" />
 
         <RadioButton
-            android:id="@+id/radio_crop"
+            android:id="@+id/radio_brightness"
             style="@android:style/Widget.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/crop" />
+            android:text="@string/brightness" />
 
         <RadioButton
-            android:id="@+id/radio_bright_cont"
+            android:id="@+id/radio_contrast"
             style="@android:style/Widget.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/bright_cont" />
+            android:text="@string/contrast" />
 
         <RadioButton
-            android:id="@+id/radio_undo"
+            android:id="@+id/radio_grayscale"
             style="@android:style/Widget.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/undo" />
+            android:text="@string/grayscale" />
 
         <RadioButton
-            android:id="@+id/radio_redo"
+            android:id="@+id/radio_bw"
             style="@android:style/Widget.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/redo" />
+            android:text="@string/bw" />
 
         <RadioButton
             android:id="@+id/radio_reset"

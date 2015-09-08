@@ -64,37 +64,37 @@ public class EditActivity extends Activity {
 					rotateSeek.setVisibility(View.VISIBLE);
 					mSurfaceViewRenderer.ApplyEffect(R.id.rotate);
 					break;
-				case R.id.radio_crop:
+				case R.id.radio_brightness:
 					rotateSeek.setVisibility(View.GONE);
 					findViewById(R.id.brightnessLinearLayout).setVisibility(
 							View.GONE);
 					findViewById(R.id.contrastLinearLayout).setVisibility(
 							View.GONE);
-					mSurfaceViewRenderer.ApplyEffect(R.id.none);
-					break;
-				case R.id.radio_bright_cont:
-					rotateSeek.setVisibility(View.GONE);
-					findViewById(R.id.brightnessLinearLayout).setVisibility(
-							View.VISIBLE);
-					findViewById(R.id.contrastLinearLayout).setVisibility(
-							View.VISIBLE);
 					mSurfaceViewRenderer.ApplyEffect(R.id.brightness);
 					break;
-				case R.id.radio_undo:
+				case R.id.radio_contrast:
 					rotateSeek.setVisibility(View.GONE);
 					findViewById(R.id.brightnessLinearLayout).setVisibility(
-							View.GONE);
+							View.VISIBLE);
 					findViewById(R.id.contrastLinearLayout).setVisibility(
-							View.GONE);
-					mSurfaceViewRenderer.ApplyEffect(R.id.none);
+							View.VISIBLE);
+					mSurfaceViewRenderer.ApplyEffect(R.id.contrast);
 					break;
-				case R.id.radio_redo:
+				case R.id.radio_grayscale:
 					rotateSeek.setVisibility(View.GONE);
 					findViewById(R.id.brightnessLinearLayout).setVisibility(
 							View.GONE);
 					findViewById(R.id.contrastLinearLayout).setVisibility(
 							View.GONE);
-					mSurfaceViewRenderer.ApplyEffect(R.id.none);
+					mSurfaceViewRenderer.ApplyEffect(R.id.grayscale);
+					break;
+				case R.id.radio_bw:
+					rotateSeek.setVisibility(View.GONE);
+					findViewById(R.id.brightnessLinearLayout).setVisibility(
+							View.GONE);
+					findViewById(R.id.contrastLinearLayout).setVisibility(
+							View.GONE);
+					mSurfaceViewRenderer.ApplyEffect(R.id.bw);
 					break;
 				case R.id.radio_reset:
 					rotateSeek.setVisibility(View.GONE);
