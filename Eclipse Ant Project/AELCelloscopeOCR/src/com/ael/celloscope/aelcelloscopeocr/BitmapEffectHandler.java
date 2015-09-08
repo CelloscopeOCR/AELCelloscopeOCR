@@ -27,8 +27,7 @@ public class BitmapEffectHandler extends Handler {
 
 			Message message2 = activity.bitmapEffectActivityHandler
 					.obtainMessage(R.id.increaseBrightness, 0, 0, brightBitmap);
-			message2.sendToTarget();
-			Log.d(TAG, message.obj.toString());
+			message2.sendToTarget();			
 			break;
 
 		case R.id.increaseContrast:
@@ -38,7 +37,6 @@ public class BitmapEffectHandler extends Handler {
 			Message message3 = activity.bitmapEffectActivityHandler
 					.obtainMessage(R.id.increaseContrast, 0, 0, contrastBitmap);
 			message3.sendToTarget();
-			Log.d(TAG, message.obj.toString());
 			break;
 		}
 	}
