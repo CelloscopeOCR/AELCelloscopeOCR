@@ -56,14 +56,19 @@ public class MatrixHelper {
 		Bitmap alteredBitmap = Bitmap.createBitmap(sourceBitmap.getWidth(),
 				sourceBitmap.getHeight(), sourceBitmap.getConfig());
 		Canvas canvas = new Canvas(alteredBitmap);
-
-		Matrix matrix = new Matrix();
-		matrix.setRotate(angle, sourceBitmap.getWidth() / 2,
-				sourceBitmap.getHeight() / 2);
-
-		canvas.drawBitmap(sourceBitmap, matrix, new Paint());
+		canvas.drawBitmap(
+				sourceBitmap,
+				getRotateMatrix(angle, sourceBitmap.getWidth() / 2,
+						sourceBitmap.getHeight() / 2), new Paint());
 
 		return alteredBitmap;
+	}
+
+	public static Matrix getRotateMatrix(float degrees, float px, float py) {
+		Matrix matrix = new Matrix();
+		matrix.postRotate(degrees, px, py);
+		return matrix;
+
 	}
 
 }

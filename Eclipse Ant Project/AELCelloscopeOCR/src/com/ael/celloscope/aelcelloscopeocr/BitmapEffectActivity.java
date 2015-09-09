@@ -78,17 +78,19 @@ public class BitmapEffectActivity extends Activity implements
 	}
 
 	Bitmap tempTargetBitmap;
-	private float rotation = 0f;
+	private float degrees = 0f;
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress,
 			boolean fromUser) {
 		switch (seekBar.getId()) {
 		case R.id.rotateSeekbar:
-			rotation = progress - 180;
-			this.imageView.setImageBitmap(MatrixHelper.rotate(
-					this.targetBitmap, rotation));
-			// bitmapEffectActivityHandler.rotate(rotation);
+			degrees = progress - 180;
+			this.imageView.setImageMatrix(MatrixHelper.getRotateMatrix(degrees,
+					targetBitmap.getWidth() / 2, targetBitmap.getHeight() / 2));
+			// this.imageView.setImageBitmap(MatrixHelper.rotate(
+			// this.targetBitmap, degrees));
+			// bitmapEffectActivityHandler.rotate(degrees);
 			break;
 		case R.id.brightnessSeekbar:
 			int brightness = progress;
