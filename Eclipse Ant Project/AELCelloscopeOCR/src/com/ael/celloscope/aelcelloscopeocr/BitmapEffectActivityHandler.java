@@ -34,17 +34,16 @@ public class BitmapEffectActivityHandler extends Handler {
 				.sendToTarget();
 	}
 
-	public void changeContrast(double contrast) {
+	public void changeContrast(float contrast) {
 
 		bitmapEffectThread.getHandler()
 				.obtainMessage(R.id.change_contrast, 0, 0, contrast)
 				.sendToTarget();
 	}
-	
+
 	public void rotate(float rotation) {
 
 		bitmapEffectThread.getHandler()
-				.obtainMessage(R.id.rotate, 0, 0, rotation)
-				.sendToTarget();
+				.obtainMessage(R.id.rotate, 0, 0, rotation).sendToTarget();
 	}
 }
