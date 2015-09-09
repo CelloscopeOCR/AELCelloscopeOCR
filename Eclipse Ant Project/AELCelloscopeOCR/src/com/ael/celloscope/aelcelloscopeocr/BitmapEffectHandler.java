@@ -35,16 +35,15 @@ public class BitmapEffectHandler extends Handler {
 		Canvas canvas = new Canvas();
 
 		switch (message.what) {
-		case R.id.change_brightness:
+		case R.id.set_brightness:
 			int brightness = (Integer) message.obj;
-			colorMatrix.set(new float[] { 1, 0, 0, 0, brightness, 0, 1, 0, 0,
-					brightness, 0, 0, 1, 0, brightness, 0, 0, 0, 1, 0 });
-			paint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
-			canvas.setBitmap(alteredBitmap);
-			canvas.drawBitmap(activity.targetBitmap, matrix, paint);
+			alteredBitmap = MatrixHelper.setBrightness(activity.targetBitmap,
+					brightness);
+			activity.bitmapEffectActivityHandler.obtainMessage(R.id.set_image,
+					0, 0, alteredBitmap).sendToTarget();
 			break;
 
-		case R.id.change_contrast:
+		case R.id.set_contrast:
 
 			float contrast = (Float) message.obj / 10;
 			colorMatrix.set(new float[] { contrast, 0, 0, 0, 0, 0, contrast, 0,
@@ -52,6 +51,8 @@ public class BitmapEffectHandler extends Handler {
 			paint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
 			canvas.setBitmap(alteredBitmap);
 			canvas.drawBitmap(activity.targetBitmap, matrix, paint);
+			activity.bitmapEffectActivityHandler.obtainMessage(R.id.set_image,
+					0, 0, alteredBitmap).sendToTarget();
 
 			break;
 
@@ -62,11 +63,12 @@ public class BitmapEffectHandler extends Handler {
 					activity.targetBitmap.getHeight() / 2);
 			canvas.setBitmap(alteredBitmap);
 			canvas.drawBitmap(activity.targetBitmap, matrix, paint);
+			activity.bitmapEffectActivityHandler.obtainMessage(R.id.set_image,
+					0, 0, alteredBitmap).sendToTarget();
 
 			break;
 		}
-		activity.bitmapEffectActivityHandler.obtainMessage(R.id.set_image, 0,
-				0, alteredBitmap).sendToTarget();
+
 	}
 
 }

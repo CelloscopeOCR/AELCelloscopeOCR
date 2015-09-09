@@ -13,23 +13,24 @@
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
- limitations under the License.
+ limitations under the License.
 -->
 <resources>
-	<item name="decode" type="id"/>
-	<item name="decode_failed" type="id"/>
-	<item name="decode_succeeded" type="id"/>
-	<item name="ocr_continuous_decode" type="id"/>
-	<item name="ocr_continuous_decode_failed" type="id"/>
-	<item name="ocr_continuous_decode_succeeded" type="id"/>
-	<item name="ocr_decode" type="id"/>
-	<item name="ocr_decode_failed" type="id"/>
-	<item name="ocr_decode_succeeded" type="id"/>
-	<item name="quit" type="id"/>
-	<item name="restart_preview" type="id"/>
-	
-	<item name="change_brightness" type="id"/>
-	<item name="change_contrast" type="id"/>
-	<item name="rotate" type="id"/>
-	<item name="set_image" type="id"/>
+
+    <item name="decode" type="id"/>
+    <item name="decode_failed" type="id"/>
+    <item name="decode_succeeded" type="id"/>
+    <item name="ocr_continuous_decode" type="id"/>
+    <item name="ocr_continuous_decode_failed" type="id"/>
+    <item name="ocr_continuous_decode_succeeded" type="id"/>
+    <item name="ocr_decode" type="id"/>
+    <item name="ocr_decode_failed" type="id"/>
+    <item name="ocr_decode_succeeded" type="id"/>
+    <item name="quit" type="id"/>
+    <item name="restart_preview" type="id"/>
+    <item name="set_brightness" type="id"/>
+    <item name="set_contrast" type="id"/>
+    <item name="rotate" type="id"/>
+    <item name="set_image" type="id"/>
+
 </resources>

@@ -30,14 +30,14 @@ public class BitmapEffectActivityHandler extends Handler {
 	public void changeBrightness(int brightness) {
 
 		bitmapEffectThread.getHandler()
-				.obtainMessage(R.id.change_brightness, 0, 0, brightness)
+				.obtainMessage(R.id.set_brightness, 0, 0, brightness)
 				.sendToTarget();
 	}
 
 	public void changeContrast(float contrast) {
 
 		bitmapEffectThread.getHandler()
-				.obtainMessage(R.id.change_contrast, 0, 0, contrast)
+				.obtainMessage(R.id.set_contrast, 0, 0, contrast)
 				.sendToTarget();
 	}
 
