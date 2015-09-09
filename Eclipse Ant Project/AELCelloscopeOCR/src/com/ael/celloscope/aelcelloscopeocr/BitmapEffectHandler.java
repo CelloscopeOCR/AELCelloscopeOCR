@@ -35,7 +35,6 @@ public class BitmapEffectHandler extends Handler {
 		case R.id.rotate:
 			float angle = (Float) message.obj;
 			alteredBitmap = MatrixHelper.rotate(activity.targetBitmap, angle);
-
 			break;
 		}
 
