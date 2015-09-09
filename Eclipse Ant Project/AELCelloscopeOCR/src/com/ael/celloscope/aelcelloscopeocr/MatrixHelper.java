@@ -15,11 +15,8 @@ public class MatrixHelper {
 				sourceBitmap.getHeight(), sourceBitmap.getConfig());
 		Canvas canvas = new Canvas(alteredBitmap);
 
-		ColorMatrix colorMatrix = new ColorMatrix(new float[] { 1, 0, 0, 0,
-				brightness, 0, 1, 0, 0, brightness, 0, 0, 1, 0, brightness, 0,
-				0, 0, 1, 0 });
 		Paint paint = new Paint();
-		paint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+		paint.setColorFilter(getColorMatrixColorFilterForBrightness(brightness));
 
 		canvas.drawBitmap(sourceBitmap, new Matrix(), paint);
 
@@ -33,22 +30,11 @@ public class MatrixHelper {
 		Canvas canvas = new Canvas(alteredBitmap);
 
 		Paint paint = new Paint();
-		paint.setColorFilter(getColorMatrixColorFilter(contrast));
+		paint.setColorFilter(getColorMatrixColorFilterForContrast(contrast));
 
 		canvas.drawBitmap(sourceBitmap, new Matrix(), paint);
 
 		return alteredBitmap;
-	}
-
-	private static ColorMatrixColorFilter getColorMatrixColorFilter(
-			float contrast) {
-		float scale = contrast + 1.f;
-		float translate = (-.5f * scale + .5f) * 255.f;
-		float[] array = new float[] { scale, 0, 0, 0, translate, 0, scale, 0,
-				0, translate, 0, 0, scale, 0, translate, 0, 0, 0, 1, 0 };
-		ColorMatrix matrix = new ColorMatrix(array);
-		ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-		return filter;
 	}
 
 	public static Bitmap rotate(Bitmap sourceBitmap, float angle) {
@@ -62,6 +48,25 @@ public class MatrixHelper {
 						sourceBitmap.getHeight() / 2), new Paint());
 
 		return alteredBitmap;
+	}
+
+	public static ColorMatrixColorFilter getColorMatrixColorFilterForBrightness(
+			int brightness) {
+		ColorMatrix colorMatrix = new ColorMatrix(new float[] { 1, 0, 0, 0,
+				brightness, 0, 1, 0, 0, brightness, 0, 0, 1, 0, brightness, 0,
+				0, 0, 1, 0 });
+		return new ColorMatrixColorFilter(colorMatrix);
+	}
+
+	public static ColorMatrixColorFilter getColorMatrixColorFilterForContrast(
+			float contrast) {
+		float scale = contrast + 1.f;
+		float translate = (-.5f * scale + .5f) * 255.f;
+		float[] array = new float[] { scale, 0, 0, 0, translate, 0, scale, 0,
+				0, translate, 0, 0, scale, 0, translate, 0, 0, 0, 1, 0 };
+		ColorMatrix matrix = new ColorMatrix(array);
+		ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+		return filter;
 	}
 
 	public static Matrix getRotateMatrix(float degrees, float px, float py) {

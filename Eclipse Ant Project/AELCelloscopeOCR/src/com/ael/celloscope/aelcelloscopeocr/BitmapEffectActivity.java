@@ -3,6 +3,7 @@ package com.ael.celloscope.aelcelloscopeocr;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ColorMatrix;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -86,10 +87,9 @@ public class BitmapEffectActivity extends Activity implements
 		switch (seekBar.getId()) {
 		case R.id.rotateSeekbar:
 			degrees = progress - 180;
-			this.imageView.setImageMatrix(MatrixHelper.getRotateMatrix(degrees,
-					targetBitmap.getWidth() / 2, targetBitmap.getHeight() / 2));
-			// this.imageView.setImageBitmap(MatrixHelper.rotate(
-			// this.targetBitmap, degrees));
+
+			this.imageView.setImageBitmap(MatrixHelper.rotate(
+					this.targetBitmap, degrees));
 			// bitmapEffectActivityHandler.rotate(degrees);
 			break;
 		case R.id.brightnessSeekbar:
@@ -100,6 +100,7 @@ public class BitmapEffectActivity extends Activity implements
 			break;
 		case R.id.contrastSeekbar:
 			float contrast = progress / 100;
+
 			this.imageView.setImageBitmap(MatrixHelper.setContrast(
 					this.targetBitmap, contrast));
 			// bitmapEffectActivityHandler.setContrast(contrast);
