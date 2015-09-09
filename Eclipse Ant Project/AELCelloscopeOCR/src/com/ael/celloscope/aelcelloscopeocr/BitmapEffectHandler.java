@@ -1,21 +1,15 @@
 package com.ael.celloscope.aelcelloscopeocr;
 
-import com.ael.celloscope.aelcelloscopeocr.mediaeffects.BitmapEffect;
-
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 public class BitmapEffectHandler extends Handler {
 
 	private final BitmapEffectActivity activity;
-	private static final String TAG = BitmapEffectHandler.class.getSimpleName();
+
+	// private static final String TAG =
+	// BitmapEffectHandler.class.getSimpleName();
 
 	BitmapEffectHandler(BitmapEffectActivity activity) {
 		this.activity = activity;
@@ -25,44 +19,29 @@ public class BitmapEffectHandler extends Handler {
 	@Override
 	public void handleMessage(Message message) {
 
-		Matrix matrix = new Matrix();
-
-		Paint paint = new Paint();
-		Bitmap alteredBitmap = Bitmap.createBitmap(
-				activity.targetBitmap.getWidth(),
-				activity.targetBitmap.getHeight(),
-				activity.targetBitmap.getConfig());
-		Canvas canvas = new Canvas();
+		Bitmap alteredBitmap = null;
 
 		switch (message.what) {
 		case R.id.set_brightness:
 			int brightness = (Integer) message.obj;
 			alteredBitmap = MatrixHelper.setBrightness(activity.targetBitmap,
 					brightness);
-			activity.bitmapEffectActivityHandler.obtainMessage(R.id.set_image,
-					0, 0, alteredBitmap).sendToTarget();
 			break;
-
 		case R.id.set_contrast:
-			float contrast = (Float) message.obj / 10;
+			float contrast = (Float) message.obj;
 			alteredBitmap = MatrixHelper.setContrast(activity.targetBitmap,
 					contrast);
-			activity.bitmapEffectActivityHandler.obtainMessage(R.id.set_image,
-					0, 0, alteredBitmap).sendToTarget();
-
 			break;
-
 		case R.id.rotate:
-
-			matrix.setRotate((Float) message.obj,
-					activity.targetBitmap.getWidth() / 2,
-					activity.targetBitmap.getHeight() / 2);
-			canvas.setBitmap(alteredBitmap);
-			canvas.drawBitmap(activity.targetBitmap, matrix, paint);
-			activity.bitmapEffectActivityHandler.obtainMessage(R.id.set_image,
-					0, 0, alteredBitmap).sendToTarget();
+			float angle = (Float) message.obj;
+			alteredBitmap = MatrixHelper.rotate(activity.targetBitmap, angle);
 
 			break;
+		}
+
+		if (alteredBitmap != null) {
+			activity.bitmapEffectActivityHandler.obtainMessage(R.id.set_image,
+					0, 0, alteredBitmap).sendToTarget();
 		}
 
 	}

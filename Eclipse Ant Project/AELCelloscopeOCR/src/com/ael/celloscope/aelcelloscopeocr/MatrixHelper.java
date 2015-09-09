@@ -14,10 +14,11 @@ public class MatrixHelper {
 		Bitmap alteredBitmap = Bitmap.createBitmap(sourceBitmap.getWidth(),
 				sourceBitmap.getHeight(), sourceBitmap.getConfig());
 		Canvas canvas = new Canvas(alteredBitmap);
-		Paint paint = new Paint();
+
 		ColorMatrix colorMatrix = new ColorMatrix(new float[] { 1, 0, 0, 0,
 				brightness, 0, 1, 0, 0, brightness, 0, 0, 1, 0, brightness, 0,
 				0, 0, 1, 0 });
+		Paint paint = new Paint();
 		paint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
 
 		canvas.drawBitmap(sourceBitmap, new Matrix(), paint);
@@ -30,13 +31,29 @@ public class MatrixHelper {
 		Bitmap alteredBitmap = Bitmap.createBitmap(sourceBitmap.getWidth(),
 				sourceBitmap.getHeight(), sourceBitmap.getConfig());
 		Canvas canvas = new Canvas(alteredBitmap);
-		Paint paint = new Paint();
+
 		ColorMatrix colorMatrix = new ColorMatrix(
 				new float[] { contrast, 0, 0, 0, 0, 0, contrast, 0, 0, 0, 0, 0,
 						contrast, 0, 0, 0, 0, 0, 1, 0 });
+		Paint paint = new Paint();
 		paint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
 
 		canvas.drawBitmap(sourceBitmap, new Matrix(), paint);
+
+		return alteredBitmap;
+	}
+
+	public static Bitmap rotate(Bitmap sourceBitmap, float angle) {
+
+		Bitmap alteredBitmap = Bitmap.createBitmap(sourceBitmap.getWidth(),
+				sourceBitmap.getHeight(), sourceBitmap.getConfig());
+		Canvas canvas = new Canvas(alteredBitmap);
+
+		Matrix matrix = new Matrix();
+		matrix.setRotate(angle, sourceBitmap.getWidth() / 2,
+				sourceBitmap.getHeight() / 2);
+
+		canvas.drawBitmap(sourceBitmap, matrix, new Paint());
 
 		return alteredBitmap;
 	}
