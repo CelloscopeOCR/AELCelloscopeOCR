@@ -26,7 +26,7 @@ public class BitmapEffectHandler extends Handler {
 	public void handleMessage(Message message) {
 
 		Matrix matrix = new Matrix();
-		ColorMatrix colorMatrix = new ColorMatrix();
+
 		Paint paint = new Paint();
 		Bitmap alteredBitmap = Bitmap.createBitmap(
 				activity.targetBitmap.getWidth(),
@@ -44,13 +44,9 @@ public class BitmapEffectHandler extends Handler {
 			break;
 
 		case R.id.set_contrast:
-
 			float contrast = (Float) message.obj / 10;
-			colorMatrix.set(new float[] { contrast, 0, 0, 0, 0, 0, contrast, 0,
-					0, 0, 0, 0, contrast, 0, 0, 0, 0, 0, 1, 0 });
-			paint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
-			canvas.setBitmap(alteredBitmap);
-			canvas.drawBitmap(activity.targetBitmap, matrix, paint);
+			alteredBitmap = MatrixHelper.setContrast(activity.targetBitmap,
+					contrast);
 			activity.bitmapEffectActivityHandler.obtainMessage(R.id.set_image,
 					0, 0, alteredBitmap).sendToTarget();
 
