@@ -97,7 +97,7 @@ public class BitmapEffectActivity extends Activity implements
 			// bitmapEffectActivityHandler.setBrightness(brightness);
 			break;
 		case R.id.contrastSeekbar:
-			float contrast = progress / 10;
+			float contrast = progress / 100;
 			this.imageView.setImageBitmap(MatrixHelper.setContrast(
 					this.targetBitmap, contrast));
 			// bitmapEffectActivityHandler.setContrast(contrast);

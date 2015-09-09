@@ -32,15 +32,23 @@ public class MatrixHelper {
 				sourceBitmap.getHeight(), sourceBitmap.getConfig());
 		Canvas canvas = new Canvas(alteredBitmap);
 
-		ColorMatrix colorMatrix = new ColorMatrix(
-				new float[] { contrast, 0, 0, 0, 0, 0, contrast, 0, 0, 0, 0, 0,
-						contrast, 0, 0, 0, 0, 0, 1, 0 });
 		Paint paint = new Paint();
-		paint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+		paint.setColorFilter(getColorMatrixColorFilter(contrast));
 
 		canvas.drawBitmap(sourceBitmap, new Matrix(), paint);
 
 		return alteredBitmap;
+	}
+
+	private static ColorMatrixColorFilter getColorMatrixColorFilter(
+			float contrast) {
+		float scale = contrast + 1.f;
+		float translate = (-.5f * scale + .5f) * 255.f;
+		float[] array = new float[] { scale, 0, 0, 0, translate, 0, scale, 0,
+				0, translate, 0, 0, scale, 0, translate, 0, 0, 0, 1, 0 };
+		ColorMatrix matrix = new ColorMatrix(array);
+		ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+		return filter;
 	}
 
 	public static Bitmap rotate(Bitmap sourceBitmap, float angle) {
