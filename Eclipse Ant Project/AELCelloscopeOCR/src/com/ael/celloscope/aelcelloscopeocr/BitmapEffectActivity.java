@@ -86,15 +86,21 @@ public class BitmapEffectActivity extends Activity implements
 		switch (seekBar.getId()) {
 		case R.id.rotateSeekbar:
 			rotation = progress - 180;
-			bitmapEffectActivityHandler.rotate(rotation);
+			this.imageView.setImageBitmap(MatrixHelper.rotate(
+					this.targetBitmap, rotation));
+			// bitmapEffectActivityHandler.rotate(rotation);
 			break;
 		case R.id.brightnessSeekbar:
-			Log.d(TAG, Integer.toString(progress));
-			bitmapEffectActivityHandler.changeBrightness(progress);
+			int brightness = progress;
+			this.imageView.setImageBitmap(MatrixHelper.setBrightness(
+					this.targetBitmap, brightness));
+			// bitmapEffectActivityHandler.setBrightness(brightness);
 			break;
 		case R.id.contrastSeekbar:
-			Log.d(TAG, Integer.toString(progress));
-			bitmapEffectActivityHandler.changeContrast(progress / 10);
+			float contrast = progress / 10;
+			this.imageView.setImageBitmap(MatrixHelper.setContrast(
+					this.targetBitmap, contrast));
+			// bitmapEffectActivityHandler.setContrast(contrast);
 			break;
 
 		default:

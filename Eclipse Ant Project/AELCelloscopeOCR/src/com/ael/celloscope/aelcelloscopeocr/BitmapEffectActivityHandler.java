@@ -1,7 +1,6 @@
 package com.ael.celloscope.aelcelloscopeocr;
 
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
@@ -28,13 +27,13 @@ public class BitmapEffectActivityHandler extends Handler {
 		}
 	}
 
-	public void changeBrightness(int brightness) {
+	public void setBrightness(int brightness) {
 
 		bitmapEffectThread.getHandler()
 				.obtainMessage(R.id.set_brightness, brightness).sendToTarget();
 	}
 
-	public void changeContrast(float contrast) {
+	public void setContrast(float contrast) {
 
 		bitmapEffectThread.getHandler()
 				.obtainMessage(R.id.set_contrast, contrast).sendToTarget();
