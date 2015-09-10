@@ -1,37 +1,24 @@
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.util.Log;
-
 import com.ael.celloscope.aelcelloscopeocr.R;
 import com.ael.celloscope.aelcelloscopeocr.mediaeffects.BitmapEffect;
 import com.googlecode.leptonica.android.ReadFile;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
-/**
- * Class to send OCR requests to the OCR engine in a separate thread, send a
- * success/failure message, and dismiss the indeterminate progress dialog box.
- * Used for non-continuous mode OCR only.
- */
 final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 	private CaptureActivity activity;
 	private TessBaseAPI baseApi;
-	private byte[] data;
-	private int width;
-	private int height;
+	// private byte[] data;
+	// private int width;
+	// private int height;
 	String textResult;
 	private ProgressDialog indeterminateDialog;
 
@@ -39,9 +26,9 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 			int height) {
 		this.activity = activity;
 		this.baseApi = activity.getBaseApi();
-		this.data = data;
-		this.width = width;
-		this.height = height;
+		// this.data = data;
+		// this.width = width;
+		// this.height = height;
 
 	}
 
@@ -65,24 +52,26 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 		 * imutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
 		 */
 
-		Uri sourceUri = Uri.parse("file://"
-				+ Environment.getExternalStorageDirectory() + "/ocr.jpg");
-		Bitmap bitmap = null;
+		// Uri sourceUri = Uri.parse("file://"
+		// + Environment.getExternalStorageDirectory() + "/ocr.jpg");
+		// Bitmap bitmap = null;
 
 		try {
-			try {
-				bitmap = MediaStore.Images.Media.getBitmap(
-						this.activity.getContentResolver(), sourceUri);
-
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			// try {
+			// bitmap = MediaStore.Images.Media.getBitmap(
+			// this.activity.getContentResolver(), sourceUri);
+			//
+			// } catch (FileNotFoundException e) {
+			//
+			// e.printStackTrace();
+			// } catch (IOException e) {
+			//
+			// e.printStackTrace();
+			// }
 			baseApi.setImage(ReadFile.readBitmap(BitmapEffect
-					.decodeSmallBitmap( Environment.getExternalStorageDirectory() + "/ocr.jpg", 1200, 1200/7)));
+					.decodeSmallBitmap(
+							Environment.getExternalStorageDirectory()
+									+ "/ocr.jpg", 1200, 1200 / 7)));
 			textResult = baseApi.getUTF8Text();
 
 			if (textResult != null && !textResult.equals("")) {

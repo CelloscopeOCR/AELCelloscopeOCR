@@ -24,8 +24,8 @@ public class BitmapEffectActivity extends Activity implements
 	VerticalSeekBar brightnessSeekbar, contrastSeekbar;
 	RadioGroup effectRadioGroup;
 	public BitmapEffectActivityHandler bitmapEffectActivityHandler;
-	private static final String TAG = BitmapEffectActivity.class
-			.getSimpleName();
+	// private static final String TAG = BitmapEffectActivity.class
+	// .getSimpleName();
 
 	Bitmap targetBitmap;
 
