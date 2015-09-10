@@ -1,4 +1,4 @@
-package com.ael.celloscope.aelcelloscopeocr.imageprocessing;
+package com.ael.celloscope.aelcelloscopeocr.ocr;
 
 
 

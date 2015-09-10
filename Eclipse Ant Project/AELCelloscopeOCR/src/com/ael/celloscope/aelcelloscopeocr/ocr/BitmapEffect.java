@@ -1,4 +1,4 @@
-package com.ael.celloscope.aelcelloscopeocr.mediaeffects;
+package com.ael.celloscope.aelcelloscopeocr.ocr;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

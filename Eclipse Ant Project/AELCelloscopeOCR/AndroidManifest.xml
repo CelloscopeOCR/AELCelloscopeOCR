@@ -34,6 +34,11 @@
             android:name=".BitmapEffectActivity"
             android:label="@string/title_activity_bitmap_effect"
             android:screenOrientation="sensorLandscape" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ocr.CaptureActivity"
@@ -41,11 +46,7 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            
         </activity>
         <activity
             android:name=".ocr.HelpActivity"
@@ -57,7 +58,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".imageprocessing.AELCropActivity"
+            android:name="com.ael.celloscope.aelcelloscopeocr.ocr.AELCropActivity"
             android:screenOrientation="sensorLandscape"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>

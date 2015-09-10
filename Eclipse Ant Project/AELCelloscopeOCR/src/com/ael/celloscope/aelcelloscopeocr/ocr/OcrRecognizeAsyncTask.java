@@ -1,14 +1,13 @@
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
 import android.app.ProgressDialog;
-
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
 import com.ael.celloscope.aelcelloscopeocr.R;
-import com.ael.celloscope.aelcelloscopeocr.mediaeffects.BitmapEffect;
 import com.googlecode.leptonica.android.ReadFile;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
