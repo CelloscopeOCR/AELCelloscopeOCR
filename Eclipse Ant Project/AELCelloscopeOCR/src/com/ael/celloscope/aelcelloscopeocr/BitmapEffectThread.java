@@ -1,6 +1,6 @@
 package com.ael.celloscope.aelcelloscopeocr;
 
-import java.util.concurrent.CountDownLatch;
+
 
 import android.os.Handler;
 import android.os.Looper;

@@ -9,16 +9,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
+
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
+
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
+
 
 import com.ael.celloscope.aelcelloscopeocr.R;
-import com.ael.celloscope.aelcelloscopeocr.camera.ShutterButton;
+
 import com.googlecode.tesseract.android.TessBaseAPI;
 import com.soundcloud.android.crop.Crop;
 import com.soundcloud.android.crop.Crop.Position;

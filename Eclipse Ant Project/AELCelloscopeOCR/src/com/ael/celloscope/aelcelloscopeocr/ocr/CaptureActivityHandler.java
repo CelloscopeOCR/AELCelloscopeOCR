@@ -10,7 +10,7 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.ael.celloscope.aelcelloscopeocr.R;
-import com.ael.celloscope.aelcelloscopeocr.camera.CameraManager;
+
 
 /**
  * This class handles all the messaging which comprises the state machine for

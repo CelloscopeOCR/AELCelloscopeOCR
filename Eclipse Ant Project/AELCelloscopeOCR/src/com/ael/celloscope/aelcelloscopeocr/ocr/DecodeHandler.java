@@ -5,7 +5,7 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.ael.celloscope.aelcelloscopeocr.R;
-import com.googlecode.tesseract.android.TessBaseAPI;
+
 
 /**
  * Class to send bitmap data for OCR.

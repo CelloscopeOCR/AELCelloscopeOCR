@@ -1,12 +1,12 @@
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
-import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;

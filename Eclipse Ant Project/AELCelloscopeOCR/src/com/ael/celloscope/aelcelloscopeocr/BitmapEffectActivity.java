@@ -3,9 +3,9 @@ package com.ael.celloscope.aelcelloscopeocr;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.ColorMatrix;
+
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
@@ -13,7 +13,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
-import com.ael.celloscope.aelcelloscopeocr.mediaeffects.BitmapEffect;
+
 import com.ael.celloscope.aelcelloscopeocr.mediaeffects.VerticalSeekBar;
 
 public class BitmapEffectActivity extends Activity implements
