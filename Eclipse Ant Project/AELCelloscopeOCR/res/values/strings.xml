@@ -21,8 +21,9 @@
 	 <string name="none">None</string>
     <string name="autofix">Autofix</string>
     <string name="bw">Min/Max Color Intensity</string>
-    <string name="brightness">Brightness</string>
-    <string name="contrast">Contrast</string>
+    
+
+
     <string name="crossprocess">Cross Process</string>
     <string name="documentary">Documentary</string>
     <string name="duotone">Duo Tone</string>
@@ -35,7 +36,7 @@
     <string name="lomoish">Lomoish</string>
     <string name="negative">Negative</string>
     <string name="posterize">Posterize</string>
-    <string name="rotate">Rotate</string>
+
     <string name="saturate">Saturate</string>
     <string name="sepia">Sepia</string>
     <string name="sharpen">Sharpen</string>
