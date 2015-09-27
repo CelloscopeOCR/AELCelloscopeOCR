@@ -20,8 +20,8 @@ import android.view.WindowManager;
 import com.ael.celloscope.aelcelloscopeocr.R;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
-import com.soundcloud.android.crop.Crop;
-import com.soundcloud.android.crop.Crop.Position;
+//import com.soundcloud.android.crop.Crop;
+//import com.soundcloud.android.crop.Crop.Position;
 
 /**
  * This activity opens the camera and does the actual scanning on a background
@@ -99,16 +99,16 @@ public final class CaptureActivity extends Activity {
 				+ "/sourceForOcr.jpg");
 		Uri destination = Uri.parse("file://"
 				+ Environment.getExternalStorageDirectory() + "/ocr.jpg");
-		Crop.of(sourceUri, destination).withMICRAspect()
-				.at(Position.BOTTOM_LEFT).start(this);
+//		Crop.of(sourceUri, destination).withMICRAspect()
+//				.at(Position.BOTTOM_LEFT).start(this);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == Crop.REQUEST_CROP && resultCode == RESULT_OK) {
-			if (captureActivityHandler != null) {
-				captureActivityHandler.shutterButtonClick();
-			}
-		}
+//		if (requestCode == Crop.REQUEST_CROP && resultCode == RESULT_OK) {
+//			if (captureActivityHandler != null) {
+//				captureActivityHandler.shutterButtonClick();
+//			}
+//		}
 	}
 
 	void stopHandler() {
