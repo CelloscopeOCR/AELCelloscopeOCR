@@ -1,0 +1,10 @@
+INDEX VERSION 1.126+E:\Git_Share\AELCelloscopeOCR\.metadata\.plugins\org.eclipse.jdt.core
+827285967.index
+3548734474.index
+2700482601.index
+2410140088.index
+401587091.index
+884435822.index
+216832771.index
+1093948817.index
+2402366007.index
