@@ -13,11 +13,9 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
+
 
 import com.ael.celloscope.aelcelloscopeocr.R;
 
@@ -25,6 +23,12 @@ import com.googlecode.tesseract.android.TessBaseAPI;
 //import com.soundcloud.android.crop.Crop;
 //import com.soundcloud.android.crop.Crop.Position;
 
+/**
+ * This activity opens the camera and does the actual scanning on a background
+ * thread. It draws a viewfinder to help the user place the text correctly,
+ * shows feedback as the image processing is happening, and then overlays the
+ * results when a scan is successful.
+ */
 public final class CaptureActivity extends Activity {
 
 	private static final String TAG = CaptureActivity.class.getSimpleName();
@@ -49,13 +53,7 @@ public final class CaptureActivity extends Activity {
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.capture);
-		Button mButton = (Button) this.findViewById(R.id.shutter_button);
-		mButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				captureActivityHandler.shutterButtonClick();
-			}
-		});
+		captureActivityHandler = null;
 	}
 
 	@Override
@@ -63,28 +61,82 @@ public final class CaptureActivity extends Activity {
 		super.onResume();
 		this.initializeOCREngine();
 		captureActivityHandler = new CaptureActivityHandler(this);
+
 	}
 
-	private void initializeOCREngine() {
+	/**
+	 * Method to start or restart recognition after the OCR engine has been
+	 * initialized, or after the app regains focus. Sets state related settings
+	 * and OCR engine parameters, and requests camera initialization.
+	 */
+	void resumeOCR() {
+		Log.d(TAG, "resumeOCR()");
 
-		boolean doNewInit = (baseApi == null);
-		if (doNewInit) {
-
-			File storageDirectory = getStorageDirectory();
-			if (storageDirectory != null) {
-
-				if (captureActivityHandler != null) {
-					captureActivityHandler.quitSynchronously();
-				}
-
-				baseApi = new TessBaseAPI();
-				new OcrInitAsyncTask(this, baseApi).execute(storageDirectory
-						.toString());
-			}
-			startEmbeddedCropActivity();
-		} else {
-			resumeOCR();
+		if (baseApi != null) {
+			baseApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_AUTO);
+			// baseApi.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, "");
+			baseApi.setVariable(
+					TessBaseAPI.VAR_CHAR_WHITELIST,
+					"[]!?@#$%&*()<>_-+=/.,:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 		}
+
+	}
+
+	@Override
+	protected void onPause() {
+		if (captureActivityHandler != null) {
+			captureActivityHandler.quitSynchronously();
+		}
+		super.onPause();
+	}
+
+	Uri sourceUri;
+	int CAMERA_REQUEST = 0xff00;
+
+	public void startEmbeddedCropActivity() {
+		sourceUri = Uri.parse("file://"
+				+ Environment.getExternalStorageDirectory()
+				+ "/sourceForOcr.jpg");
+		Uri destination = Uri.parse("file://"
+				+ Environment.getExternalStorageDirectory() + "/ocr.jpg");
+//		Crop.of(sourceUri, destination).withMICRAspect()
+//				.at(Position.BOTTOM_LEFT).start(this);
+	}
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		if (requestCode == Crop.REQUEST_CROP && resultCode == RESULT_OK) {
+//			if (captureActivityHandler != null) {
+//				captureActivityHandler.shutterButtonClick();
+//			}
+//		}
+	}
+
+	void stopHandler() {
+		if (captureActivityHandler != null) {
+			captureActivityHandler.stop();
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		if (baseApi != null) {
+			baseApi.end();
+		}
+		super.onDestroy();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+			setResult(RESULT_CANCELED);
+			finish();
+			return true;
+		} else if (keyCode == KeyEvent.KEYCODE_CAMERA) {
+			captureActivityHandler.hardwareShutterButtonClick();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	private File getStorageDirectory() {
@@ -124,73 +176,28 @@ public final class CaptureActivity extends Activity {
 		return null;
 	}
 
-	void resumeOCR() {
-		Log.d(TAG, "resumeOCR()");
+	private void initializeOCREngine() {
+		// Do OCR engine initialization, if necessary
+		boolean doNewInit = (baseApi == null);
+		if (doNewInit) {
 
-		if (baseApi != null) {
-			baseApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_AUTO);
-			baseApi.setVariable(
-					TessBaseAPI.VAR_CHAR_WHITELIST,
-					"[]!?@#$%&*()<>_-+=/.,:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+			File storageDirectory = getStorageDirectory();
+			if (storageDirectory != null) {
+
+				if (captureActivityHandler != null) {
+					captureActivityHandler.quitSynchronously();
+				}
+
+				// Start AsyncTask to install language data and init OCR
+				baseApi = new TessBaseAPI();
+				new OcrInitAsyncTask(this, baseApi).execute(storageDirectory
+						.toString());
+			}
+			startEmbeddedCropActivity();
+		} else {
+			// We already have the engine initialized, so just start the camera.
+			resumeOCR();
 		}
-
-	}
-
-	@Override
-	protected void onPause() {
-		if (captureActivityHandler != null) {
-			captureActivityHandler.quitSynchronously();
-		}
-		super.onPause();
-	}
-
-	Uri sourceUri;
-	int CAMERA_REQUEST = 0xff00;
-
-	public void startEmbeddedCropActivity() {
-		sourceUri = Uri.parse("file://"
-				+ Environment.getExternalStorageDirectory()
-				+ "/sourceForOcr.jpg");
-		Uri destination = Uri.parse("file://"
-				+ Environment.getExternalStorageDirectory() + "/ocr.jpg");
-		// Crop.of(sourceUri, destination).withMICRAspect()
-		// .at(Position.BOTTOM_LEFT).start(this);
-	}
-
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// if (requestCode == Crop.REQUEST_CROP && resultCode == RESULT_OK) {
-		// if (captureActivityHandler != null) {
-		// captureActivityHandler.shutterButtonClick();
-		// }
-		// }
-	}
-
-	void stopHandler() {
-		if (captureActivityHandler != null) {
-			captureActivityHandler.stop();
-		}
-	}
-
-	@Override
-	protected void onDestroy() {
-		if (baseApi != null) {
-			baseApi.end();
-		}
-		super.onDestroy();
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-
-			setResult(RESULT_CANCELED);
-			finish();
-			return true;
-		} else if (keyCode == KeyEvent.KEYCODE_CAMERA) {
-			captureActivityHandler.hardwareShutterButtonClick();
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
 	}
 
 	void showErrorMessage(String title, String message) {

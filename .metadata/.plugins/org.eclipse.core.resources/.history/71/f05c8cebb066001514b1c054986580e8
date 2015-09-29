@@ -51,9 +51,11 @@ public final class CaptureActivity extends Activity {
 		setContentView(R.layout.capture);
 		Button mButton = (Button) this.findViewById(R.id.shutter_button);
 		mButton.setOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
-				captureActivityHandler.shutterButtonClick();
+				// TODO Auto-generated method stub
+
 			}
 		});
 	}

@@ -13,11 +13,9 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
+
 
 import com.ael.celloscope.aelcelloscopeocr.R;
 
@@ -49,13 +47,6 @@ public final class CaptureActivity extends Activity {
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.capture);
-		Button mButton = (Button) this.findViewById(R.id.shutter_button);
-		mButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				captureActivityHandler.shutterButtonClick();
-			}
-		});
 	}
 
 	@Override
@@ -64,9 +55,9 @@ public final class CaptureActivity extends Activity {
 		this.initializeOCREngine();
 		captureActivityHandler = new CaptureActivityHandler(this);
 	}
-
+	
 	private void initializeOCREngine() {
-
+		
 		boolean doNewInit = (baseApi == null);
 		if (doNewInit) {
 
@@ -77,16 +68,18 @@ public final class CaptureActivity extends Activity {
 					captureActivityHandler.quitSynchronously();
 				}
 
+				// Start AsyncTask to install language data and init OCR
 				baseApi = new TessBaseAPI();
 				new OcrInitAsyncTask(this, baseApi).execute(storageDirectory
 						.toString());
 			}
 			startEmbeddedCropActivity();
 		} else {
+			// We already have the engine initialized, so just start the camera.
 			resumeOCR();
 		}
 	}
-
+	
 	private File getStorageDirectory() {
 
 		String state = null;
@@ -153,16 +146,16 @@ public final class CaptureActivity extends Activity {
 				+ "/sourceForOcr.jpg");
 		Uri destination = Uri.parse("file://"
 				+ Environment.getExternalStorageDirectory() + "/ocr.jpg");
-		// Crop.of(sourceUri, destination).withMICRAspect()
-		// .at(Position.BOTTOM_LEFT).start(this);
+//		Crop.of(sourceUri, destination).withMICRAspect()
+//				.at(Position.BOTTOM_LEFT).start(this);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// if (requestCode == Crop.REQUEST_CROP && resultCode == RESULT_OK) {
-		// if (captureActivityHandler != null) {
-		// captureActivityHandler.shutterButtonClick();
-		// }
-		// }
+//		if (requestCode == Crop.REQUEST_CROP && resultCode == RESULT_OK) {
+//			if (captureActivityHandler != null) {
+//				captureActivityHandler.shutterButtonClick();
+//			}
+//		}
 	}
 
 	void stopHandler() {
@@ -192,6 +185,10 @@ public final class CaptureActivity extends Activity {
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+
+
+
+
 
 	void showErrorMessage(String title, String message) {
 		new AlertDialog.Builder(this).setTitle(title).setMessage(message)
