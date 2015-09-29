@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import com.ael.celloscope.aelcelloscopeocr.R;
+import com.ael.celloscope.aelcelloscopeocr.ocr.R;
 
 final class CaptureActivityHandler extends Handler {
 

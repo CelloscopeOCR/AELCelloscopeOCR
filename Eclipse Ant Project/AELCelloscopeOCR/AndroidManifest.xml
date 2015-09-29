@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ael.celloscope.aelcelloscopeocr"
+    package="com.ael.celloscope.aelcelloscopeocr.ocr"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -30,23 +30,34 @@
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-        <activity
-            android:name=".BitmapEffectActivity"
-            android:label="@string/title_activity_bitmap_effect"
-            android:screenOrientation="sensorLandscape" >
-            
-        </activity>
-        <activity
-            android:name=".ocr.CaptureActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="stateAlwaysHidden" >
+        <service android:name=".OCRService" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
+                <action android:name="com.ael.celloscope.aelcelloscopeocr.ocr.OCRService" />
             </intent-filter>
+        </service>
+
+        <activity
+            android:name=".BitmapEffectActivity"
+            android:label="@string/title_activity_bitmap_effect"
+            android:screenOrientation="sensorLandscape" >
+        </activity>
+        <activity
+            android:name=".CaptureActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".ocr.HelpActivity"

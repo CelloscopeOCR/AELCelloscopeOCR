@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import com.ael.celloscope.aelcelloscopeocr.R;
+import com.ael.celloscope.aelcelloscopeocr.ocr.R;
 
 final class DecodeHandler extends Handler {
 

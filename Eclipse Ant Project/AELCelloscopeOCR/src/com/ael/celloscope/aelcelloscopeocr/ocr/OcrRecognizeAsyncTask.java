@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.ael.celloscope.aelcelloscopeocr.R;
+import com.ael.celloscope.aelcelloscopeocr.ocr.R;
 import com.googlecode.leptonica.android.ReadFile;
 import com.googlecode.tesseract.android.TessBaseAPI;
 

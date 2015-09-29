@@ -19,11 +19,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.ael.celloscope.aelcelloscopeocr.R;
-
+import com.ael.celloscope.aelcelloscopeocr.ocr.R;
 import com.googlecode.tesseract.android.TessBaseAPI;
-//import com.soundcloud.android.crop.Crop;
-//import com.soundcloud.android.crop.Crop.Position;
 
 public final class CaptureActivity extends Activity {
 

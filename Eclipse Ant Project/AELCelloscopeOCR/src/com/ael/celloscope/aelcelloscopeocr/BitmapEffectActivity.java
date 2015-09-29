@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.ael.celloscope.aelcelloscopeocr.mediaeffects.VerticalSeekBar;
+import com.ael.celloscope.aelcelloscopeocr.ocr.R;
 
 public class BitmapEffectActivity extends Activity implements
 		OnSeekBarChangeListener, OnCheckedChangeListener {

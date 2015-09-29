@@ -1,5 +1,7 @@
 package com.ael.celloscope.aelcelloscopeocr;
 
+import com.ael.celloscope.aelcelloscopeocr.ocr.R;
+
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
