@@ -23,6 +23,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 	private static final String TAG = OcrInitAsyncTask.class.getSimpleName();
@@ -30,7 +31,6 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 	/** Suffixes of required data files for Cube. */
 	private static final String[] CUBE_DATA_FILES = { ".cube.bigrams",
 			".cube.fold", ".cube.lm", ".cube.nn", ".cube.params",
-			// ".cube.size", // This file is not available for Hindi
 			".cube.word-freq", ".tesseract_cube.nn", ".traineddata" };
 
 	static final String[] CUBE_SUPPORTED_LANGUAGES = { "ara", // Arabic
@@ -44,7 +44,7 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 
 	static final String OSD_FILENAME_BASE = "osd.traineddata";
 
-	private CaptureActivity activity;
+	private OCRHelper activity;
 	private Context context;
 	private TessBaseAPI baseApi;
 	private ProgressDialog dialog;
@@ -52,11 +52,11 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 	private String languageName;
 	private int ocrEngineMode;
 
-	OcrInitAsyncTask(CaptureActivity activity, TessBaseAPI baseApi) {
-		this.activity = activity;
-		this.context = activity.getBaseContext();
+	OcrInitAsyncTask(OCRHelper ocrHelper, Context context, TessBaseAPI baseApi) {
+		this.activity = ocrHelper;
+		this.context = context;
 		this.baseApi = baseApi;
-		dialog = new ProgressDialog(activity);
+		dialog = new ProgressDialog(context);
 		this.languageCode = "eng";
 		this.languageName = "English";
 		this.ocrEngineMode = 0;
@@ -70,8 +70,13 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 		dialog.setIndeterminate(false);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		dialog.setCancelable(false);
-		dialog.show();
-	
+		
+		try {
+			dialog.show();	
+		} catch (Exception e) {
+			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+		}
+
 	}
 
 	protected Boolean doInBackground(String... params) {
@@ -665,10 +670,10 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 			// Restart recognition
 			activity.resumeOCR();
 		} else {
-			activity.showErrorMessage(
-					"Error",
-					"Network is unreachable - cannot download language data. "
-							+ "Please enable network access and restart this app.");
+//			activity.showErrorMessage(
+//					"Error",
+//					"Network is unreachable - cannot download language data. "
+//							+ "Please enable network access and restart this app.");
 		}
 	}
 }

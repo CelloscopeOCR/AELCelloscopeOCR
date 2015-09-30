@@ -1,6 +1,7 @@
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Handler;
@@ -11,12 +12,11 @@ import android.widget.Toast;
 
 import com.ael.celloscope.aelcelloscopeocr.ocr.R;
 
-final class CaptureActivityHandler extends Handler {
+final class OCRActivityHandler extends Handler {
 
-	private static final String TAG = CaptureActivityHandler.class
-			.getSimpleName();
+	private static final String TAG = OCRActivityHandler.class.getSimpleName();
 
-	private final CaptureActivity activity;
+	private final Context context;
 	private final DecodeThread decodeThread;
 	private static State state;
 
@@ -24,10 +24,9 @@ final class CaptureActivityHandler extends Handler {
 		PREVIEW, PREVIEW_PAUSED, CONTINUOUS, CONTINUOUS_PAUSED, SUCCESS, DONE
 	}
 
-	CaptureActivityHandler(CaptureActivity activity) {
-		this.activity = activity;
-
-		decodeThread = new DecodeThread(activity);
+	OCRActivityHandler(OCRHelper activity, OCRActivity context) {
+		this.context = context;
+		decodeThread = new DecodeThread(activity, context);
 		decodeThread.start();
 
 		state = State.SUCCESS;
@@ -49,12 +48,12 @@ final class CaptureActivityHandler extends Handler {
 		case R.id.ocr_decode_succeeded:
 			state = State.SUCCESS;
 
-			new AlertDialog.Builder(activity)
+			new AlertDialog.Builder(context)
 					.setMessage(message.obj.toString())
 					.setPositiveButton("OCR", new OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							activity.startEmbeddedCropActivity();
+							//activity.startEmbeddedCropActivity();
 
 						}
 					}).setCancelable(false).create().show();
@@ -63,8 +62,8 @@ final class CaptureActivityHandler extends Handler {
 		case R.id.ocr_decode_failed:
 			state = State.PREVIEW;
 
-			Toast toast = Toast.makeText(activity.getBaseContext(),
-					"OCR failed. Please try again.", Toast.LENGTH_SHORT);
+			Toast toast = Toast.makeText(context,
+					"OCR failed. Please try agai'n.", Toast.LENGTH_SHORT);
 			toast.setGravity(Gravity.TOP, 0, 0);
 			toast.show();
 			break;
@@ -109,7 +108,7 @@ final class CaptureActivityHandler extends Handler {
 
 		ocrDecode();
 	}
-	
+
 	private void ocrDecode() {
 		state = State.PREVIEW_PAUSED;
 		Message message = decodeThread.getHandler().obtainMessage(

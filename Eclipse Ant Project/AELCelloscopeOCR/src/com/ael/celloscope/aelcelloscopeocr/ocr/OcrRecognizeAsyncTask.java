@@ -1,6 +1,7 @@
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
@@ -13,18 +14,20 @@ import com.googlecode.tesseract.android.TessBaseAPI;
 
 final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
-	private CaptureActivity activity;
+	private OCRHelper helper;
 	private TessBaseAPI baseApi;
+	private final OCRActivity context;
 	// private byte[] data;
 	// private int width;
 	// private int height;
 	String textResult;
 	private ProgressDialog indeterminateDialog;
 
-	OcrRecognizeAsyncTask(CaptureActivity activity, byte[] data, int width,
-			int height) {
-		this.activity = activity;
-		this.baseApi = activity.getBaseApi();
+	OcrRecognizeAsyncTask(OCRHelper helper, OCRActivity context, byte[] data,
+			int width, int height) {
+		this.helper = helper;
+		this.baseApi = helper.getBaseApi();
+		this.context = context;
 		// this.data = data;
 		// this.width = width;
 		// this.height = height;
@@ -38,7 +41,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 	@Override
 	protected Boolean doInBackground(Void... arg0) {
-		
+
 		try {
 			baseApi.setImage(ReadFile.readBitmap(BitmapEffect
 					.decodeSmallBitmap(
@@ -56,7 +59,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 			e.printStackTrace();
 			try {
 				baseApi.clear();
-				activity.stopHandler();
+				helper.stopHandler();
 			} catch (NullPointerException e1) {
 				// Continue
 			}
@@ -68,7 +71,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
 
-		Handler handler = activity.getcaptureActivityHandler();
+		Handler handler = helper.getcaptureActivityHandler();
 		if (handler != null) {
 
 			if (result) {
@@ -90,7 +93,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 	void displayProgressDialog() {
 
-		indeterminateDialog = new ProgressDialog(activity);
+		indeterminateDialog = new ProgressDialog(context);
 		indeterminateDialog.setTitle("Please wait");
 		indeterminateDialog.setMessage("Performing OCR " + "...");
 		indeterminateDialog.setCancelable(false);

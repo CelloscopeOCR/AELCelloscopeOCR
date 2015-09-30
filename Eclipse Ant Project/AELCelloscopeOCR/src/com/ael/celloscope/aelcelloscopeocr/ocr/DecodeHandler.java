@@ -1,5 +1,6 @@
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -8,11 +9,13 @@ import com.ael.celloscope.aelcelloscopeocr.ocr.R;
 
 final class DecodeHandler extends Handler {
 
-	private final CaptureActivity activity;
+	private final OCRHelper activity;
+	private final OCRActivity context;
 	private boolean running = true;
 
-	DecodeHandler(CaptureActivity activity) {
+	DecodeHandler(OCRHelper activity, OCRActivity context) {
 		this.activity = activity;
+		this.context = context;
 	}
 
 	@Override
@@ -32,6 +35,7 @@ final class DecodeHandler extends Handler {
 	}
 
 	private void ocrDecode(byte[] data, int width, int height) {
-		new OcrRecognizeAsyncTask(activity, data, width, height).execute();
+		new OcrRecognizeAsyncTask(activity, context, data, width, height)
+				.execute();
 	}
 }
