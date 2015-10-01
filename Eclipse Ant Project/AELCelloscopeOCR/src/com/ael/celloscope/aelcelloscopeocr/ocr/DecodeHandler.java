@@ -10,10 +10,10 @@ import com.ael.celloscope.aelcelloscopeocr.ocr.R;
 final class DecodeHandler extends Handler {
 
 	private final OCRHelper activity;
-	private final OCRActivity context;
+	private final Context context;
 	private boolean running = true;
 
-	DecodeHandler(OCRHelper activity, OCRActivity context) {
+	DecodeHandler(OCRHelper activity, Context context) {
 		this.activity = activity;
 		this.context = context;
 	}

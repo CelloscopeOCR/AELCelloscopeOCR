@@ -9,11 +9,11 @@ import android.os.Looper;
 final class DecodeThread extends Thread {
 
 	private final OCRHelper activity;
-	private final OCRActivity context;
+	private final Context context;
 	private Handler handler;
 	private final CountDownLatch handlerInitLatch;
  
-	DecodeThread(OCRHelper activity, OCRActivity context) {
+	DecodeThread(OCRHelper activity, Context context) {
 		this.activity = activity;
 		handlerInitLatch = new CountDownLatch(1);
 		this.context = context;

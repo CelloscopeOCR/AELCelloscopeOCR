@@ -24,7 +24,7 @@ final class OCRActivityHandler extends Handler {
 		PREVIEW, PREVIEW_PAUSED, CONTINUOUS, CONTINUOUS_PAUSED, SUCCESS, DONE
 	}
 
-	OCRActivityHandler(OCRHelper activity, OCRActivity context) {
+	OCRActivityHandler(OCRHelper activity, Context context) {
 		this.context = context;
 		decodeThread = new DecodeThread(activity, context);
 		decodeThread.start();

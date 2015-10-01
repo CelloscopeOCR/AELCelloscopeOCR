@@ -16,14 +16,14 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 	private OCRHelper helper;
 	private TessBaseAPI baseApi;
-	private final OCRActivity context;
+	private final Context context;
 	// private byte[] data;
 	// private int width;
 	// private int height;
 	String textResult;
 	private ProgressDialog indeterminateDialog;
 
-	OcrRecognizeAsyncTask(OCRHelper helper, OCRActivity context, byte[] data,
+	OcrRecognizeAsyncTask(OCRHelper helper, Context context, byte[] data,
 			int width, int height) {
 		this.helper = helper;
 		this.baseApi = helper.getBaseApi();
