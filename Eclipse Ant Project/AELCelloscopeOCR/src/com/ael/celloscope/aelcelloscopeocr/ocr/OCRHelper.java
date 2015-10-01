@@ -2,6 +2,7 @@ package com.ael.celloscope.aelcelloscopeocr.ocr;
 
 import java.io.File;
 
+import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 
@@ -11,9 +12,9 @@ import com.googlecode.tesseract.android.TessBaseAPI;
 public final class OCRHelper {
 
 	private static final String TAG = OCRHelper.class.getSimpleName();
-	private final OCRActivity context;
+	private final Context context;
 
-	public OCRHelper(OCRActivity context) {
+	public OCRHelper(Context context) {
 		this.context = context;
 	}
 
