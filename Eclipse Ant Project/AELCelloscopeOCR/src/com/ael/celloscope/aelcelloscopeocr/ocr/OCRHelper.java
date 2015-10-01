@@ -18,7 +18,7 @@ public final class OCRHelper {
 		this.context = context;
 	}
 
-	OCRActivityHandler ocrActivityHandler;
+	OCRHandler ocrActivityHandler;
 
 	TessBaseAPI baseApi;
 

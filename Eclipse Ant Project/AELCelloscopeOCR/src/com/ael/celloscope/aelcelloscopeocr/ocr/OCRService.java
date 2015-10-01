@@ -43,7 +43,7 @@ public class OCRService extends Service {
 	@Override
 	public IBinder onBind(Intent intent) {
 		mOcrHelper.initializeOCREngine();
-		mOcrHelper.ocrActivityHandler = new OCRActivityHandler(mOcrHelper, this);
+		mOcrHelper.ocrActivityHandler = new OCRHandler(mOcrHelper, this);
 
 		Toast.makeText(this, "Service bounded", Toast.LENGTH_SHORT).show();
 		return mMessenger.getBinder();
@@ -69,7 +69,10 @@ public class OCRService extends Service {
 				mClients.remove(msg.replyTo);
 				break;
 			case MSG_DO_OCR:
-				mValue = ((Bundle) msg.obj).getString("name");
+				mValue = ((Bundle) msg.obj).getString("name");				
+				mOcrHelper.ocrActivityHandler.doOCR(Environment
+						.getExternalStorageDirectory() + "/ocr.jpg");
+				
 				mValue = (new StringBuilder(mValue)).reverse().toString();
 				Bundle mBundle = new Bundle();
 				mBundle.putString("ocrText", mValue);
@@ -86,8 +89,8 @@ public class OCRService extends Service {
 								Toast.LENGTH_LONG).show();
 					}
 				}
-				mOcrHelper.ocrActivityHandler.doOCR(Environment
-						.getExternalStorageDirectory() + "/ocr.jpg");
+				
+				
 				break;
 			default:
 				super.handleMessage(msg);

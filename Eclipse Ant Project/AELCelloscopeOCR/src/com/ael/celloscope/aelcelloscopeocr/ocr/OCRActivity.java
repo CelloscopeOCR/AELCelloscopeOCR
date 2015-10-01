@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.KeyEvent;
 
 import android.view.View;
@@ -31,7 +32,8 @@ public final class OCRActivity extends Activity {
 				new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						mOcrHelper.ocrActivityHandler.shutterButtonClick();
+						mOcrHelper.ocrActivityHandler.shutterButtonClick(Environment
+								.getExternalStorageDirectory() + "/ocr.jpg");
 					}
 				});
 	}
@@ -40,7 +42,7 @@ public final class OCRActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		mOcrHelper.initializeOCREngine();
-		mOcrHelper.ocrActivityHandler = new OCRActivityHandler(mOcrHelper, this);
+		mOcrHelper.ocrActivityHandler = new OCRHandler(mOcrHelper, this);
 	}
 
 	@Override
@@ -67,7 +69,8 @@ public final class OCRActivity extends Activity {
 			finish();
 			return true;
 		} else if (keyCode == KeyEvent.KEYCODE_CAMERA) {
-			mOcrHelper.ocrActivityHandler.hardwareShutterButtonClick();
+			mOcrHelper.ocrActivityHandler.hardwareShutterButtonClick(Environment
+					.getExternalStorageDirectory() + "/ocr.jpg");
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

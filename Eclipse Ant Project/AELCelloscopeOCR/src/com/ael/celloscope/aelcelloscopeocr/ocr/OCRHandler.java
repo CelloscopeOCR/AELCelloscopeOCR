@@ -13,9 +13,9 @@ import android.widget.Toast;
 
 import com.ael.celloscope.aelcelloscopeocr.ocr.R;
 
-final class OCRActivityHandler extends Handler {
+final class OCRHandler extends Handler {
 
-	private static final String TAG = OCRActivityHandler.class.getSimpleName();
+	private static final String TAG = OCRHandler.class.getSimpleName();
 
 	private final Context context;
 	private final DecodeThread decodeThread;
@@ -25,9 +25,9 @@ final class OCRActivityHandler extends Handler {
 		PREVIEW, PREVIEW_PAUSED, CONTINUOUS, CONTINUOUS_PAUSED, SUCCESS, DONE
 	}
 
-	OCRActivityHandler(OCRHelper activity, Context context) {
+	OCRHandler(OCRHelper ocrHelper, Context context) {
 		this.context = context;
-		decodeThread = new DecodeThread(activity, context);
+		decodeThread = new DecodeThread(ocrHelper, context);
 		decodeThread.start();
 
 		state = State.SUCCESS;
@@ -62,6 +62,8 @@ final class OCRActivityHandler extends Handler {
 			} else {
 				Toast.makeText(context, message.obj.toString(),
 						Toast.LENGTH_LONG).show();
+				
+				
 			}
 
 			break;
@@ -114,8 +116,8 @@ final class OCRActivityHandler extends Handler {
 
 		ocrDecode(filePath);
 	}
-	
-	void doOCR(String filePath){
+
+	void doOCR(String filePath) {
 		ocrDecode(filePath);
 	}
 
