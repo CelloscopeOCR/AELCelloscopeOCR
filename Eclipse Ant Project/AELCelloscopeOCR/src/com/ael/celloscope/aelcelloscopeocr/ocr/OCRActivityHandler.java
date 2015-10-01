@@ -1,5 +1,6 @@
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,16 +48,21 @@ final class OCRActivityHandler extends Handler {
 
 		case R.id.ocr_decode_succeeded:
 			state = State.SUCCESS;
+			if (context instanceof Activity) {
+				new AlertDialog.Builder(context)
+						.setMessage(message.obj.toString())
+						.setPositiveButton("OCR", new OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// activity.startEmbeddedCropActivity();
 
-			new AlertDialog.Builder(context)
-					.setMessage(message.obj.toString())
-					.setPositiveButton("OCR", new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							//activity.startEmbeddedCropActivity();
-
-						}
-					}).setCancelable(false).create().show();
+							}
+						}).setCancelable(false).create().show();
+			} else {
+				Toast.makeText(context, message.obj.toString(),
+						Toast.LENGTH_LONG).show();
+			}
 
 			break;
 		case R.id.ocr_decode_failed:

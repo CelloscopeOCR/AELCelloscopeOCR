@@ -19,6 +19,8 @@ import java.util.zip.ZipInputStream;
 import org.xeustechnologies.jtar.TarEntry;
 import org.xeustechnologies.jtar.TarInputStream;
 import com.googlecode.tesseract.android.TessBaseAPI;
+
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -65,18 +67,21 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		dialog.setTitle("Please wait");
-		dialog.setMessage("Checking for data installation...");
-		dialog.setIndeterminate(false);
-		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		dialog.setCancelable(false);
-		
-		try {
-			dialog.show();	
-		} catch (Exception e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
+		if (context instanceof Activity) {
 
+			dialog.setTitle("Please wait");
+			dialog.setMessage("Checking for data installation...");
+			dialog.setIndeterminate(false);
+			dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			dialog.setCancelable(false);
+
+			try {
+				dialog.show();
+			} catch (Exception e) {
+				Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG)
+						.show();
+			}
+		}
 	}
 
 	protected Boolean doInBackground(String... params) {
@@ -648,12 +653,14 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 	@Override
 	protected void onProgressUpdate(String... message) {
 		super.onProgressUpdate(message);
-		int percentComplete = 0;
+		if (context instanceof Activity) {
+			int percentComplete = 0;
 
-		percentComplete = Integer.parseInt(message[1]);
-		dialog.setMessage(message[0]);
-		dialog.setProgress(percentComplete);
-		dialog.show();
+			percentComplete = Integer.parseInt(message[1]);
+			dialog.setMessage(message[0]);
+			dialog.setProgress(percentComplete);
+			dialog.show();
+		}
 	}
 
 	@Override
@@ -670,10 +677,10 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 			// Restart recognition
 			activity.resumeOCR();
 		} else {
-//			activity.showErrorMessage(
-//					"Error",
-//					"Network is unreachable - cannot download language data. "
-//							+ "Please enable network access and restart this app.");
+			// activity.showErrorMessage(
+			// "Error",
+			// "Network is unreachable - cannot download language data. "
+			// + "Please enable network access and restart this app.");
 		}
 	}
 }

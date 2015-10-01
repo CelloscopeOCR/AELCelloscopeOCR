@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 
 import com.ael.celloscope.aelcelloscopeocr.ocr.R;
 
@@ -28,13 +27,13 @@ public final class OCRActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.capture);
 		mOcrHelper = new OCRHelper(OCRActivity.this);
-		Button mButton = (Button) this.findViewById(R.id.shutter_button);
-		mButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mOcrHelper.ocrActivityHandler.shutterButtonClick();
-			}
-		});
+		this.findViewById(R.id.shutter_button).setOnClickListener(
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mOcrHelper.ocrActivityHandler.shutterButtonClick();
+					}
+				});
 	}
 
 	@Override
