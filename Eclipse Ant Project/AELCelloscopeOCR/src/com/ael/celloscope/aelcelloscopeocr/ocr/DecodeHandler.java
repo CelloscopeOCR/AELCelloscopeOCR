@@ -25,7 +25,7 @@ final class DecodeHandler extends Handler {
 		}
 		switch (message.what) {
 		case R.id.ocr_decode:
-			ocrDecode(null, 0, 0);
+			ocrDecode(message.obj, 0, 0);
 			break;
 		case R.id.quit:
 			running = false;
@@ -34,7 +34,7 @@ final class DecodeHandler extends Handler {
 		}
 	}
 
-	private void ocrDecode(byte[] data, int width, int height) {
+	private void ocrDecode(Object data, int width, int height) {
 		new OcrRecognizeAsyncTask(activity, context, data, width, height)
 				.execute();
 	}

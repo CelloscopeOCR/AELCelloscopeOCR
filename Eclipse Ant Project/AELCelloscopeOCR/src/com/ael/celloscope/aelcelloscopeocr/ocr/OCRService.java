@@ -3,10 +3,13 @@ package com.ael.celloscope.aelcelloscopeocr.ocr;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.RemoteException;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -66,24 +69,25 @@ public class OCRService extends Service {
 				mClients.remove(msg.replyTo);
 				break;
 			case MSG_DO_OCR:
-				// mValue = ((Bundle) msg.obj).getString("name");
-				// mValue = (new StringBuilder(mValue)).reverse().toString();
-				// Bundle mBundle = new Bundle();
-				// mBundle.putString("ocrText", mValue);
-				// for (int i = mClients.size() - 1; i >= 0; i--) {
-				// try {
-				// mClients.get(i).send(Message.obtain(null,
-				// MSG_DO_OCR, mBundle));
-				// } catch (RemoteException e) {
-				// mClients.remove(i);
-				// Toast.makeText(OCRService.this, e.getMessage(),
-				// Toast.LENGTH_LONG).show();
-				// } catch (Exception e) {
-				// Toast.makeText(OCRService.this, e.getMessage(),
-				// Toast.LENGTH_LONG).show();
-				// }
-				// }
-				mOcrHelper.ocrActivityHandler.shutterButtonClick();
+				mValue = ((Bundle) msg.obj).getString("name");
+				mValue = (new StringBuilder(mValue)).reverse().toString();
+				Bundle mBundle = new Bundle();
+				mBundle.putString("ocrText", mValue);
+				for (int i = mClients.size() - 1; i >= 0; i--) {
+					try {
+						mClients.get(i).send(
+								Message.obtain(null, MSG_DO_OCR, mBundle));
+					} catch (RemoteException e) {
+						mClients.remove(i);
+						Toast.makeText(OCRService.this, e.getMessage(),
+								Toast.LENGTH_LONG).show();
+					} catch (Exception e) {
+						Toast.makeText(OCRService.this, e.getMessage(),
+								Toast.LENGTH_LONG).show();
+					}
+				}
+				mOcrHelper.ocrActivityHandler.doOCR(Environment
+						.getExternalStorageDirectory() + "/ocr.jpg");
 				break;
 			default:
 				super.handleMessage(msg);

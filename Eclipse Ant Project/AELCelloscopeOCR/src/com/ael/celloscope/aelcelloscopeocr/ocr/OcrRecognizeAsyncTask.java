@@ -18,18 +18,18 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	private OCRHelper helper;
 	private TessBaseAPI baseApi;
 	private final Context context;
-	// private byte[] data;
+	private Object data;
 	// private int width;
 	// private int height;
 	String textResult;
 	private ProgressDialog indeterminateDialog;
 
-	OcrRecognizeAsyncTask(OCRHelper helper, Context context, byte[] data,
+	OcrRecognizeAsyncTask(OCRHelper helper, Context context, Object data,
 			int width, int height) {
 		this.helper = helper;
 		this.baseApi = helper.getBaseApi();
 		this.context = context;
-		// this.data = data;
+		this.data = data;
 		// this.width = width;
 		// this.height = height;
 
@@ -45,9 +45,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 		try {
 			baseApi.setImage(ReadFile.readBitmap(BitmapEffect
-					.decodeSmallBitmap(
-							Environment.getExternalStorageDirectory()
-									+ "/ocr.jpg", 1200, 1200 / 7)));
+					.decodeSmallBitmap((String) data, 1200, 1200 / 7)));
 			textResult = baseApi.getUTF8Text();
 
 			if (textResult != null && !textResult.equals("")) {

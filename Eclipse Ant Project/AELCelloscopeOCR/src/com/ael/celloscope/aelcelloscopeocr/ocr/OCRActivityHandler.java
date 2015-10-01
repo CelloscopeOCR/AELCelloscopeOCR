@@ -103,22 +103,26 @@ final class OCRActivityHandler extends Handler {
 
 	}
 
-	void hardwareShutterButtonClick() {
+	void hardwareShutterButtonClick(String filePath) {
 
 		if (state == State.PREVIEW) {
-			ocrDecode();
+			ocrDecode(filePath);
 		}
 	}
 
-	void shutterButtonClick() {
+	void shutterButtonClick(String filePath) {
 
-		ocrDecode();
+		ocrDecode(filePath);
+	}
+	
+	void doOCR(String filePath){
+		ocrDecode(filePath);
 	}
 
-	private void ocrDecode() {
+	private void ocrDecode(String filePath) {
 		state = State.PREVIEW_PAUSED;
 		Message message = decodeThread.getHandler().obtainMessage(
-				R.id.ocr_decode, 0, 0, 0);
+				R.id.ocr_decode, 0, 0, filePath);
 		message.sendToTarget();
 
 	}
