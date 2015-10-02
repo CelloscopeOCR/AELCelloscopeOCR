@@ -1,20 +1,20 @@
-//package co.celloscope.ocrservicehost;
 package com.ael.celloscope.aelcelloscopeocr.ocr;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.RemoteException;
-import android.widget.Toast;
+import android.util.Log;
 
 import java.util.ArrayList;
 
 public class OCRService extends Service {
+
+	private static final String TAG = OCRService.class.getSimpleName();
+
 	static final int MSG_REGISTER_CLIENT = 1;
 	static final int MSG_UNREGISTER_CLIENT = 2;
 	static final int MSG_DO_OCR = 3;
@@ -28,7 +28,7 @@ public class OCRService extends Service {
 	@Override
 	public void onCreate() {
 		mOcrHelper = new OCRHelper(OCRService.this);
-		Toast.makeText(this, "Created", Toast.LENGTH_SHORT).show();
+		Log.i(TAG, "Created");
 	}
 
 	@Override
@@ -37,15 +37,15 @@ public class OCRService extends Service {
 		if (mOcrHelper.baseApi != null) {
 			mOcrHelper.baseApi.end();
 		}
-		Toast.makeText(this, "Service Destroyed", Toast.LENGTH_SHORT).show();
+		Log.i(TAG, "Service Destroyed");
 	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
 		mOcrHelper.initializeOCREngine();
-		mOcrHelper.ocrActivityHandler = new OCRHandler(mOcrHelper, this);
-
-		Toast.makeText(this, "Service bounded", Toast.LENGTH_SHORT).show();
+		mOcrHelper.ocrActivityHandler = new OCRHandler(mOcrHelper, this,
+				mClients);
+		Log.i(TAG, "Service bounded");
 		return mMessenger.getBinder();
 	}
 
@@ -54,7 +54,7 @@ public class OCRService extends Service {
 		if (mOcrHelper.ocrActivityHandler != null) {
 			mOcrHelper.ocrActivityHandler.quitSynchronously();
 		}
-		Toast.makeText(this, "Unbind", Toast.LENGTH_SHORT).show();
+		Log.i(TAG, "Unbind");
 		return super.onUnbind(intent);
 	}
 
@@ -69,28 +69,9 @@ public class OCRService extends Service {
 				mClients.remove(msg.replyTo);
 				break;
 			case MSG_DO_OCR:
-				mValue = ((Bundle) msg.obj).getString("name");				
-				mOcrHelper.ocrActivityHandler.doOCR(Environment
-						.getExternalStorageDirectory() + "/ocr.jpg");
-				
-				mValue = (new StringBuilder(mValue)).reverse().toString();
-				Bundle mBundle = new Bundle();
-				mBundle.putString("ocrText", mValue);
-				for (int i = mClients.size() - 1; i >= 0; i--) {
-					try {
-						mClients.get(i).send(
-								Message.obtain(null, MSG_DO_OCR, mBundle));
-					} catch (RemoteException e) {
-						mClients.remove(i);
-						Toast.makeText(OCRService.this, e.getMessage(),
-								Toast.LENGTH_LONG).show();
-					} catch (Exception e) {
-						Toast.makeText(OCRService.this, e.getMessage(),
-								Toast.LENGTH_LONG).show();
-					}
-				}
-				
-				
+				// mValue = ((Bundle) msg.obj).getString("name");
+				mValue = Environment.getExternalStorageDirectory() + "/ocr.jpg";
+				mOcrHelper.ocrActivityHandler.doOCR(mValue);
 				break;
 			default:
 				super.handleMessage(msg);

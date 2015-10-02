@@ -164,6 +164,7 @@ public class BitmapEffectActivity extends Activity implements
 	private int dialerHeight, dialerWidth;
 	private static Matrix matrix;
 
+	@SuppressWarnings("unused")
 	private class MyOnTouchListener implements OnTouchListener {
 
 		private double startAngle;
