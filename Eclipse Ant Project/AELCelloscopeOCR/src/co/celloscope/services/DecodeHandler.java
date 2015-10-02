@@ -1,11 +1,11 @@
-package com.ael.celloscope.aelcelloscopeocr.ocr;
+package co.celloscope.services;
 
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import com.ael.celloscope.aelcelloscopeocr.ocr.R;
+import co.celloscope.services.R;
 
 final class DecodeHandler extends Handler {
 

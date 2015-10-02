@@ -1,4 +1,4 @@
-package com.ael.celloscope.aelcelloscopeocr.ocr;
+package co.celloscope.services;
 
 import java.util.ArrayList;
 
@@ -16,7 +16,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import com.ael.celloscope.aelcelloscopeocr.ocr.R;
+import co.celloscope.services.R;
 
 final class OCRHandler extends Handler {
 

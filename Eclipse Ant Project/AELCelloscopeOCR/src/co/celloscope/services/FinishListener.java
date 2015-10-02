@@ -1,4 +1,4 @@
-package com.ael.celloscope.aelcelloscopeocr.ocr;
+package co.celloscope.services;
 
 import android.app.Activity;
 import android.content.DialogInterface;

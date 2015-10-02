@@ -1,4 +1,4 @@
-package com.ael.celloscope.aelcelloscopeocr.ocr;
+package co.celloscope.services;
 
 import java.util.concurrent.CountDownLatch;
 

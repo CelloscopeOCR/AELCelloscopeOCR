@@ -1,4 +1,4 @@
-package com.ael.celloscope.aelcelloscopeocr.ocr;
+package co.celloscope.services;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,7 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.ael.celloscope.aelcelloscopeocr.ocr.R;
+import co.celloscope.services.R;
 
 public final class OCRActivity extends Activity {
 
