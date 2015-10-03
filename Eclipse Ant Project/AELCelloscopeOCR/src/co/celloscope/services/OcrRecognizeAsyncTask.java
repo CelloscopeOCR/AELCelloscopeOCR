@@ -14,7 +14,7 @@ import com.googlecode.tesseract.android.TessBaseAPI;
 
 final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
-	private OCRHelper helper;
+	private OCRManager helper;
 	private TessBaseAPI baseApi;
 	private final Context context;
 	private Object data;
@@ -23,7 +23,7 @@ final class OcrRecognizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	String textResult;
 	private ProgressDialog indeterminateDialog;
 
-	OcrRecognizeAsyncTask(OCRHelper helper, Context context, Object data,
+	OcrRecognizeAsyncTask(OCRManager helper, Context context, Object data,
 			int width, int height) {
 		this.helper = helper;
 		this.baseApi = helper.getBaseApi();

@@ -9,11 +9,11 @@ import co.celloscope.services.R;
 
 final class DecodeHandler extends Handler {
 
-	private final OCRHelper activity;
+	private final OCRManager activity;
 	private final Context context;
 	private boolean running = true;
 
-	DecodeHandler(OCRHelper activity, Context context) {
+	DecodeHandler(OCRManager activity, Context context) {
 		this.activity = activity;
 		this.context = context;
 	}

@@ -19,36 +19,33 @@ public class OCRService extends Service {
 
 	ArrayList<Messenger> mClients = new ArrayList<Messenger>();
 	String mValue = "";
-	private OCRHelper mOcrHelper;
+	private OCRManager mOcrManager;
 
 	@Override
 	public void onCreate() {
-		mOcrHelper = new OCRHelper(OCRService.this);
-		Log.i(TAG, "Created");
-	}
-
-	@Override
-	public void onDestroy() {
-
-		if (mOcrHelper.baseApi != null) {
-			mOcrHelper.baseApi.end();
-		}
-		Log.i(TAG, "Service Destroyed");
+		mOcrManager = new OCRManager(OCRService.this);
 	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		mOcrHelper.initializeOCREngine();
-		mOcrHelper.ocrActivityHandler = new OCRHandler(mOcrHelper, this,
-				mClients);
+		mOcrManager.initialize(this, mClients);
 		Log.i(TAG, "Service bounded");
 		return mMessenger.getBinder();
 	}
 
 	@Override
+	public void onDestroy() {
+
+		if (mOcrManager.baseApi != null) {
+			mOcrManager.baseApi.end();
+		}
+		Log.i(TAG, "Service Destroyed");
+	}
+
+	@Override
 	public boolean onUnbind(Intent intent) {
-		if (mOcrHelper.ocrActivityHandler != null) {
-			mOcrHelper.ocrActivityHandler.quitSynchronously();
+		if (mOcrManager.ocrActivityHandler != null) {
+			mOcrManager.ocrActivityHandler.quitSynchronously();
 		}
 		Log.i(TAG, "Unbind");
 		return super.onUnbind(intent);
@@ -67,7 +64,7 @@ public class OCRService extends Service {
 			case ServiceOperations.MSG_DO_OCR:
 				// mValue = ((Bundle) msg.obj).getString("name");
 				mValue = Environment.getExternalStorageDirectory() + "/ocr.jpg";
-				mOcrHelper.ocrActivityHandler.doOCR(mValue);
+				mOcrManager.ocrActivityHandler.doOCR(mValue);
 				break;
 			default:
 				super.handleMessage(msg);

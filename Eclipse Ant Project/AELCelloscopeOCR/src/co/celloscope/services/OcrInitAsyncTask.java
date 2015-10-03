@@ -46,7 +46,7 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 
 	static final String OSD_FILENAME_BASE = "osd.traineddata";
 
-	private OCRHelper activity;
+	private OCRManager activity;
 	private Context context;
 	private TessBaseAPI baseApi;
 	private ProgressDialog dialog;
@@ -54,7 +54,7 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
 	private String languageName;
 	private int ocrEngineMode;
 
-	OcrInitAsyncTask(OCRHelper ocrHelper, Context context, TessBaseAPI baseApi) {
+	OcrInitAsyncTask(OCRManager ocrHelper, Context context, TessBaseAPI baseApi) {
 		this.activity = ocrHelper;
 		this.context = context;
 		this.baseApi = baseApi;

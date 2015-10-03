@@ -32,19 +32,10 @@ final class OCRHandler extends Handler {
 		PREVIEW, PREVIEW_PAUSED, CONTINUOUS, CONTINUOUS_PAUSED, SUCCESS, DONE
 	}
 
-	OCRHandler(OCRHelper ocrHelper, Context context,
+	OCRHandler(OCRManager ocrHelper, Context context,
 			ArrayList<Messenger> mClients) {
 		this.context = context;
 		this.mClients = mClients;
-		decodeThread = new DecodeThread(ocrHelper, context);
-		decodeThread.start();
-
-		state = State.SUCCESS;
-		restartOcrPreview();
-	}
-
-	OCRHandler(OCRHelper ocrHelper, Context context) {
-		this.context = context;
 		decodeThread = new DecodeThread(ocrHelper, context);
 		decodeThread.start();
 

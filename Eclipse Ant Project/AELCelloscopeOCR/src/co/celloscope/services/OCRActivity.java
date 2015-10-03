@@ -17,7 +17,7 @@ import co.celloscope.services.R;
 public final class OCRActivity extends Activity {
 
 	// private static final String TAG = OCRActivity.class.getSimpleName();
-	private OCRHelper mOcrHelper;
+	private OCRManager mOCRManager;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -27,36 +27,38 @@ public final class OCRActivity extends Activity {
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.capture);
-		mOcrHelper = new OCRHelper(OCRActivity.this);
 		this.findViewById(R.id.shutter_button).setOnClickListener(
 				new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						mOcrHelper.ocrActivityHandler.shutterButtonClick(Environment
-								.getExternalStorageDirectory() + "/ocr.jpg");
+						mOCRManager.ocrActivityHandler
+								.shutterButtonClick(Environment
+										.getExternalStorageDirectory()
+										+ "/ocr.jpg");
 					}
 				});
+
+		mOCRManager = new OCRManager(OCRActivity.this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mOcrHelper.initializeOCREngine();
-		mOcrHelper.ocrActivityHandler = new OCRHandler(mOcrHelper, this);
+		mOCRManager.initialize(this, null);
 	}
 
 	@Override
 	protected void onPause() {
-		if (mOcrHelper.ocrActivityHandler != null) {
-			mOcrHelper.ocrActivityHandler.quitSynchronously();
+		if (mOCRManager.ocrActivityHandler != null) {
+			mOCRManager.ocrActivityHandler.quitSynchronously();
 		}
 		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
-		if (mOcrHelper.baseApi != null) {
-			mOcrHelper.baseApi.end();
+		if (mOCRManager.baseApi != null) {
+			mOCRManager.baseApi.end();
 		}
 		super.onDestroy();
 	}
@@ -69,8 +71,9 @@ public final class OCRActivity extends Activity {
 			finish();
 			return true;
 		} else if (keyCode == KeyEvent.KEYCODE_CAMERA) {
-			mOcrHelper.ocrActivityHandler.hardwareShutterButtonClick(Environment
-					.getExternalStorageDirectory() + "/ocr.jpg");
+			mOCRManager.ocrActivityHandler
+					.hardwareShutterButtonClick(Environment
+							.getExternalStorageDirectory() + "/ocr.jpg");
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

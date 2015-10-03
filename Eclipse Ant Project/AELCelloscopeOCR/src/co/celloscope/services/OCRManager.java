@@ -1,33 +1,38 @@
 package co.celloscope.services;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Messenger;
 
 import android.util.Log;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
-public final class OCRHelper {
+public final class OCRManager {
 
-	private static final String TAG = OCRHelper.class.getSimpleName();
+	private static final String TAG = OCRManager.class.getSimpleName();
 	private final Context context;
-
-	public OCRHelper(Context context) {
-		this.context = context;
-	}
-
 	OCRHandler ocrActivityHandler;
-
 	TessBaseAPI baseApi;
-
-	Handler getcaptureActivityHandler() {
-		return ocrActivityHandler;
-	}
 
 	TessBaseAPI getBaseApi() {
 		return baseApi;
+	}
+
+	OCRManager(Context context) {
+		this.context = context;
+	}
+
+	void initialize(Context context, ArrayList<Messenger> mClients) {
+		initializeOCREngine();
+		ocrActivityHandler = new OCRHandler(this, context, mClients);
+	}
+
+	Handler getcaptureActivityHandler() {
+		return ocrActivityHandler;
 	}
 
 	void initializeOCREngine() {
