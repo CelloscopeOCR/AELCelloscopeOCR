@@ -32,9 +32,11 @@
         android:label="@string/app_name" >
         <service android:name="co.celloscope.services.OCRService" >
             <intent-filter>
-<!--                 <action android:name="android.intent.action.MAIN" /> -->
 
-<!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
+                <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
 
                 <action android:name="com.ael.celloscope.aelcelloscopeocr.ocr.OCRService" />
             </intent-filter>
@@ -51,12 +53,11 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden" >
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-</intent-filter>
+            </intent-filter>
         </activity>
         <activity
             android:name=".ocr.HelpActivity"

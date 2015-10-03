@@ -78,8 +78,6 @@ final class OCRHandler extends Handler {
 							}
 						}).setCancelable(false).create().show();
 			} else {
-				Toast.makeText(context, message.obj.toString(),
-						Toast.LENGTH_LONG).show();
 				Bundle mBundle = new Bundle();
 				mBundle.putString("ocrText", message.obj.toString());
 				for (int i = mClients.size() - 1; i >= 0; i--) {
