@@ -1,17 +1,12 @@
 package co.celloscope.ocr;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -25,17 +20,15 @@ final class OCRHandler extends Handler {
 	private final Context context;
 	private final DecodeThread decodeThread;
 	private static State state;
-	private ArrayList<Messenger> mClients = null;
+
 	static final int MSG_DO_OCR = 3;
 
 	private enum State {
 		PREVIEW, PREVIEW_PAUSED, CONTINUOUS, CONTINUOUS_PAUSED, SUCCESS, DONE
 	}
 
-	OCRHandler(OCRManager ocrHelper, Context context,
-			ArrayList<Messenger> mClients) {
+	OCRHandler(OCRManager ocrHelper, Context context) {
 		this.context = context;
-		this.mClients = mClients;
 		decodeThread = new DecodeThread(ocrHelper, context);
 		decodeThread.start();
 
@@ -69,19 +62,10 @@ final class OCRHandler extends Handler {
 							}
 						}).setCancelable(false).create().show();
 			} else {
-				Bundle mBundle = new Bundle();
-				mBundle.putString("ocrText", message.obj.toString());
-				for (int i = mClients.size() - 1; i >= 0; i--) {
-					try {
-						mClients.get(i).send(
-								Message.obtain(null, MSG_DO_OCR, mBundle));
-					} catch (RemoteException e) {
-						mClients.remove(i);
-						Log.e(TAG, e.getMessage());
-					} catch (Exception e) {
-						Log.e(TAG, e.getMessage());
-					}
-				}
+
+				Toast.makeText(context, message.obj.toString(),
+						Toast.LENGTH_LONG);
+				Log.i(TAG, message.obj.toString());
 
 			}
 

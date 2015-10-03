@@ -40,7 +40,7 @@ public final class OCRActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mOCRManager.initialize(this, null);
+		mOCRManager.initialize();
 	}
 
 	@Override

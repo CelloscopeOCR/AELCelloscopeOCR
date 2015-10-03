@@ -1,12 +1,10 @@
 package co.celloscope.ocr;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Messenger;
 
 import android.util.Log;
 import com.googlecode.tesseract.android.TessBaseAPI;
@@ -28,9 +26,9 @@ public final class OCRManager {
 		this.context = context;
 	}
 
-	public void initialize(Context context, ArrayList<Messenger> mClients) {
+	public void initialize() {
 		initializeOCREngine();
-		ocrActivityHandler = new OCRHandler(this, context, mClients);
+		ocrActivityHandler = new OCRHandler(this, this.context);
 	}
 
 	public void release() {
