@@ -11,13 +11,12 @@ public class OCRService extends Service {
 
 	private static final String TAG = OCRService.class.getSimpleName();
 	private OCRManager mOcrManager;
-
 	private Messenger mServiceMessenger;
 
 	@Override
 	public void onCreate() {
 		mOcrManager = new OCRManager(OCRService.this);
-		mServiceMessenger = new Messenger(new OCRServiceHandler(mOcrManager));
+		mServiceMessenger = new Messenger(new ServiceHandler(mOcrManager));
 	}
 
 	@Override
