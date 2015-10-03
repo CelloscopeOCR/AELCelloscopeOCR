@@ -15,10 +15,6 @@ public class OCRService extends Service {
 
 	private static final String TAG = OCRService.class.getSimpleName();
 
-	static final int MSG_REGISTER_CLIENT = 1;
-	static final int MSG_UNREGISTER_CLIENT = 2;
-	static final int MSG_DO_OCR = 3;
-
 	final Messenger mMessenger = new Messenger(new IncomingHandler());
 
 	ArrayList<Messenger> mClients = new ArrayList<Messenger>();
@@ -62,13 +58,13 @@ public class OCRService extends Service {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case MSG_REGISTER_CLIENT:
+			case ServiceOperations.MSG_REGISTER_CLIENT:
 				mClients.add(msg.replyTo);
 				break;
-			case MSG_UNREGISTER_CLIENT:
+			case ServiceOperations.MSG_UNREGISTER_CLIENT:
 				mClients.remove(msg.replyTo);
 				break;
-			case MSG_DO_OCR:
+			case ServiceOperations.MSG_DO_OCR:
 				// mValue = ((Bundle) msg.obj).getString("name");
 				mValue = Environment.getExternalStorageDirectory() + "/ocr.jpg";
 				mOcrHelper.ocrActivityHandler.doOCR(mValue);
