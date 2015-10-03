@@ -29,12 +29,14 @@ public class ServiceHandler extends Handler {
 		switch (msg.what) {
 		case ServiceOperations.MSG_REGISTER_CLIENT:
 			mClients.add(msg.replyTo);
-			bundle.putString("register", msg.replyTo.toString());
+			bundle.putString("text",
+					"Registered client " + msg.replyTo.toString());
 			this.sendMessageToClients(Message.obtain(null,
 					ServiceOperations.MSG_REGISTER_CLIENT, bundle));
 			break;
 		case ServiceOperations.MSG_UNREGISTER_CLIENT:
-			bundle.putString("unregister", msg.replyTo.toString());
+			bundle.putString("text",
+					"Unregistered client " + msg.replyTo.toString());
 			this.sendMessageToClients(Message.obtain(null,
 					ServiceOperations.MSG_UNREGISTER_CLIENT, bundle));
 			mClients.remove(msg.replyTo);
@@ -42,9 +44,13 @@ public class ServiceHandler extends Handler {
 		case ServiceOperations.MSG_DO_OCR:
 			String filePath = ((Bundle) msg.obj).getString("name");
 			mOcrManager.doOCR(filePath);
+			bundle.putString("text",
+					"OCR request sent to " + mOcrManager.toString());
+			this.sendMessageToClients(Message.obtain(null,
+					ServiceOperations.MSG_DO_OCR, bundle));
 			break;
 		case ServiceOperations.MSG_OCR_RESULT:
-			bundle.putString("ocrText", msg.obj.toString());
+			bundle.putString("text", "OCR text " + msg.obj.toString());
 			this.sendMessageToClients(Message.obtain(null,
 					ServiceOperations.MSG_OCR_RESULT, bundle));
 			break;
