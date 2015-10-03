@@ -31,10 +31,7 @@ public final class OCRActivity extends Activity {
 				new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						mOCRManager.ocrActivityHandler
-								.shutterButtonClick(Environment
-										.getExternalStorageDirectory()
-										+ "/ocr.jpg");
+						mOCRManager.doOCR(mOCRManager.testFilePath);
 					}
 				});
 
@@ -49,17 +46,13 @@ public final class OCRActivity extends Activity {
 
 	@Override
 	protected void onPause() {
-		if (mOCRManager.ocrActivityHandler != null) {
-			mOCRManager.ocrActivityHandler.quitSynchronously();
-		}
+		mOCRManager.release();
 		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
-		if (mOCRManager.baseApi != null) {
-			mOCRManager.baseApi.end();
-		}
+		mOCRManager.destroy();
 		super.onDestroy();
 	}
 
@@ -71,9 +64,7 @@ public final class OCRActivity extends Activity {
 			finish();
 			return true;
 		} else if (keyCode == KeyEvent.KEYCODE_CAMERA) {
-			mOCRManager.ocrActivityHandler
-					.hardwareShutterButtonClick(Environment
-							.getExternalStorageDirectory() + "/ocr.jpg");
+			mOCRManager.doOCR(mOCRManager.testFilePath);
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

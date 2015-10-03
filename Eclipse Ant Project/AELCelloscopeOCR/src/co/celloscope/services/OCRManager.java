@@ -14,8 +14,10 @@ import com.googlecode.tesseract.android.TessBaseAPI;
 public final class OCRManager {
 
 	private static final String TAG = OCRManager.class.getSimpleName();
+	final String testFilePath = Environment.getExternalStorageDirectory()
+			+ "/ocr.jpg";
 	private final Context context;
-	OCRHandler ocrActivityHandler;
+	private OCRHandler ocrActivityHandler;
 	TessBaseAPI baseApi;
 
 	TessBaseAPI getBaseApi() {
@@ -29,6 +31,23 @@ public final class OCRManager {
 	void initialize(Context context, ArrayList<Messenger> mClients) {
 		initializeOCREngine();
 		ocrActivityHandler = new OCRHandler(this, context, mClients);
+	}
+
+	void release() {
+		if (ocrActivityHandler != null) {
+			ocrActivityHandler.quitSynchronously();
+		}
+	}
+
+	void destroy() {
+
+		if (baseApi != null) {
+			baseApi.end();
+		}
+	}
+
+	void doOCR(String filePath) {
+		ocrActivityHandler.doOCR(filePath);
 	}
 
 	Handler getcaptureActivityHandler() {
