@@ -1,10 +1,9 @@
-package co.celloscope.services;
+package co.celloscope.ocr;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.KeyEvent;
 
 import android.view.View;

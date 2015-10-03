@@ -1,4 +1,4 @@
-package co.celloscope.services;
+package co.celloscope.ocr;
 
 
 

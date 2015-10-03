@@ -48,7 +48,7 @@
             android:screenOrientation="sensorLandscape" >
         </activity>
         <activity
-            android:name="co.celloscope.services.OCRActivity"
+            android:name="co.celloscope.ocr.OCRActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"

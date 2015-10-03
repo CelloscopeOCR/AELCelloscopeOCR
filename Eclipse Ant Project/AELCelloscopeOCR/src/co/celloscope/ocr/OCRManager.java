@@ -1,4 +1,4 @@
-package co.celloscope.services;
+package co.celloscope.ocr;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,29 +24,29 @@ public final class OCRManager {
 		return baseApi;
 	}
 
-	OCRManager(Context context) {
+	public OCRManager(Context context) {
 		this.context = context;
 	}
 
-	void initialize(Context context, ArrayList<Messenger> mClients) {
+	public void initialize(Context context, ArrayList<Messenger> mClients) {
 		initializeOCREngine();
 		ocrActivityHandler = new OCRHandler(this, context, mClients);
 	}
 
-	void release() {
+	public void release() {
 		if (ocrActivityHandler != null) {
 			ocrActivityHandler.quitSynchronously();
 		}
 	}
 
-	void destroy() {
+	public void destroy() {
 
 		if (baseApi != null) {
 			baseApi.end();
 		}
 	}
 
-	void doOCR(String filePath) {
+	public void doOCR(String filePath) {
 		ocrActivityHandler.doOCR(filePath);
 	}
 
