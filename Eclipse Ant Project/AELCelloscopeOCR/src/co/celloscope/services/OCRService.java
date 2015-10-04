@@ -2,6 +2,7 @@ package co.celloscope.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.util.Log;
@@ -11,19 +12,22 @@ public class OCRService extends Service {
 
 	private static final String TAG = OCRService.class.getSimpleName();
 	private OCRManager mOcrManager;
-	private Messenger mServiceMessenger;
+	private Messenger svcMessenger;
 
 	@Override
 	public void onCreate() {
-		mOcrManager = new OCRManager(OCRService.this);
-		mServiceMessenger = new Messenger(new ServiceHandler(mOcrManager));
+
+		mOcrManager = new OCRManager(this);
+		Handler handler = new ServiceHandler(mOcrManager);
+		mOcrManager.setContextHandler(handler);
+		svcMessenger = new Messenger(handler);
 	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
 		mOcrManager.initialize();
 		Log.i(TAG, "Service bounded");
-		return mServiceMessenger.getBinder();
+		return svcMessenger.getBinder();
 	}
 
 	@Override

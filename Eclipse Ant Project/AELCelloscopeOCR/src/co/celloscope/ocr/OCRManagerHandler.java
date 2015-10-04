@@ -12,14 +12,16 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import co.celloscope.services.R;
+import co.celloscope.services.ServiceOperations;
 
-final class OCRHandler extends Handler {
+final class OCRManagerHandler extends Handler {
 
-	private static final String TAG = OCRHandler.class.getSimpleName();
+	private static final String TAG = OCRManagerHandler.class.getSimpleName();
 
 	private final Context context;
 	private final DecodeThread decodeThread;
 	private static State state;
+	private OCRManager manager;
 
 	static final int MSG_DO_OCR = 3;
 
@@ -27,9 +29,10 @@ final class OCRHandler extends Handler {
 		PREVIEW, PREVIEW_PAUSED, CONTINUOUS, CONTINUOUS_PAUSED, SUCCESS, DONE
 	}
 
-	OCRHandler(OCRManager ocrHelper, Context context) {
+	OCRManagerHandler(OCRManager ocrManager, Context context) {
 		this.context = context;
-		decodeThread = new DecodeThread(ocrHelper, context);
+		this.manager = ocrManager;
+		decodeThread = new DecodeThread(ocrManager, context);
 		decodeThread.start();
 
 		state = State.SUCCESS;
@@ -63,10 +66,11 @@ final class OCRHandler extends Handler {
 						}).setCancelable(false).create().show();
 			} else {
 
-				Toast.makeText(context, message.obj.toString(),
-						Toast.LENGTH_LONG);
-				Log.i(TAG, message.obj.toString());
-
+				// Toast.makeText(context, message.obj.toString(),
+				// Toast.LENGTH_LONG);
+				// Log.i(TAG, message.obj.toString());
+				manager.contextHandler.obtainMessage(ServiceOperations.MSG_OCR_RESULT, 0, 0,
+						message.obj.toString()).sendToTarget();
 			}
 
 			break;
@@ -105,19 +109,6 @@ final class OCRHandler extends Handler {
 		}
 		removeMessages(R.id.ocr_continuous_decode);
 		removeMessages(R.id.ocr_decode);
-
-	}
-
-	void hardwareShutterButtonClick(String filePath) {
-
-		if (state == State.PREVIEW) {
-			ocrDecode(filePath);
-		}
-	}
-
-	void shutterButtonClick(String filePath) {
-
-		ocrDecode(filePath);
 	}
 
 	void doOCR(String filePath) {
@@ -129,7 +120,5 @@ final class OCRHandler extends Handler {
 		Message message = decodeThread.getHandler().obtainMessage(
 				R.id.ocr_decode, 0, 0, filePath);
 		message.sendToTarget();
-
 	}
-
 }

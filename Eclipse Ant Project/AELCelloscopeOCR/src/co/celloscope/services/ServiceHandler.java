@@ -42,7 +42,7 @@ public class ServiceHandler extends Handler {
 			mClients.remove(msg.replyTo);
 			break;
 		case ServiceOperations.MSG_DO_OCR:
-			String filePath = ((Bundle) msg.obj).getString("name");
+			String filePath = ((Bundle) msg.obj).getString("text");
 			mOcrManager.doOCR(filePath);
 			bundle.putString("text",
 					"OCR request sent to " + mOcrManager.toString());

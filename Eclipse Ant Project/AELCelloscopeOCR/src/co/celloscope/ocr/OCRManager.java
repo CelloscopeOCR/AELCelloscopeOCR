@@ -15,8 +15,17 @@ public final class OCRManager {
 	final String testFilePath = Environment.getExternalStorageDirectory()
 			+ "/ocr.jpg";
 	private final Context context;
-	private OCRHandler ocrActivityHandler;
+	private OCRManagerHandler ocrManagerHandler;
 	TessBaseAPI baseApi;
+	Handler contextHandler;
+
+	public Handler getContextHandler() {
+		return contextHandler;
+	}
+
+	public void setContextHandler(Handler contextHandler) {
+		this.contextHandler = contextHandler;
+	}
 
 	TessBaseAPI getBaseApi() {
 		return baseApi;
@@ -25,15 +34,14 @@ public final class OCRManager {
 	public OCRManager(Context context) {
 		this.context = context;
 	}
-
 	public void initialize() {
 		initializeOCREngine();
-		ocrActivityHandler = new OCRHandler(this, this.context);
+		ocrManagerHandler = new OCRManagerHandler(this, this.context);
 	}
 
 	public void release() {
-		if (ocrActivityHandler != null) {
-			ocrActivityHandler.quitSynchronously();
+		if (ocrManagerHandler != null) {
+			ocrManagerHandler.quitSynchronously();
 		}
 	}
 
@@ -45,11 +53,11 @@ public final class OCRManager {
 	}
 
 	public void doOCR(String filePath) {
-		ocrActivityHandler.doOCR(filePath);
+		ocrManagerHandler.doOCR(filePath);
 	}
 
 	Handler getcaptureActivityHandler() {
-		return ocrActivityHandler;
+		return ocrManagerHandler;
 	}
 
 	void initializeOCREngine() {
@@ -60,8 +68,8 @@ public final class OCRManager {
 			File storageDirectory = getStorageDirectory();
 			if (storageDirectory != null) {
 
-				if (ocrActivityHandler != null) {
-					ocrActivityHandler.quitSynchronously();
+				if (ocrManagerHandler != null) {
+					ocrManagerHandler.quitSynchronously();
 				}
 
 				baseApi = new TessBaseAPI();
@@ -120,8 +128,8 @@ public final class OCRManager {
 	}
 
 	void stopHandler() {
-		if (ocrActivityHandler != null) {
-			ocrActivityHandler.stop();
+		if (ocrManagerHandler != null) {
+			ocrManagerHandler.stop();
 		}
 	}
 
